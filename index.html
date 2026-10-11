@@ -255,12 +255,8 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: 32% 42%;
-  transform: scale(1.05);
-  animation: heroZoom 20s var(--ease) infinite alternate;
-}
-@keyframes heroZoom {
-  from { transform: scale(1.05); }
-  to   { transform: scale(1.12); }
+  transform: scale(1.08) translate3d(0, 0, 0);
+  will-change: transform;
 }
 .hero-overlay {
   position: absolute; inset: 0;
@@ -678,11 +674,18 @@ section { padding: 5rem 1.5rem; }
 }
 .prev-step.active {
   display: block;
-  animation: stepIn 0.4s var(--ease-out) forwards;
+  animation: stepInNext 0.4s var(--ease-out) both;
 }
-@keyframes stepIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+.prev-step.active[data-dir="back"] {
+  animation-name: stepInBack;
+}
+@keyframes stepInNext {
+  from { opacity: 0; transform: translate3d(28px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes stepInBack {
+  from { opacity: 0; transform: translate3d(-28px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 .prev-question {
   font-size: 1.15rem;
@@ -972,11 +975,28 @@ section { padding: 5rem 1.5rem; }
   backdrop-filter: blur(10px);
 }
 
+/* ── Micro-interazioni: feedback alla pressione ── */
+.hero-cta:active,
+.chi-cta:active,
+.prev-next:active,
+.nav-cta-link:active { transform: scale(0.97); }
+.prev-option:active { transform: scale(0.99); }
+.ba-tab:active { transform: scale(0.96); }
+.gal-item { transition: transform 0.4s var(--ease-out), box-shadow 0.4s; }
+.gal-item:hover { box-shadow: var(--shadow-md); }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+  /* i contenuti rivelati allo scroll restano sempre visibili */
+  .reveal, .pop { opacity: 1 !important; transform: none !important; }
+  /* nessun movimento ambientale o parallax */
+  .blob, .leaf-float { animation: none !important; }
+  .hero-bg img { transform: scale(1.04) !important; }
 }
 </style>
 </head>
@@ -1362,6 +1382,24 @@ section { padding: 5rem 1.5rem; }
     waObserver.observe(prevSection);
   }
 
+  // ── Parallax leggero sulla foto hero (solo transform, 60fps) ──
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var heroImg = document.querySelector('.hero-bg img');
+  if (heroImg && !prefersReduced) {
+    var heroTicking = false;
+    var applyParallax = function() {
+      var y = window.scrollY;
+      if (y <= window.innerHeight) {
+        heroImg.style.transform = 'scale(1.08) translate3d(0, ' + (y * 0.16) + 'px, 0)';
+      }
+      heroTicking = false;
+    };
+    window.addEventListener('scroll', function() {
+      if (!heroTicking) { requestAnimationFrame(applyParallax); heroTicking = true; }
+    }, { passive: true });
+    applyParallax();
+  }
+
   // ── B/A slider ──
   var slider = document.getElementById('baSlider');
   var divider = document.getElementById('baDivider');
@@ -1436,9 +1474,11 @@ section { padding: 5rem 1.5rem; }
   var backBtn = document.getElementById('prevBack');
   var nextBtn = document.getElementById('prevNext');
 
-  function showStep(n) {
+  function showStep(n, dir) {
     steps.forEach(function(s) { s.classList.remove('active'); });
-    document.querySelector('[data-step="' + n + '"]').classList.add('active');
+    var active = document.querySelector('[data-step="' + n + '"]');
+    active.setAttribute('data-dir', dir === 'back' ? 'back' : 'next');
+    active.classList.add('active');
     dots.forEach(function(d, i) {
       d.classList.remove('active', 'done');
       if (i + 1 === n) d.classList.add('active');
@@ -1467,7 +1507,7 @@ section { padding: 5rem 1.5rem; }
   nextBtn.addEventListener('click', function() {
     if (step < totalSteps) {
       step++;
-      showStep(step);
+      showStep(step, 'next');
     } else {
       var notes = document.getElementById('prevNotes').value;
       var msg = 'Buongiorno, vorrei un preventivo.\n';
@@ -1480,7 +1520,7 @@ section { padding: 5rem 1.5rem; }
   });
 
   backBtn.addEventListener('click', function() {
-    if (step > 1) { step--; showStep(step); }
+    if (step > 1) { step--; showStep(step, 'back'); }
   });
 
   // ── Lightbox ──
