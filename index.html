@@ -338,6 +338,21 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   padding: 1.5rem;
   max-width: 800px;
 }
+/* Piante in primo piano agli angoli dell'hero (dietro la card) */
+.hero-deco {
+  position: absolute;
+  bottom: -14px;
+  z-index: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 22px rgba(0,0,0,0.4));
+}
+.hero-deco img { width: 100%; height: auto; display: block; }
+.hero-deco--left { left: -26px; width: clamp(140px, 21vw, 300px); }
+.hero-deco--right { right: -24px; width: clamp(120px, 17vw, 250px); }
+@media (max-width: 600px) {
+  .hero-deco--left { width: 140px; left: -34px; }
+  .hero-deco--right { width: 120px; right: -30px; }
+}
 .hero-glass {
   background: rgba(18, 28, 18, 0.26);
   backdrop-filter: saturate(140%) blur(22px);
@@ -929,6 +944,22 @@ section { padding: 5rem 1.5rem; }
 }
 .deco-ivy img { width: 100%; height: auto; display: block; }
 @media (max-width: 900px) { .deco-ivy { display: none; } }
+
+/* Texture di foglie molto tenue nello sfondo delle sezioni chiare */
+.servizi::before,
+.chi-siamo::before,
+.preventivo::before,
+.galleria::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('assets/img/leaf-pattern.svg');
+  background-repeat: repeat;
+  background-size: 300px auto;
+  opacity: 0.5;
+}
 .galleria-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1420,6 +1451,16 @@ textarea:focus-visible,
     </picture>
   </div>
   <div class="hero-overlay"></div>
+  <picture class="hero-deco hero-deco--left" aria-hidden="true">
+    <source type="image/avif" srcset="assets/img/deco-plant-320.avif 320w, assets/img/deco-plant-520.avif 520w" sizes="(min-width:600px) 280px, 150px">
+    <source type="image/webp" srcset="assets/img/deco-plant-320.webp 320w, assets/img/deco-plant-520.webp 520w" sizes="(min-width:600px) 280px, 150px">
+    <img src="assets/img/deco-plant-520.png" width="520" height="477" loading="eager" decoding="async" alt="">
+  </picture>
+  <picture class="hero-deco hero-deco--right" aria-hidden="true">
+    <source type="image/avif" srcset="assets/img/deco-fern-320.avif 320w, assets/img/deco-fern-520.avif 520w" sizes="(min-width:600px) 250px, 140px">
+    <source type="image/webp" srcset="assets/img/deco-fern-320.webp 320w, assets/img/deco-fern-520.webp 520w" sizes="(min-width:600px) 250px, 140px">
+    <img src="assets/img/deco-fern-520.png" width="520" height="506" loading="eager" decoding="async" alt="">
+  </picture>
   <div class="hero-content">
     <div class="hero-glass">
       <div class="hero-eyebrow">Vignolo &middot; Borgo San Dalmazzo &middot; Cuneo &middot; Boves</div>
