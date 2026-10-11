@@ -458,7 +458,40 @@ section { padding: 5rem 1.5rem; }
 }
 .prima-dopo .section-eyebrow { color: var(--sage); }
 .prima-dopo .section-title { color: var(--surface); }
-.prima-dopo .section-sub { color: rgba(255,255,255,0.5); }
+.prima-dopo .section-sub { color: rgba(255,255,255,0.62); }
+
+.ba-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 2rem;
+  max-width: 720px;
+}
+.ba-cta-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fz-lg);
+  color: var(--surface);
+  line-height: 1.2;
+  flex: 1 1 260px;
+}
+.ba-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
+}
+.ba-cta-btn:hover { transform: scale(1.04); box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+.ba-cta-btn:active { transform: scale(0.98); }
 
 .ba-tabs {
   display: flex;
@@ -1308,8 +1341,10 @@ textarea:focus-visible,
     </div>
     <div class="ba-tabs reveal" role="group" aria-label="Scegli il lavoro da confrontare">
       <button type="button" class="ba-tab active" data-pair="1" aria-pressed="true">Giardino privato</button>
-      <button type="button" class="ba-tab" data-pair="2" aria-pressed="false">Area commerciale</button>
-      <button type="button" class="ba-tab" data-pair="3" aria-pressed="false">Aiuola residenziale</button>
+      <button type="button" class="ba-tab" data-pair="2" aria-pressed="false">Angolo barbecue</button>
+      <button type="button" class="ba-tab" data-pair="5" aria-pressed="false">Da incolto a prato</button>
+      <button type="button" class="ba-tab" data-pair="4" aria-pressed="false">Area commerciale</button>
+      <button type="button" class="ba-tab" data-pair="3" aria-pressed="false">Aiuola fiorita</button>
     </div>
     <div class="ba-slider pop" id="baSlider" tabindex="0" role="slider" aria-label="Confronto prima e dopo: trascina, oppure usa le frecce sinistra e destra" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% visibile il dopo">
       <picture>
@@ -1329,6 +1364,10 @@ textarea:focus-visible,
       </div>
       <span class="ba-tag ba-tag-before">Prima</span>
       <span class="ba-tag ba-tag-after">Dopo</span>
+    </div>
+    <div class="ba-cta reveal">
+      <p class="ba-cta-text">Immagina il tuo spazio trasformato così.</p>
+      <a href="#preventivo" class="ba-cta-btn">Richiedi un preventivo gratuito</a>
     </div>
   </div>
 </section>
@@ -1504,6 +1543,27 @@ textarea:focus-visible,
           <source type="image/avif" srcset="assets/img/chi-siamo-480.avif 480w, assets/img/chi-siamo-800.avif 800w, assets/img/chi-siamo-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/chi-siamo-480.webp 480w, assets/img/chi-siamo-800.webp 800w, assets/img/chi-siamo-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/chi-siamo-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Vialetto in pietra e prato curvo al tramonto con rose">
+        </picture>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-3" data-lb aria-label="Ingrandisci: Aiuole in ghiaia con piante ornamentali davanti a un edificio commerciale">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-7-480.avif 480w, assets/img/gal-7-800.avif 800w, assets/img/gal-7-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-7-480.webp 480w, assets/img/gal-7-800.webp 800w, assets/img/gal-7-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <img src="assets/img/gal-7-1200.jpg" width="1170" height="1560" loading="lazy" decoding="async" alt="Aiuole in ghiaia con piante ornamentali e alberelli davanti a un edificio commerciale">
+        </picture>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-1" data-lb aria-label="Ingrandisci: Bordura in ghiaia con cerchi di corteccia e graminacee ornamentali">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-8-480.avif 480w, assets/img/gal-8-800.avif 800w, assets/img/gal-8-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-8-480.webp 480w, assets/img/gal-8-800.webp 800w, assets/img/gal-8-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <img src="assets/img/gal-8-1200.jpg" width="1170" height="1560" loading="lazy" decoding="async" alt="Bordura in ghiaia con cerchi di corteccia e graminacee ornamentali in un'area commerciale">
+        </picture>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-2" data-lb aria-label="Ingrandisci: Aiuole con rose e ulivi lungo un vialetto in pietra">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-9-480.avif 480w, assets/img/gal-9-800.avif 800w, assets/img/gal-9-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-9-480.webp 480w, assets/img/gal-9-800.webp 800w, assets/img/gal-9-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <img src="assets/img/gal-9-1200.jpg" width="1170" height="1560" loading="lazy" decoding="async" alt="Aiuole con rose e ulivi lungo un vialetto in pietra in un giardino residenziale">
         </picture>
       </button>
     </div>
@@ -1693,7 +1753,13 @@ textarea:focus-visible,
       afterAlt: 'Dopo: angolo barbecue con prato, rose bianche e muretto in pietra' },
     '3': { before: 'ba3-before', after: 'ba3-after',
       beforeAlt: 'Prima: giardino incolto e invaso dalle erbacce',
-      afterAlt: 'Dopo: prato curvo con bordura in corteccia, rose e peonia' }
+      afterAlt: 'Dopo: prato curvo con bordura in corteccia, rose e peonia' },
+    '4': { before: 'ba4-before', after: 'ba4-after',
+      beforeAlt: 'Prima: area verde di un edificio commerciale con prato incolto e parcheggio',
+      afterAlt: 'Dopo: aiuole in ghiaia con piante ornamentali e alberelli davanti all\'edificio commerciale' },
+    '5': { before: 'ba5-before', after: 'ba5-after',
+      beforeAlt: 'Prima: giardino completamente invaso dalle erbacce',
+      afterAlt: 'Dopo: prato curato con vialetto in pietra e bordura in corteccia' }
   };
   function srcsetFor(base, ext) {
     return ['600', '900', '1200'].map(function(w) {
