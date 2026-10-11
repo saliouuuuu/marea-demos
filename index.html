@@ -1236,6 +1236,14 @@ textarea:focus-visible,
   gap: 0.4rem;
 }
 .prev-error[hidden] { display: none; }
+/* Honeypot anti-spam: nascosto agli utenti, visibile ai bot */
+.hp-field {
+  position: absolute !important;
+  left: -9999px;
+  top: auto;
+  width: 1px; height: 1px;
+  overflow: hidden;
+}
 .prev-error svg { width: 16px; height: 16px; flex-shrink: 0; }
 .prev-step.invalid .prev-options { animation: shake 0.3s var(--ease); }
 @keyframes shake {
@@ -1558,6 +1566,7 @@ textarea:focus-visible,
           <textarea class="prev-textarea" id="prevNotes" rows="4" maxlength="600" placeholder="Descrivi brevemente il lavoro, oppure lascia vuoto..."></textarea>
         </div>
 
+        <p class="hp-field" aria-hidden="true"><label>Lascia vuoto questo campo <input type="text" id="prevBotField" name="bot-field" tabindex="-1" autocomplete="off"></label></p>
         <p class="prev-error" id="prevError" role="alert" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg><span id="prevErrorText">Seleziona un'opzione per continuare.</span></p>
         <div class="prev-nav">
           <button type="button" class="prev-back hidden" id="prevBack">&#8592; Indietro</button>
@@ -1566,6 +1575,14 @@ textarea:focus-visible,
       </div>
     </div>
   </div>
+  <!-- Form nascosto per il rilevamento di Netlify Forms (l'invio reale avviene via fetch dal wizard) -->
+  <form name="preventivo" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="text" name="servizio">
+    <input type="text" name="dimensione">
+    <input type="text" name="zona">
+    <textarea name="note"></textarea>
+    <input type="text" name="bot-field">
+  </form>
 </section>
 
 <!-- GALLERIA -->
@@ -1926,14 +1943,35 @@ textarea:focus-visible,
     if (notes) msg += '\nNote: ' + notes;
     return msg;
   }
-  function showSuccess(waUrl) {
+  function showSuccess(waUrl, ok) {
+    var title = ok ? 'Richiesta inviata!' : 'Ti apriamo WhatsApp';
+    var msg = ok
+      ? 'Abbiamo ricevuto la tua richiesta: ti ricontattiamo a breve con un preventivo su misura. Nel frattempo si è aperto WhatsApp per scriverci subito.'
+      : 'Si è aperto WhatsApp con la tua richiesta già compilata: inviala e ti rispondiamo al più presto. Se la finestra non si è aperta, usa il pulsante qui sotto.';
     prevForm.innerHTML =
       '<div class="prev-success" role="status">' +
         '<div class="prev-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>' +
-        '<h3>Richiesta pronta!</h3>' +
-        '<p>Si apre WhatsApp con la tua richiesta già compilata: inviala e ti risponderemo al più presto con un preventivo su misura.</p>' +
+        '<h3>' + title + '</h3>' +
+        '<p>' + msg + '</p>' +
         '<a class="prev-success-wa" href="' + waUrl + '" target="_blank" rel="noopener">' + WA_ICON + 'Apri WhatsApp</a>' +
       '</div>';
+  }
+  function submitToNetlify() {
+    var notes = document.getElementById('prevNotes').value.trim();
+    var bot = document.getElementById('prevBotField');
+    var body = new URLSearchParams({
+      'form-name': 'preventivo',
+      'servizio': answers.step1 || '',
+      'dimensione': answers.step2 || '',
+      'zona': answers.step3 || '',
+      'note': notes,
+      'bot-field': bot ? bot.value : ''
+    }).toString();
+    return fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body
+    }).then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); });
   }
   nextBtn.addEventListener('click', function() {
     if (submitting) return;
@@ -1943,8 +1981,12 @@ textarea:focus-visible,
     nextBtn.setAttribute('disabled', '');
     nextBtn.textContent = 'Invio…';
     var waUrl = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(buildMessage());
+    // Apri WhatsApp subito (gesto utente: evita il blocco popup)
     window.open(waUrl, '_blank', 'noopener');
-    showSuccess(waUrl);
+    // Registra la richiesta su Netlify Forms (record durevole + notifica al titolare)
+    submitToNetlify()
+      .then(function() { showSuccess(waUrl, true); })
+      .catch(function() { showSuccess(waUrl, false); });
   });
 
   backBtn.addEventListener('click', function() {
