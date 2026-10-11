@@ -1018,20 +1018,46 @@ section { padding: 5rem 1.5rem; }
 .ba-tab:active { transform: scale(0.96); }
 .gal-item:hover { box-shadow: var(--shadow-md); }
 
-/* Accento decorativo: masso muschiato in un angolo di "Chi siamo" */
+/* Scena decorativa di sfondo in "Chi siamo":
+   masso muschiato fuso nello sfondo (maschera morbida + opacita ridotta),
+   accompagnato da un alone verde-salvia e da un anello sottile. */
+.deco-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.deco-halo {
+  position: absolute;
+  right: -40px; bottom: -90px;
+  width: 580px; height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 58% 52%, rgba(143,174,132,0.5), rgba(143,174,132,0.16) 46%, rgba(143,174,132,0) 70%);
+  filter: blur(6px);
+}
+.deco-ring {
+  position: absolute;
+  right: 36px; bottom: 44px;
+  width: 340px; height: 340px;
+  border-radius: 50%;
+  border: 1px solid rgba(53,106,57,0.16);
+}
 .deco-rock {
   position: absolute;
-  z-index: 1;
-  right: -18px;
-  bottom: -14px;
-  width: clamp(180px, 24vw, 300px);
+  right: -34px; bottom: -44px;
+  width: clamp(260px, 34vw, 460px);
   height: auto;
-  pointer-events: none;
-  opacity: 0.97;
-  filter: drop-shadow(0 16px 24px rgba(20,30,20,0.16));
+  opacity: 0.74;
+  filter: saturate(0.92);
+  -webkit-mask-image: radial-gradient(135% 135% at 80% 84%, #000 40%, rgba(0,0,0,0.4) 66%, transparent 88%);
+          mask-image: radial-gradient(135% 135% at 80% 84%, #000 40%, rgba(0,0,0,0.4) 66%, transparent 88%);
 }
 .deco-rock img { width: 100%; height: auto; display: block; }
-@media (max-width: 600px) { .deco-rock { display: none; } }
+@media (max-width: 700px) {
+  .deco-ring { display: none; }
+  .deco-rock { opacity: 0.6; width: clamp(200px, 52vw, 320px); right: -40px; bottom: -30px; }
+  .deco-halo { width: 420px; height: 420px; right: -80px; bottom: -120px; }
+}
 
 .deco-plant {
   position: absolute;
@@ -1408,13 +1434,15 @@ textarea:focus-visible,
 
 <!-- CHI SIAMO -->
 <section class="chi-siamo" id="chi-siamo">
-  <div class="blob" style="width: 500px; height: 500px; top: -100px; right: -200px; background: linear-gradient(135deg, rgba(138,171,127,0.4), rgba(61,122,40,0.15)); animation-delay: -3s;"></div>
-  <div class="blob" style="width: 360px; height: 360px; bottom: -80px; left: -140px; background: linear-gradient(135deg, rgba(240,200,90,0.15), rgba(138,171,127,0.25)); animation-delay: -9s;"></div>
-  <picture class="deco-rock" aria-hidden="true">
-    <source type="image/avif" srcset="assets/img/deco-rock-320.avif 320w, assets/img/deco-rock-520.avif 520w" sizes="(min-width:600px) 240px, 160px">
-    <source type="image/webp" srcset="assets/img/deco-rock-320.webp 320w, assets/img/deco-rock-520.webp 520w" sizes="(min-width:600px) 240px, 160px">
-    <img src="assets/img/deco-rock-520.png" width="520" height="320" loading="lazy" decoding="async" alt="">
-  </picture>
+  <div class="deco-scene" aria-hidden="true">
+    <span class="deco-halo"></span>
+    <span class="deco-ring"></span>
+    <picture class="deco-rock">
+      <source type="image/avif" srcset="assets/img/deco-rock-320.avif 320w, assets/img/deco-rock-520.avif 520w, assets/img/deco-rock-760.avif 760w" sizes="(min-width:1000px) 460px, (min-width:600px) 38vw, 70vw">
+      <source type="image/webp" srcset="assets/img/deco-rock-320.webp 320w, assets/img/deco-rock-520.webp 520w, assets/img/deco-rock-760.webp 760w" sizes="(min-width:1000px) 460px, (min-width:600px) 38vw, 70vw">
+      <img src="assets/img/deco-rock-760.png" width="760" height="468" loading="lazy" decoding="async" alt="">
+    </picture>
+  </div>
   <div class="container" style="position: relative; z-index: 2;">
     <div class="chi-grid">
       <div class="chi-photo pop">
