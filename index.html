@@ -472,7 +472,7 @@ section { padding: 5rem 1.5rem; }
   border-radius: 50px;
   font-size: 0.82rem;
   font-weight: 500;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.62);
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.08);
   transition: all 0.3s var(--ease);
@@ -687,6 +687,7 @@ section { padding: 5rem 1.5rem; }
   from { opacity: 0; transform: translate3d(-28px, 0, 0); }
   to   { opacity: 1; transform: translate3d(0, 0, 0); }
 }
+.prev-optional { color: var(--text-muted); font-weight: 400; font-size: 0.85em; }
 .prev-question {
   font-size: 1.15rem;
   font-weight: 600;
@@ -862,7 +863,7 @@ section { padding: 5rem 1.5rem; }
 .footer-brand p {
   font-size: 0.88rem;
   line-height: 1.6;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.62);
   max-width: 300px;
 }
 .footer h4 {
@@ -870,7 +871,7 @@ section { padding: 5rem 1.5rem; }
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.6);
   margin-bottom: 1rem;
 }
 .footer-links {
@@ -881,7 +882,7 @@ section { padding: 5rem 1.5rem; }
 }
 .footer-links a {
   font-size: 0.88rem;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.72);
   transition: color 0.2s;
 }
 .footer-links a:hover { color: var(--surface); }
@@ -895,7 +896,7 @@ section { padding: 5rem 1.5rem; }
   align-items: center;
   gap: 0.5rem;
   font-size: 0.88rem;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.72);
   transition: color 0.2s;
 }
 .footer-contact a:hover { color: var(--surface); }
@@ -905,8 +906,8 @@ section { padding: 5rem 1.5rem; }
   margin: 3rem auto 0;
   padding-top: 1.5rem;
   border-top: 1px solid rgba(255,255,255,0.06);
-  font-size: 0.75rem;
-  color: rgba(255,255,255,0.25);
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
   text-align: center;
 }
 
@@ -982,8 +983,189 @@ section { padding: 5rem 1.5rem; }
 .nav-cta-link:active { transform: scale(0.97); }
 .prev-option:active { transform: scale(0.99); }
 .ba-tab:active { transform: scale(0.96); }
-.gal-item { transition: transform 0.4s var(--ease-out), box-shadow 0.4s; }
 .gal-item:hover { box-shadow: var(--shadow-md); }
+
+/* ── Accessibilità (FASE 4) ── */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed;
+  top: 0.5rem; left: 0.5rem;
+  z-index: 300;
+  padding: 0.6rem 1rem;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-160%);
+  transition: transform 0.25s var(--ease-out);
+}
+.skip-link:focus { transform: translateY(0); outline: 3px solid var(--green); outline-offset: 2px; }
+
+/* Focus visibile coerente su tutti gli elementi interattivi */
+a:focus-visible,
+button:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+/* Su fondi scuri (prima/dopo, footer, hero) anello chiaro per contrasto */
+.prima-dopo button:focus-visible,
+.ba-slider:focus-visible,
+.footer a:focus-visible,
+.hero a:focus-visible,
+.nav:not(.scrolled) .nav-links a:focus-visible {
+  outline-color: #eef3e9;
+}
+
+/* Galleria come bottoni */
+.gal-item {
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: zoom-in;
+  display: block;
+  width: 100%;
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s;
+}
+
+/* Slider prima/dopo: focus da tastiera */
+.ba-slider:focus-visible { outline: 3px solid #eef3e9; outline-offset: 3px; }
+
+/* ── Nav: menu mobile ── */
+.nav-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px; height: 44px;
+  padding: 10px;
+  border-radius: 10px;
+  color: var(--surface);
+  transition: color 0.4s, background 0.3s;
+}
+.nav.scrolled .nav-toggle { color: var(--ink); }
+.nav-toggle span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.3s var(--ease-out), opacity 0.2s;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+@media (min-width: 768px) {
+  .nav-toggle { display: none; }
+}
+@media (max-width: 767px) {
+  .nav-links {
+    display: flex;
+    position: absolute;
+    top: calc(52px + 0.5rem);
+    left: 1rem; right: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    background: rgba(246, 243, 236, 0.96);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transform-origin: top right;
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease-out), visibility 0.25s;
+  }
+  .nav-links.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+  .nav-links a {
+    color: var(--ink) !important;
+    padding: 0.7rem 0.85rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+  }
+  .nav-links a:hover { background: rgba(53,106,57,0.08); opacity: 1; }
+  .nav-links .nav-cta-link {
+    background: var(--green) !important;
+    color: var(--surface) !important;
+    text-align: center;
+    margin-top: 0.25rem;
+  }
+}
+
+/* ── Wizard: errore e stato di successo ── */
+.prev-error {
+  color: #b23b3b;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.prev-error svg { width: 16px; height: 16px; flex-shrink: 0; }
+.prev-step.invalid .prev-options { animation: shake 0.3s var(--ease); }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.prev-success {
+  text-align: center;
+  padding: 1rem 0.5rem;
+  animation: stepInNext 0.45s var(--ease-out) both;
+}
+.prev-success-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 1.25rem;
+  border-radius: 50%;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+}
+.prev-success-icon svg { width: 28px; height: 28px; color: var(--surface); }
+.prev-success h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.prev-success p {
+  color: var(--text-muted);
+  font-size: var(--fz-md);
+  max-width: 34ch;
+  margin: 0 auto 1.5rem;
+}
+.prev-success-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  background: var(--whatsapp);
+  color: var(--surface);
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.prev-success-wa svg { width: 20px; height: 20px; }
+.prev-next[disabled] { opacity: 0.6; pointer-events: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -1001,20 +1183,26 @@ section { padding: 5rem 1.5rem; }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Salta al contenuto</a>
 
 <!-- NAV -->
-<nav class="nav" id="nav">
+<nav class="nav" id="nav" aria-label="Principale">
   <div class="nav-inner">
-    <div class="nav-logo">Lisa <span>Garden</span></div>
-    <ul class="nav-links">
+    <a class="nav-logo" href="#main">Lisa <span>Garden</span></a>
+    <ul class="nav-links" id="navLinks">
       <li><a href="#servizi">Servizi</a></li>
       <li><a href="#prima-dopo">Prima e Dopo</a></li>
       <li><a href="#chi-siamo">Chi siamo</a></li>
       <li><a href="#galleria">Lavori</a></li>
       <li><a href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo." class="nav-cta-link">Preventivo</a></li>
     </ul>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<main id="main">
 
 <!-- HERO -->
 <section class="hero">
@@ -1037,7 +1225,7 @@ section { padding: 5rem 1.5rem; }
       </a>
     </div>
   </div>
-  <div class="hero-scroll">
+  <div class="hero-scroll" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14m0 0l-5-5m5 5l5-5"/></svg>
   </div>
 </section>
@@ -1103,12 +1291,12 @@ section { padding: 5rem 1.5rem; }
       <h2 class="section-title">Prima e <span class="light">dopo.</span></h2>
       <p class="section-sub">Trascina il cursore per scoprire la trasformazione.</p>
     </div>
-    <div class="ba-tabs reveal">
-      <button class="ba-tab active" data-pair="1">Giardino privato</button>
-      <button class="ba-tab" data-pair="2">Area commerciale</button>
-      <button class="ba-tab" data-pair="3">Aiuola residenziale</button>
+    <div class="ba-tabs reveal" role="group" aria-label="Scegli il lavoro da confrontare">
+      <button type="button" class="ba-tab active" data-pair="1" aria-pressed="true">Giardino privato</button>
+      <button type="button" class="ba-tab" data-pair="2" aria-pressed="false">Area commerciale</button>
+      <button type="button" class="ba-tab" data-pair="3" aria-pressed="false">Aiuola residenziale</button>
     </div>
-    <div class="ba-slider pop" id="baSlider">
+    <div class="ba-slider pop" id="baSlider" tabindex="0" role="slider" aria-label="Confronto prima e dopo: trascina, oppure usa le frecce sinistra e destra" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% visibile il dopo">
       <picture>
         <source id="baBeforeAvif" type="image/avif" srcset="assets/img/ba1-before-600.avif 600w, assets/img/ba1-before-900.avif 900w, assets/img/ba1-before-1200.avif 1200w" sizes="(min-width:800px) 720px, 92vw">
         <source id="baBeforeWebp" type="image/webp" srcset="assets/img/ba1-before-600.webp 600w, assets/img/ba1-before-900.webp 900w, assets/img/ba1-before-1200.webp 1200w" sizes="(min-width:800px) 720px, 92vw">
@@ -1120,7 +1308,7 @@ section { padding: 5rem 1.5rem; }
         <img class="ba-after" id="baAfterImg" src="assets/img/ba1-after-1200.jpg" width="1200" height="900" decoding="async" alt="Dopo: prato curato con bordura in corteccia e vialetto in pietra" draggable="false">
       </picture>
       <div class="ba-divider" id="baDivider"></div>
-      <div class="ba-knob" id="baKnob">
+      <div class="ba-knob" id="baKnob" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
@@ -1190,55 +1378,57 @@ section { padding: 5rem 1.5rem; }
       </div>
 
       <div class="prev-form reveal" id="prevForm">
-        <div class="prev-progress" id="prevProgress">
+        <div class="prev-progress" id="prevProgress" aria-hidden="true">
           <div class="prev-dot active"></div>
           <div class="prev-dot"></div>
           <div class="prev-dot"></div>
           <div class="prev-dot"></div>
         </div>
+        <p class="visually-hidden" id="prevStatus" role="status" aria-live="polite">Passo 1 di 4</p>
 
         <!-- Step 1 -->
-        <div class="prev-step active" data-step="1">
-          <p class="prev-question">Di cosa hai bisogno?</p>
+        <div class="prev-step active" data-step="1" role="group" aria-labelledby="q1">
+          <p class="prev-question" id="q1">Di cosa hai bisogno?</p>
           <div class="prev-options">
-            <button class="prev-option" data-value="Manutenzione ordinaria"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M8 21c0-3-1-5-3-7"/><path d="M8 21c0-4 1-6 3-8"/><path d="M16 21c0-3 1-5 3-7"/><path d="M16 21c0-4-1-6-3-8"/></svg></span>Manutenzione ordinaria</button>
-            <button class="prev-option" data-value="Potatura e sfalcio"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg></span>Potatura e sfalcio</button>
-            <button class="prev-option" data-value="Impianto irrigazione"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 5.6 6 10a6 6 0 0 1-12 0c0-4.4 6-10 6-10z"/></svg></span>Impianto di irrigazione</button>
-            <button class="prev-option" data-value="Nuovo giardino"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3-2-5-5-5 0 3 2 5 5 5z"/><path d="M12 12c0-3 2-5 5-5 0 3-2 5-5 5z"/></svg></span>Nuovo giardino o aiuola</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Manutenzione ordinaria"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M8 21c0-3-1-5-3-7"/><path d="M8 21c0-4 1-6 3-8"/><path d="M16 21c0-3 1-5 3-7"/><path d="M16 21c0-4-1-6-3-8"/></svg></span>Manutenzione ordinaria</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Potatura e sfalcio"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg></span>Potatura e sfalcio</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Impianto irrigazione"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 5.6 6 10a6 6 0 0 1-12 0c0-4.4 6-10 6-10z"/></svg></span>Impianto di irrigazione</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Nuovo giardino"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3-2-5-5-5 0 3 2 5 5 5z"/><path d="M12 12c0-3 2-5 5-5 0 3-2 5-5 5z"/></svg></span>Nuovo giardino o aiuola</button>
           </div>
         </div>
 
         <!-- Step 2 -->
-        <div class="prev-step" data-step="2">
-          <p class="prev-question">Quanto è grande lo spazio?</p>
+        <div class="prev-step" data-step="2" role="group" aria-labelledby="q2">
+          <p class="prev-question" id="q2">Quanto è grande lo spazio?</p>
           <div class="prev-options">
-            <button class="prev-option" data-value="Piccolo (fino a 100mq)">Piccolo &mdash; fino a 100 m&sup2;</button>
-            <button class="prev-option" data-value="Medio (100-300mq)">Medio &mdash; 100&ndash;300 m&sup2;</button>
-            <button class="prev-option" data-value="Grande (300-1000mq)">Grande &mdash; 300&ndash;1000 m&sup2;</button>
-            <button class="prev-option" data-value="Molto grande (oltre 1000mq)">Molto grande &mdash; oltre 1000 m&sup2;</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Piccolo (fino a 100mq)">Piccolo &mdash; fino a 100 m&sup2;</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Medio (100-300mq)">Medio &mdash; 100&ndash;300 m&sup2;</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Grande (300-1000mq)">Grande &mdash; 300&ndash;1000 m&sup2;</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Molto grande (oltre 1000mq)">Molto grande &mdash; oltre 1000 m&sup2;</button>
           </div>
         </div>
 
         <!-- Step 3 -->
-        <div class="prev-step" data-step="3">
-          <p class="prev-question">Dove si trova il giardino?</p>
+        <div class="prev-step" data-step="3" role="group" aria-labelledby="q3">
+          <p class="prev-question" id="q3">Dove si trova il giardino?</p>
           <div class="prev-options">
-            <button class="prev-option" data-value="Vignolo">Vignolo</button>
-            <button class="prev-option" data-value="Borgo San Dalmazzo">Borgo San Dalmazzo</button>
-            <button class="prev-option" data-value="Cuneo">Cuneo</button>
-            <button class="prev-option" data-value="Boves o altri comuni">Boves / altri comuni</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Vignolo">Vignolo</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Borgo San Dalmazzo">Borgo San Dalmazzo</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Cuneo">Cuneo</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Boves o altri comuni">Boves / altri comuni</button>
           </div>
         </div>
 
         <!-- Step 4 -->
-        <div class="prev-step" data-step="4">
-          <p class="prev-question">Vuoi aggiungere qualche dettaglio?</p>
-          <textarea class="prev-textarea" id="prevNotes" placeholder="Descrivi brevemente il lavoro o lascia vuoto..."></textarea>
+        <div class="prev-step" data-step="4" role="group" aria-labelledby="q4">
+          <label class="prev-question" id="q4" for="prevNotes">Vuoi aggiungere qualche dettaglio? <span class="prev-optional">(facoltativo)</span></label>
+          <textarea class="prev-textarea" id="prevNotes" rows="4" maxlength="600" placeholder="Descrivi brevemente il lavoro, oppure lascia vuoto..."></textarea>
         </div>
 
+        <p class="prev-error" id="prevError" role="alert" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg><span id="prevErrorText">Seleziona un'opzione per continuare.</span></p>
         <div class="prev-nav">
-          <button class="prev-back hidden" id="prevBack">&#8592; Indietro</button>
-          <button class="prev-next" id="prevNext">Avanti &#8594;</button>
+          <button type="button" class="prev-back hidden" id="prevBack">&#8592; Indietro</button>
+          <button type="button" class="prev-next" id="prevNext">Avanti &#8594;</button>
         </div>
       </div>
     </div>
@@ -1254,51 +1444,53 @@ section { padding: 5rem 1.5rem; }
       <p class="section-sub">Una selezione dei giardini che abbiamo curato e trasformato.</p>
     </div>
     <div class="galleria-grid">
-      <div class="gal-item pop" data-lb>
+      <button type="button" class="gal-item pop" data-lb aria-label="Ingrandisci: Giardino completo con prato, vialetto in pietra e vista panoramica sulle montagne">
         <picture>
           <source type="image/avif" srcset="assets/img/gal-6-480.avif 480w, assets/img/gal-6-800.avif 800w, assets/img/gal-6-1200.avif 1200w" sizes="(min-width:600px) 66vw, 92vw">
           <source type="image/webp" srcset="assets/img/gal-6-480.webp 480w, assets/img/gal-6-800.webp 800w, assets/img/gal-6-1200.webp 1200w" sizes="(min-width:600px) 66vw, 92vw">
           <img src="assets/img/gal-6-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Giardino completo con prato, vialetto in pietra e vista panoramica sulle montagne">
         </picture>
-      </div>
-      <div class="gal-item pop reveal-delay-1" data-lb>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-1" data-lb aria-label="Ingrandisci: Prato curato con bordura in corteccia e rose rosa lungo il muro di pietra">
         <picture>
           <source type="image/avif" srcset="assets/img/gal-1-480.avif 480w, assets/img/gal-1-800.avif 800w, assets/img/gal-1-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/gal-1-480.webp 480w, assets/img/gal-1-800.webp 800w, assets/img/gal-1-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/gal-1-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato curato con bordura in corteccia e rose rosa lungo il muro di pietra">
         </picture>
-      </div>
-      <div class="gal-item pop reveal-delay-2" data-lb>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-2" data-lb aria-label="Ingrandisci: Prato lungo un muro di pietra con vialetto e aiuola curata">
         <picture>
           <source type="image/avif" srcset="assets/img/gal-2-480.avif 480w, assets/img/gal-2-800.avif 800w, assets/img/gal-2-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/gal-2-480.webp 480w, assets/img/gal-2-800.webp 800w, assets/img/gal-2-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/gal-2-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato lungo un muro di pietra con vialetto e aiuola curata">
         </picture>
-      </div>
-      <div class="gal-item pop reveal-delay-3" data-lb>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-3" data-lb aria-label="Ingrandisci: Angolo barbecue con prato, rose bianche e fioriera in mattoni">
         <picture>
           <source type="image/avif" srcset="assets/img/gal-3-480.avif 480w, assets/img/gal-3-800.avif 800w, assets/img/gal-3-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/gal-3-480.webp 480w, assets/img/gal-3-800.webp 800w, assets/img/gal-3-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/gal-3-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Angolo barbecue con prato, rose bianche e fioriera in mattoni">
         </picture>
-      </div>
-      <div class="gal-item pop reveal-delay-1" data-lb>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-1" data-lb aria-label="Ingrandisci: Bordura in corteccia con peonia in fiore e prato curvo">
         <picture>
           <source type="image/avif" srcset="assets/img/gal-4-480.avif 480w, assets/img/gal-4-800.avif 800w, assets/img/gal-4-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/gal-4-480.webp 480w, assets/img/gal-4-800.webp 800w, assets/img/gal-4-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/gal-4-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Bordura in corteccia con peonia in fiore e prato curvo">
         </picture>
-      </div>
-      <div class="gal-item pop reveal-delay-2" data-lb>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-2" data-lb aria-label="Ingrandisci: Vialetto in pietra e prato curvo al tramonto con rose">
         <picture>
           <source type="image/avif" srcset="assets/img/chi-siamo-480.avif 480w, assets/img/chi-siamo-800.avif 800w, assets/img/chi-siamo-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/chi-siamo-480.webp 480w, assets/img/chi-siamo-800.webp 800w, assets/img/chi-siamo-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/chi-siamo-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Vialetto in pietra e prato curvo al tramonto con rose">
         </picture>
-      </div>
+      </button>
     </div>
   </div>
 </section>
+
+</main>
 
 <!-- FOOTER -->
 <footer class="footer" id="contatti">
@@ -1344,9 +1536,9 @@ section { padding: 5rem 1.5rem; }
 </a>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox">
-  <button class="lb-close" aria-label="Chiudi">&times;</button>
-  <img src="" alt="">
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Immagine ingrandita">
+  <button type="button" class="lb-close" id="lbClose" aria-label="Chiudi">&times;</button>
+  <img id="lbImg" src="" alt="">
 </div>
 
 <script>
@@ -1368,6 +1560,32 @@ section { padding: 5rem 1.5rem; }
   window.addEventListener('scroll', function() {
     nav.classList.toggle('scrolled', window.scrollY > 50);
   }, { passive: true });
+
+  // ── Menu mobile ──
+  var navToggle = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  function closeMenu() {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Apri il menu');
+  }
+  function openMenu() {
+    navLinks.classList.add('open');
+    navToggle.setAttribute('aria-expanded', 'true');
+    navToggle.setAttribute('aria-label', 'Chiudi il menu');
+  }
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function() {
+      if (navLinks.classList.contains('open')) closeMenu(); else openMenu();
+    });
+    navLinks.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeMenu); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && navLinks.classList.contains('open')) { closeMenu(); navToggle.focus(); }
+    });
+    document.addEventListener('click', function(e) {
+      if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !navToggle.contains(e.target)) closeMenu();
+    });
+  }
 
   // ── WhatsApp flottante: nascondilo quando il wizard è a schermo ──
   // così non copre mai i controlli "Avanti/Invia" del form.
@@ -1408,12 +1626,19 @@ section { padding: 5rem 1.5rem; }
   var beforeImg = slider.querySelector('.ba-before');
   var dragging = false;
 
+  function setFraction(p) {
+    p = Math.max(0, Math.min(1, p));
+    var pct = p * 100;
+    afterImg.style.clipPath = 'inset(0 0 0 ' + pct + '%)';
+    divider.style.left = pct + '%';
+    knob.style.left = pct + '%';
+    var val = Math.round(pct);
+    slider.setAttribute('aria-valuenow', String(val));
+    slider.setAttribute('aria-valuetext', val + '% visibile il dopo');
+  }
   function setPos(x) {
     var r = slider.getBoundingClientRect();
-    var p = Math.max(0, Math.min(1, (x - r.left) / r.width));
-    afterImg.style.clipPath = 'inset(0 0 0 ' + (p * 100) + '%)';
-    divider.style.left = (p * 100) + '%';
-    knob.style.left = (p * 100) + '%';
+    setFraction((x - r.left) / r.width);
   }
   slider.addEventListener('pointerdown', function(e) {
     dragging = true;
@@ -1423,6 +1648,15 @@ section { padding: 5rem 1.5rem; }
   slider.addEventListener('pointermove', function(e) { if (dragging) setPos(e.clientX); });
   slider.addEventListener('pointerup', function() { dragging = false; });
   slider.addEventListener('pointercancel', function() { dragging = false; });
+  // Controllo da tastiera (frecce / Home / End)
+  slider.addEventListener('keydown', function(e) {
+    var cur = parseInt(slider.getAttribute('aria-valuenow'), 10);
+    if (isNaN(cur)) cur = 50;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); setFraction((cur - 5) / 100); }
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); setFraction((cur + 5) / 100); }
+    else if (e.key === 'Home') { e.preventDefault(); setFraction(0); }
+    else if (e.key === 'End') { e.preventDefault(); setFraction(1); }
+  });
 
   var tabs = document.querySelectorAll('.ba-tab');
   var baBeforeAvif = document.getElementById('baBeforeAvif');
@@ -1446,14 +1680,11 @@ section { padding: 5rem 1.5rem; }
       return 'assets/img/' + base + '-' + w + '.' + ext + ' ' + w + 'w';
     }).join(', ');
   }
-  function resetSlider() {
-    afterImg.style.clipPath = 'inset(0 0 0 50%)';
-    divider.style.left = '50%'; knob.style.left = '50%';
-  }
+  function resetSlider() { setFraction(0.5); }
   tabs.forEach(function(t) {
     t.addEventListener('click', function() {
-      tabs.forEach(function(x) { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
-      t.classList.add('active'); t.setAttribute('aria-selected', 'true');
+      tabs.forEach(function(x) { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
+      t.classList.add('active'); t.setAttribute('aria-pressed', 'true');
       var p = pairs[t.dataset.pair];
       baBeforeAvif.srcset = srcsetFor(p.before, 'avif');
       baBeforeWebp.srcset = srcsetFor(p.before, 'webp');
@@ -1469,10 +1700,24 @@ section { padding: 5rem 1.5rem; }
   var step = 1;
   var totalSteps = 4;
   var answers = {};
+  var submitting = false;
   var steps = document.querySelectorAll('.prev-step');
   var dots = document.querySelectorAll('.prev-dot');
   var backBtn = document.getElementById('prevBack');
   var nextBtn = document.getElementById('prevNext');
+  var prevForm = document.getElementById('prevForm');
+  var prevError = document.getElementById('prevError');
+  var prevErrorText = document.getElementById('prevErrorText');
+  var prevStatus = document.getElementById('prevStatus');
+  var WA_NUMBER = '393209517477';
+  var WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
+  function hideError() { prevError.hidden = true; }
+  function showError(msg) {
+    prevErrorText.textContent = msg || "Seleziona un'opzione per continuare.";
+    prevError.hidden = false;
+    var a = document.querySelector('.prev-step.active');
+    if (a) { a.classList.remove('invalid'); void a.offsetWidth; a.classList.add('invalid'); }
+  }
 
   function showStep(n, dir) {
     steps.forEach(function(s) { s.classList.remove('active'); });
@@ -1485,66 +1730,90 @@ section { padding: 5rem 1.5rem; }
       else if (i + 1 < n) d.classList.add('done');
     });
     backBtn.classList.toggle('hidden', n === 1);
+    prevStatus.textContent = 'Passo ' + n + ' di ' + totalSteps;
+    hideError();
     if (n === totalSteps) {
-      nextBtn.textContent = '';
       nextBtn.classList.add('wa');
-      nextBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Invia su WhatsApp';
+      nextBtn.innerHTML = WA_ICON + 'Invia la richiesta';
     } else {
       nextBtn.classList.remove('wa');
       nextBtn.innerHTML = 'Avanti &#8594;';
     }
+    if (dir) { active.setAttribute('tabindex', '-1'); active.focus(); }
   }
 
   document.querySelectorAll('.prev-option').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var siblings = btn.parentElement.querySelectorAll('.prev-option');
-      siblings.forEach(function(s) { s.classList.remove('selected'); });
-      btn.classList.add('selected');
+      siblings.forEach(function(x) { x.classList.remove('selected'); x.setAttribute('aria-pressed', 'false'); });
+      btn.classList.add('selected'); btn.setAttribute('aria-pressed', 'true');
       answers['step' + step] = btn.dataset.value;
+      hideError();
     });
   });
 
+  function buildMessage() {
+    var notes = document.getElementById('prevNotes').value.trim();
+    var msg = 'Buongiorno, vorrei un preventivo.\n';
+    if (answers.step1) msg += '\nServizio: ' + answers.step1;
+    if (answers.step2) msg += '\nDimensione: ' + answers.step2;
+    if (answers.step3) msg += '\nZona: ' + answers.step3;
+    if (notes) msg += '\nNote: ' + notes;
+    return msg;
+  }
+  function showSuccess(waUrl) {
+    prevForm.innerHTML =
+      '<div class="prev-success" role="status">' +
+        '<div class="prev-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>' +
+        '<h3>Richiesta pronta!</h3>' +
+        '<p>Si apre WhatsApp con la tua richiesta già compilata: inviala e ti risponderemo al più presto con un preventivo su misura.</p>' +
+        '<a class="prev-success-wa" href="' + waUrl + '" target="_blank" rel="noopener">' + WA_ICON + 'Apri WhatsApp</a>' +
+      '</div>';
+  }
   nextBtn.addEventListener('click', function() {
-    if (step < totalSteps) {
-      step++;
-      showStep(step, 'next');
-    } else {
-      var notes = document.getElementById('prevNotes').value;
-      var msg = 'Buongiorno, vorrei un preventivo.\n';
-      if (answers.step1) msg += '\nServizio: ' + answers.step1;
-      if (answers.step2) msg += '\nDimensione: ' + answers.step2;
-      if (answers.step3) msg += '\nZona: ' + answers.step3;
-      if (notes) msg += '\nNote: ' + notes;
-      window.open('https://wa.me/393209517477?text=' + encodeURIComponent(msg), '_blank');
-    }
+    if (submitting) return;
+    if (step >= 1 && step <= 3 && !answers['step' + step]) { showError(); return; }
+    if (step < totalSteps) { step++; showStep(step, 'next'); return; }
+    submitting = true;
+    nextBtn.setAttribute('disabled', '');
+    nextBtn.textContent = 'Invio…';
+    var waUrl = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(buildMessage());
+    window.open(waUrl, '_blank', 'noopener');
+    showSuccess(waUrl);
   });
 
   backBtn.addEventListener('click', function() {
     if (step > 1) { step--; showStep(step, 'back'); }
   });
 
-  // ── Lightbox ──
+  // ── Lightbox (dialog con focus-trap) ──
   var lb = document.getElementById('lightbox');
-  var lbImg = lb.querySelector('img');
+  var lbImg = document.getElementById('lbImg');
+  var lbClose = document.getElementById('lbClose');
+  var lbLastFocus = null;
+  function openLb(trigger) {
+    var im = trigger.querySelector('img');
+    lbImg.src = im.src;
+    lbImg.alt = im.alt;
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    lbLastFocus = trigger;
+    lbClose.focus();
+  }
+  function closeLb() {
+    lb.classList.remove('active');
+    document.body.style.overflow = '';
+    if (lbLastFocus) { lbLastFocus.focus(); lbLastFocus = null; }
+  }
   document.querySelectorAll('[data-lb]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      lbImg.src = el.querySelector('img').src;
-      lbImg.alt = el.querySelector('img').alt;
-      lb.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
+    el.addEventListener('click', function() { openLb(el); });
   });
-  lb.addEventListener('click', function(e) {
-    if (e.target !== lbImg) {
-      lb.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-  });
+  lb.addEventListener('click', function(e) { if (e.target !== lbImg) closeLb(); });
+  lbClose.addEventListener('click', closeLb);
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && lb.classList.contains('active')) {
-      lb.classList.remove('active');
-      document.body.style.overflow = '';
-    }
+    if (!lb.classList.contains('active')) return;
+    if (e.key === 'Escape') { closeLb(); }
+    else if (e.key === 'Tab') { e.preventDefault(); lbClose.focus(); }
   });
 
   // ── Smooth scroll ──
