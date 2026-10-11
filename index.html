@@ -944,6 +944,22 @@ section { padding: 5rem 1.5rem; }
 }
 .deco-ivy img { width: 100%; height: auto; display: block; }
 @media (max-width: 900px) { .deco-ivy { display: none; } }
+
+/* Texture di foglie molto tenue nello sfondo delle sezioni chiare */
+.servizi::before,
+.chi-siamo::before,
+.preventivo::before,
+.galleria::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('assets/img/leaf-pattern.svg');
+  background-repeat: repeat;
+  background-size: 300px auto;
+  opacity: 0.5;
+}
 .galleria-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
