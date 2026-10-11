@@ -8,6 +8,73 @@
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" type="image/avif" href="assets/img/hero-960.avif" imagesrcset="assets/img/hero-640.avif 640w, assets/img/hero-960.avif 960w, assets/img/hero-1200.avif 1200w" imagesizes="100vw">
+
+<!-- Canonical / lingua -->
+<link rel="canonical" href="https://lisagarden.netlify.app/">
+<meta name="theme-color" content="#356a39">
+<meta name="author" content="Lisa Garden di Andrea Lisa">
+<meta name="robots" content="index, follow">
+<meta name="geo.region" content="IT-CN">
+<meta name="geo.placename" content="Vignolo">
+
+<!-- Favicon / icone -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="Lisa Garden">
+<meta property="og:title" content="Lisa Garden — Cura del verde a Vignolo (CN)">
+<meta property="og:description" content="Manutenzione, potatura, irrigazione e realizzazione giardini. Lavoro artigianale e diretto a Vignolo, Borgo San Dalmazzo, Cuneo e Boves.">
+<meta property="og:url" content="https://lisagarden.netlify.app/">
+<meta property="og:image" content="https://lisagarden.netlify.app/assets/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Giardino curato con prato e vialetto in pietra, vista sulle montagne">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lisa Garden — Cura del verde a Vignolo (CN)">
+<meta name="twitter:description" content="Manutenzione, potatura, irrigazione e realizzazione giardini a Vignolo e dintorni.">
+<meta name="twitter:image" content="https://lisagarden.netlify.app/assets/img/og-image.jpg">
+
+<!-- Dati strutturati: attività locale -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://lisagarden.netlify.app/#business",
+  "name": "Lisa Garden",
+  "alternateName": "Lisa Garden di Andrea Lisa",
+  "description": "Ditta individuale di cura del verde: manutenzione, potatura, irrigazione e realizzazione giardini a Vignolo (CN) e comuni limitrofi.",
+  "url": "https://lisagarden.netlify.app/",
+  "image": "https://lisagarden.netlify.app/assets/img/og-image.jpg",
+  "telephone": "+393209517477",
+  "founder": { "@type": "Person", "name": "Andrea Lisa" },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Vignolo",
+    "addressRegion": "CN",
+    "addressCountry": "IT"
+  },
+  "areaServed": [
+    { "@type": "City", "name": "Vignolo" },
+    { "@type": "City", "name": "Borgo San Dalmazzo" },
+    { "@type": "City", "name": "Cuneo" },
+    { "@type": "City", "name": "Boves" }
+  ],
+  "knowsAbout": ["Manutenzione del verde", "Potatura e sfalcio", "Impianti di irrigazione", "Realizzazione aree verdi"],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+393209517477",
+    "contactType": "customer service",
+    "availableLanguage": "Italian"
+  }
+}
+</script>
 <style>
 /* ── Self-hosted variable fonts (woff2, latin) ── */
 @font-face {
@@ -255,12 +322,8 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: 32% 42%;
-  transform: scale(1.05);
-  animation: heroZoom 20s var(--ease) infinite alternate;
-}
-@keyframes heroZoom {
-  from { transform: scale(1.05); }
-  to   { transform: scale(1.12); }
+  transform: scale(1.08) translate3d(0, 0, 0);
+  will-change: transform;
 }
 .hero-overlay {
   position: absolute; inset: 0;
@@ -462,7 +525,40 @@ section { padding: 5rem 1.5rem; }
 }
 .prima-dopo .section-eyebrow { color: var(--sage); }
 .prima-dopo .section-title { color: var(--surface); }
-.prima-dopo .section-sub { color: rgba(255,255,255,0.5); }
+.prima-dopo .section-sub { color: rgba(255,255,255,0.62); }
+
+.ba-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 2rem;
+  max-width: 720px;
+}
+.ba-cta-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fz-lg);
+  color: var(--surface);
+  line-height: 1.2;
+  flex: 1 1 260px;
+}
+.ba-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
+}
+.ba-cta-btn:hover { transform: scale(1.04); box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+.ba-cta-btn:active { transform: scale(0.98); }
 
 .ba-tabs {
   display: flex;
@@ -476,7 +572,7 @@ section { padding: 5rem 1.5rem; }
   border-radius: 50px;
   font-size: 0.82rem;
   font-weight: 500;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.62);
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.08);
   transition: all 0.3s var(--ease);
@@ -678,12 +774,20 @@ section { padding: 5rem 1.5rem; }
 }
 .prev-step.active {
   display: block;
-  animation: stepIn 0.4s var(--ease-out) forwards;
+  animation: stepInNext 0.4s var(--ease-out) both;
 }
-@keyframes stepIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+.prev-step.active[data-dir="back"] {
+  animation-name: stepInBack;
 }
+@keyframes stepInNext {
+  from { opacity: 0; transform: translate3d(28px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes stepInBack {
+  from { opacity: 0; transform: translate3d(-28px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.prev-optional { color: var(--text-muted); font-weight: 400; font-size: 0.85em; }
 .prev-question {
   font-size: 1.15rem;
   font-weight: 600;
@@ -796,7 +900,35 @@ section { padding: 5rem 1.5rem; }
 .prev-textarea::placeholder { color: var(--text-secondary); }
 
 /* ── GALLERIA ── */
-.galleria { background: var(--cream); }
+.galleria { background: var(--cream); position: relative; overflow: hidden; }
+.galleria .container { position: relative; z-index: 1; }
+.deco-bloom {
+  position: absolute;
+  z-index: 0;
+  left: -40px; bottom: -40px;
+  width: clamp(170px, 22vw, 280px);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 16px 24px rgba(20,30,20,0.14));
+}
+.deco-bloom img { width: 100%; height: auto; display: block; }
+@media (max-width: 700px) { .deco-bloom { display: none; } }
+
+/* Edera che ricade dall'angolo in alto a destra di "Prima e Dopo" */
+.prima-dopo .container { position: relative; z-index: 1; }
+.deco-ivy {
+  position: absolute;
+  z-index: 0;
+  top: -24px; right: -16px;
+  width: clamp(150px, 17vw, 230px);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 14px 22px rgba(0,0,0,0.3));
+}
+.deco-ivy img { width: 100%; height: auto; display: block; }
+@media (max-width: 900px) { .deco-ivy { display: none; } }
 .galleria-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -859,7 +991,7 @@ section { padding: 5rem 1.5rem; }
 .footer-brand p {
   font-size: 0.88rem;
   line-height: 1.6;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.62);
   max-width: 300px;
 }
 .footer h4 {
@@ -867,7 +999,7 @@ section { padding: 5rem 1.5rem; }
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.6);
   margin-bottom: 1rem;
 }
 .footer-links {
@@ -878,7 +1010,7 @@ section { padding: 5rem 1.5rem; }
 }
 .footer-links a {
   font-size: 0.88rem;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.72);
   transition: color 0.2s;
 }
 .footer-links a:hover { color: var(--surface); }
@@ -892,7 +1024,7 @@ section { padding: 5rem 1.5rem; }
   align-items: center;
   gap: 0.5rem;
   font-size: 0.88rem;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.72);
   transition: color 0.2s;
 }
 .footer-contact a:hover { color: var(--surface); }
@@ -902,8 +1034,8 @@ section { padding: 5rem 1.5rem; }
   margin: 3rem auto 0;
   padding-top: 1.5rem;
   border-top: 1px solid rgba(255,255,255,0.06);
-  font-size: 0.75rem;
-  color: rgba(255,255,255,0.25);
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
   text-align: center;
 }
 
@@ -972,29 +1104,311 @@ section { padding: 5rem 1.5rem; }
   backdrop-filter: blur(10px);
 }
 
+/* ── Micro-interazioni: feedback alla pressione ── */
+.hero-cta:active,
+.chi-cta:active,
+.prev-next:active,
+.nav-cta-link:active { transform: scale(0.97); }
+.prev-option:active { transform: scale(0.99); }
+.ba-tab:active { transform: scale(0.96); }
+.gal-item:hover { box-shadow: var(--shadow-md); }
+
+/* Scena decorativa di sfondo in "Chi siamo":
+   masso muschiato fuso nello sfondo (maschera morbida + opacita ridotta),
+   accompagnato da un alone verde-salvia e da un anello sottile. */
+.deco-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.deco-halo {
+  position: absolute;
+  right: -40px; bottom: -90px;
+  width: 580px; height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 58% 52%, rgba(143,174,132,0.5), rgba(143,174,132,0.16) 46%, rgba(143,174,132,0) 70%);
+  filter: blur(6px);
+}
+.deco-ring {
+  position: absolute;
+  right: 36px; bottom: 44px;
+  width: 340px; height: 340px;
+  border-radius: 50%;
+  border: 1px solid rgba(53,106,57,0.16);
+}
+.deco-rock {
+  position: absolute;
+  right: -34px; bottom: -44px;
+  width: clamp(260px, 34vw, 460px);
+  height: auto;
+  opacity: 0.74;
+  filter: saturate(0.92);
+  -webkit-mask-image: radial-gradient(135% 135% at 80% 84%, #000 40%, rgba(0,0,0,0.4) 66%, transparent 88%);
+          mask-image: radial-gradient(135% 135% at 80% 84%, #000 40%, rgba(0,0,0,0.4) 66%, transparent 88%);
+}
+.deco-rock img { width: 100%; height: auto; display: block; }
+@media (max-width: 700px) {
+  .deco-ring { display: none; }
+  .deco-rock { opacity: 0.6; width: clamp(200px, 52vw, 320px); right: -40px; bottom: -30px; }
+  .deco-halo { width: 420px; height: 420px; right: -80px; bottom: -120px; }
+}
+
+.deco-plant {
+  position: absolute;
+  z-index: 1;
+  left: -26px;
+  bottom: -28px;
+  width: clamp(150px, 20vw, 260px);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.95;
+  filter: drop-shadow(0 16px 24px rgba(20,30,20,0.16));
+}
+.deco-plant img { width: 100%; height: auto; display: block; }
+@media (max-width: 600px) { .deco-plant { display: none; } }
+
+.deco-fern {
+  position: absolute;
+  z-index: 1;
+  right: -24px;
+  bottom: -26px;
+  width: clamp(150px, 20vw, 250px);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 16px 22px rgba(20,30,20,0.12));
+}
+.deco-fern img { width: 100%; height: auto; display: block; }
+@media (max-width: 700px) { .deco-fern { display: none; } }
+
+/* ── Accessibilità (FASE 4) ── */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed;
+  top: 0.5rem; left: 0.5rem;
+  z-index: 300;
+  padding: 0.6rem 1rem;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-160%);
+  transition: transform 0.25s var(--ease-out);
+}
+.skip-link:focus { transform: translateY(0); outline: 3px solid var(--green); outline-offset: 2px; }
+
+/* Focus visibile coerente su tutti gli elementi interattivi */
+a:focus-visible,
+button:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+/* Su fondi scuri (prima/dopo, footer, hero) anello chiaro per contrasto */
+.prima-dopo button:focus-visible,
+.ba-slider:focus-visible,
+.footer a:focus-visible,
+.hero a:focus-visible,
+.nav:not(.scrolled) .nav-links a:focus-visible {
+  outline-color: #eef3e9;
+}
+
+/* Galleria come bottoni */
+.gal-item {
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: zoom-in;
+  display: block;
+  width: 100%;
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s;
+}
+
+/* Slider prima/dopo: focus da tastiera */
+.ba-slider:focus-visible { outline: 3px solid #eef3e9; outline-offset: 3px; }
+
+/* ── Nav: menu mobile ── */
+.nav-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px; height: 44px;
+  padding: 10px;
+  border-radius: 10px;
+  color: var(--surface);
+  transition: color 0.4s, background 0.3s;
+}
+.nav.scrolled .nav-toggle { color: var(--ink); }
+.nav-toggle span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.3s var(--ease-out), opacity 0.2s;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+@media (min-width: 768px) {
+  .nav-toggle { display: none; }
+}
+@media (max-width: 767px) {
+  .nav-links {
+    display: flex;
+    position: absolute;
+    top: calc(52px + 0.5rem);
+    left: 1rem; right: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    background: rgba(246, 243, 236, 0.96);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transform-origin: top right;
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease-out), visibility 0.25s;
+  }
+  .nav-links.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+  .nav-links a {
+    color: var(--ink) !important;
+    padding: 0.7rem 0.85rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+  }
+  .nav-links a:hover { background: rgba(53,106,57,0.08); opacity: 1; }
+  .nav-links .nav-cta-link {
+    background: var(--green) !important;
+    color: var(--surface) !important;
+    text-align: center;
+    margin-top: 0.25rem;
+  }
+}
+
+/* ── Wizard: errore e stato di successo ── */
+.prev-error {
+  color: #b23b3b;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.prev-error[hidden] { display: none; }
+/* Honeypot anti-spam: nascosto agli utenti, visibile ai bot */
+.hp-field {
+  position: absolute !important;
+  left: -9999px;
+  top: auto;
+  width: 1px; height: 1px;
+  overflow: hidden;
+}
+.prev-error svg { width: 16px; height: 16px; flex-shrink: 0; }
+.prev-step.invalid .prev-options { animation: shake 0.3s var(--ease); }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.prev-success {
+  text-align: center;
+  padding: 1rem 0.5rem;
+  animation: stepInNext 0.45s var(--ease-out) both;
+}
+.prev-success-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 1.25rem;
+  border-radius: 50%;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+}
+.prev-success-icon svg { width: 28px; height: 28px; color: var(--surface); }
+.prev-success h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.prev-success p {
+  color: var(--text-muted);
+  font-size: var(--fz-md);
+  max-width: 34ch;
+  margin: 0 auto 1.5rem;
+}
+.prev-success-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  background: var(--whatsapp);
+  color: var(--surface);
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.prev-success-wa svg { width: 20px; height: 20px; }
+.prev-next[disabled] { opacity: 0.6; pointer-events: none; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+  /* i contenuti rivelati allo scroll restano sempre visibili */
+  .reveal, .pop { opacity: 1 !important; transform: none !important; }
+  /* nessun movimento ambientale o parallax */
+  .blob, .leaf-float { animation: none !important; }
+  .hero-bg img { transform: scale(1.04) !important; }
 }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Salta al contenuto</a>
 
 <!-- NAV -->
-<nav class="nav" id="nav">
+<nav class="nav" id="nav" aria-label="Principale">
   <div class="nav-inner">
-    <div class="nav-logo">Lisa <span>Garden</span></div>
-    <ul class="nav-links">
+    <a class="nav-logo" href="#main">Lisa <span>Garden</span></a>
+    <ul class="nav-links" id="navLinks">
       <li><a href="#servizi">Servizi</a></li>
       <li><a href="#prima-dopo">Prima e Dopo</a></li>
       <li><a href="#chi-siamo">Chi siamo</a></li>
       <li><a href="#galleria">Lavori</a></li>
       <li><a href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo." class="nav-cta-link">Preventivo</a></li>
     </ul>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<main id="main">
 
 <!-- HERO -->
 <section class="hero">
@@ -1017,13 +1431,18 @@ section { padding: 5rem 1.5rem; }
       </a>
     </div>
   </div>
-  <div class="hero-scroll">
+  <div class="hero-scroll" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14m0 0l-5-5m5 5l5-5"/></svg>
   </div>
 </section>
 
 <!-- SERVIZI -->
 <section class="servizi" id="servizi" style="position: relative; overflow: hidden;">
+  <picture class="deco-plant" aria-hidden="true">
+    <source type="image/avif" srcset="assets/img/deco-plant-320.avif 320w, assets/img/deco-plant-520.avif 520w" sizes="(min-width:600px) 260px, 170px">
+    <source type="image/webp" srcset="assets/img/deco-plant-320.webp 320w, assets/img/deco-plant-520.webp 520w" sizes="(min-width:600px) 260px, 170px">
+    <img src="assets/img/deco-plant-520.png" width="520" height="477" loading="lazy" decoding="async" alt="">
+  </picture>
   <div class="blob" style="width: 420px; height: 420px; top: -120px; right: -150px; background: linear-gradient(135deg, rgba(138,171,127,0.35), rgba(61,122,40,0.18));"></div>
   <div class="blob" style="width: 340px; height: 340px; bottom: -100px; left: -120px; background: linear-gradient(135deg, rgba(232,226,216,0.8), rgba(138,171,127,0.25)); animation-delay: -8s;"></div>
   <div class="leaf-float" style="width: 46px; height: 46px; top: 12%; right: 8%;">
@@ -1077,18 +1496,25 @@ section { padding: 5rem 1.5rem; }
 
 <!-- PRIMA E DOPO -->
 <section class="prima-dopo" id="prima-dopo">
+  <picture class="deco-ivy" aria-hidden="true">
+    <source type="image/avif" srcset="assets/img/deco-ivy-320.avif 320w, assets/img/deco-ivy-520.avif 520w" sizes="(min-width:900px) 240px, 180px">
+    <source type="image/webp" srcset="assets/img/deco-ivy-320.webp 320w, assets/img/deco-ivy-520.webp 520w" sizes="(min-width:900px) 240px, 180px">
+    <img src="assets/img/deco-ivy-520.png" width="520" height="863" loading="lazy" decoding="async" alt="">
+  </picture>
   <div class="container">
     <div class="reveal">
       <span class="section-eyebrow">Risultati concreti</span>
       <h2 class="section-title">Prima e <span class="light">dopo.</span></h2>
       <p class="section-sub">Trascina il cursore per scoprire la trasformazione.</p>
     </div>
-    <div class="ba-tabs reveal">
-      <button class="ba-tab active" data-pair="1">Giardino privato</button>
-      <button class="ba-tab" data-pair="2">Area commerciale</button>
-      <button class="ba-tab" data-pair="3">Aiuola residenziale</button>
+    <div class="ba-tabs reveal" role="group" aria-label="Scegli il lavoro da confrontare">
+      <button type="button" class="ba-tab active" data-pair="1" aria-pressed="true">Giardino privato</button>
+      <button type="button" class="ba-tab" data-pair="2" aria-pressed="false">Angolo barbecue</button>
+      <button type="button" class="ba-tab" data-pair="5" aria-pressed="false">Da incolto a prato</button>
+      <button type="button" class="ba-tab" data-pair="4" aria-pressed="false">Area commerciale</button>
+      <button type="button" class="ba-tab" data-pair="3" aria-pressed="false">Aiuola fiorita</button>
     </div>
-    <div class="ba-slider pop" id="baSlider">
+    <div class="ba-slider pop" id="baSlider" tabindex="0" role="slider" aria-label="Confronto prima e dopo: trascina, oppure usa le frecce sinistra e destra" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% visibile il dopo">
       <picture>
         <source id="baBeforeAvif" type="image/avif" srcset="assets/img/ba1-before-600.avif 600w, assets/img/ba1-before-900.avif 900w, assets/img/ba1-before-1200.avif 1200w" sizes="(min-width:800px) 720px, 92vw">
         <source id="baBeforeWebp" type="image/webp" srcset="assets/img/ba1-before-600.webp 600w, assets/img/ba1-before-900.webp 900w, assets/img/ba1-before-1200.webp 1200w" sizes="(min-width:800px) 720px, 92vw">
@@ -1100,20 +1526,31 @@ section { padding: 5rem 1.5rem; }
         <img class="ba-after" id="baAfterImg" src="assets/img/ba1-after-1200.jpg" width="1200" height="900" decoding="async" alt="Dopo: prato curato con bordura in corteccia e vialetto in pietra" draggable="false">
       </picture>
       <div class="ba-divider" id="baDivider"></div>
-      <div class="ba-knob" id="baKnob">
+      <div class="ba-knob" id="baKnob" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
       <span class="ba-tag ba-tag-before">Prima</span>
       <span class="ba-tag ba-tag-after">Dopo</span>
     </div>
+    <div class="ba-cta reveal">
+      <p class="ba-cta-text">Immagina il tuo spazio trasformato così.</p>
+      <a href="#preventivo" class="ba-cta-btn">Richiedi un preventivo gratuito</a>
+    </div>
   </div>
 </section>
 
 <!-- CHI SIAMO -->
 <section class="chi-siamo" id="chi-siamo">
-  <div class="blob" style="width: 500px; height: 500px; top: -100px; right: -200px; background: linear-gradient(135deg, rgba(138,171,127,0.4), rgba(61,122,40,0.15)); animation-delay: -3s;"></div>
-  <div class="blob" style="width: 360px; height: 360px; bottom: -80px; left: -140px; background: linear-gradient(135deg, rgba(240,200,90,0.15), rgba(138,171,127,0.25)); animation-delay: -9s;"></div>
+  <div class="deco-scene" aria-hidden="true">
+    <span class="deco-halo"></span>
+    <span class="deco-ring"></span>
+    <picture class="deco-rock">
+      <source type="image/avif" srcset="assets/img/deco-rock-320.avif 320w, assets/img/deco-rock-520.avif 520w, assets/img/deco-rock-760.avif 760w" sizes="(min-width:1000px) 460px, (min-width:600px) 38vw, 70vw">
+      <source type="image/webp" srcset="assets/img/deco-rock-320.webp 320w, assets/img/deco-rock-520.webp 520w, assets/img/deco-rock-760.webp 760w" sizes="(min-width:1000px) 460px, (min-width:600px) 38vw, 70vw">
+      <img src="assets/img/deco-rock-760.png" width="760" height="468" loading="lazy" decoding="async" alt="">
+    </picture>
+  </div>
   <div class="container" style="position: relative; z-index: 2;">
     <div class="chi-grid">
       <div class="chi-photo pop">
@@ -1155,12 +1592,11 @@ section { padding: 5rem 1.5rem; }
 <section class="preventivo" id="preventivo">
   <div class="blob" style="width: 480px; height: 480px; top: -80px; left: -180px; background: linear-gradient(135deg, rgba(138,171,127,0.3), rgba(61,122,40,0.12)); animation-delay: -5s;"></div>
   <div class="blob" style="width: 380px; height: 380px; bottom: -120px; right: -140px; background: linear-gradient(135deg, rgba(232,226,216,0.9), rgba(138,171,127,0.2)); animation-delay: -11s;"></div>
-  <div class="leaf-float" style="width: 40px; height: 40px; top: 15%; left: 7%; animation-delay: -2s;">
-    <svg viewBox="0 0 48 48" fill="none"><path d="M24 4C12 14 8 26 12 38c12 4 24 0 32-12C36 14 30 8 24 4z" fill="rgba(61,122,40,0.2)"/><path d="M24 4C20 20 20 30 12 38" stroke="rgba(61,122,40,0.35)" stroke-width="1.2" stroke-linecap="round"/></svg>
-  </div>
-  <div class="leaf-float" style="width: 30px; height: 30px; bottom: 12%; right: 9%; animation-delay: -6s;">
-    <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="6" fill="rgba(217,131,166,0.3)"/><circle cx="16" cy="26" r="6" fill="rgba(217,131,166,0.25)"/><circle cx="32" cy="26" r="6" fill="rgba(217,131,166,0.25)"/><circle cx="20" cy="34" r="6" fill="rgba(217,131,166,0.2)"/><circle cx="28" cy="34" r="6" fill="rgba(217,131,166,0.2)"/><circle cx="24" cy="27" r="4" fill="rgba(240,200,90,0.5)"/></svg>
-  </div>
+  <picture class="deco-fern" aria-hidden="true">
+    <source type="image/avif" srcset="assets/img/deco-fern-320.avif 320w, assets/img/deco-fern-520.avif 520w" sizes="(min-width:600px) 240px, 160px">
+    <source type="image/webp" srcset="assets/img/deco-fern-320.webp 320w, assets/img/deco-fern-520.webp 520w" sizes="(min-width:600px) 240px, 160px">
+    <img src="assets/img/deco-fern-520.png" width="520" height="506" loading="lazy" decoding="async" alt="">
+  </picture>
   <div class="container" style="position: relative; z-index: 2;">
     <div class="preventivo-wrap">
       <div class="reveal">
@@ -1170,63 +1606,79 @@ section { padding: 5rem 1.5rem; }
       </div>
 
       <div class="prev-form reveal" id="prevForm">
-        <div class="prev-progress" id="prevProgress">
+        <div class="prev-progress" id="prevProgress" aria-hidden="true">
           <div class="prev-dot active"></div>
           <div class="prev-dot"></div>
           <div class="prev-dot"></div>
           <div class="prev-dot"></div>
         </div>
+        <p class="visually-hidden" id="prevStatus" role="status" aria-live="polite">Passo 1 di 4</p>
 
         <!-- Step 1 -->
-        <div class="prev-step active" data-step="1">
-          <p class="prev-question">Di cosa hai bisogno?</p>
+        <div class="prev-step active" data-step="1" role="group" aria-labelledby="q1">
+          <p class="prev-question" id="q1">Di cosa hai bisogno?</p>
           <div class="prev-options">
-            <button class="prev-option" data-value="Manutenzione ordinaria"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M8 21c0-3-1-5-3-7"/><path d="M8 21c0-4 1-6 3-8"/><path d="M16 21c0-3 1-5 3-7"/><path d="M16 21c0-4-1-6-3-8"/></svg></span>Manutenzione ordinaria</button>
-            <button class="prev-option" data-value="Potatura e sfalcio"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg></span>Potatura e sfalcio</button>
-            <button class="prev-option" data-value="Impianto irrigazione"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 5.6 6 10a6 6 0 0 1-12 0c0-4.4 6-10 6-10z"/></svg></span>Impianto di irrigazione</button>
-            <button class="prev-option" data-value="Nuovo giardino"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3-2-5-5-5 0 3 2 5 5 5z"/><path d="M12 12c0-3 2-5 5-5 0 3-2 5-5 5z"/></svg></span>Nuovo giardino o aiuola</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Manutenzione ordinaria"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M8 21c0-3-1-5-3-7"/><path d="M8 21c0-4 1-6 3-8"/><path d="M16 21c0-3 1-5 3-7"/><path d="M16 21c0-4-1-6-3-8"/></svg></span>Manutenzione ordinaria</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Potatura e sfalcio"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg></span>Potatura e sfalcio</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Impianto irrigazione"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 5.6 6 10a6 6 0 0 1-12 0c0-4.4 6-10 6-10z"/></svg></span>Impianto di irrigazione</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Nuovo giardino"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3-2-5-5-5 0 3 2 5 5 5z"/><path d="M12 12c0-3 2-5 5-5 0 3-2 5-5 5z"/></svg></span>Nuovo giardino o aiuola</button>
           </div>
         </div>
 
         <!-- Step 2 -->
-        <div class="prev-step" data-step="2">
-          <p class="prev-question">Quanto è grande lo spazio?</p>
+        <div class="prev-step" data-step="2" role="group" aria-labelledby="q2">
+          <p class="prev-question" id="q2">Quanto è grande lo spazio?</p>
           <div class="prev-options">
-            <button class="prev-option" data-value="Piccolo (fino a 100mq)">Piccolo &mdash; fino a 100 m&sup2;</button>
-            <button class="prev-option" data-value="Medio (100-300mq)">Medio &mdash; 100&ndash;300 m&sup2;</button>
-            <button class="prev-option" data-value="Grande (300-1000mq)">Grande &mdash; 300&ndash;1000 m&sup2;</button>
-            <button class="prev-option" data-value="Molto grande (oltre 1000mq)">Molto grande &mdash; oltre 1000 m&sup2;</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Piccolo (fino a 100mq)">Piccolo &mdash; fino a 100 m&sup2;</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Medio (100-300mq)">Medio &mdash; 100&ndash;300 m&sup2;</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Grande (300-1000mq)">Grande &mdash; 300&ndash;1000 m&sup2;</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Molto grande (oltre 1000mq)">Molto grande &mdash; oltre 1000 m&sup2;</button>
           </div>
         </div>
 
         <!-- Step 3 -->
-        <div class="prev-step" data-step="3">
-          <p class="prev-question">Dove si trova il giardino?</p>
+        <div class="prev-step" data-step="3" role="group" aria-labelledby="q3">
+          <p class="prev-question" id="q3">Dove si trova il giardino?</p>
           <div class="prev-options">
-            <button class="prev-option" data-value="Vignolo">Vignolo</button>
-            <button class="prev-option" data-value="Borgo San Dalmazzo">Borgo San Dalmazzo</button>
-            <button class="prev-option" data-value="Cuneo">Cuneo</button>
-            <button class="prev-option" data-value="Boves o altri comuni">Boves / altri comuni</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Vignolo">Vignolo</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Borgo San Dalmazzo">Borgo San Dalmazzo</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Cuneo">Cuneo</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Boves o altri comuni">Boves / altri comuni</button>
           </div>
         </div>
 
         <!-- Step 4 -->
-        <div class="prev-step" data-step="4">
-          <p class="prev-question">Vuoi aggiungere qualche dettaglio?</p>
-          <textarea class="prev-textarea" id="prevNotes" placeholder="Descrivi brevemente il lavoro o lascia vuoto..."></textarea>
+        <div class="prev-step" data-step="4" role="group" aria-labelledby="q4">
+          <label class="prev-question" id="q4" for="prevNotes">Vuoi aggiungere qualche dettaglio? <span class="prev-optional">(facoltativo)</span></label>
+          <textarea class="prev-textarea" id="prevNotes" rows="4" maxlength="600" placeholder="Descrivi brevemente il lavoro, oppure lascia vuoto..."></textarea>
         </div>
 
+        <p class="hp-field" aria-hidden="true"><label>Lascia vuoto questo campo <input type="text" id="prevBotField" name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <p class="prev-error" id="prevError" role="alert" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg><span id="prevErrorText">Seleziona un'opzione per continuare.</span></p>
         <div class="prev-nav">
-          <button class="prev-back hidden" id="prevBack">&#8592; Indietro</button>
-          <button class="prev-next" id="prevNext">Avanti &#8594;</button>
+          <button type="button" class="prev-back hidden" id="prevBack">&#8592; Indietro</button>
+          <button type="button" class="prev-next" id="prevNext">Avanti &#8594;</button>
         </div>
       </div>
     </div>
   </div>
+  <!-- Form nascosto per il rilevamento di Netlify Forms (l'invio reale avviene via fetch dal wizard) -->
+  <form name="preventivo" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="text" name="servizio">
+    <input type="text" name="dimensione">
+    <input type="text" name="zona">
+    <textarea name="note"></textarea>
+    <input type="text" name="bot-field">
+  </form>
 </section>
 
 <!-- GALLERIA -->
 <section class="galleria" id="galleria">
+  <picture class="deco-bloom" aria-hidden="true">
+    <source type="image/avif" srcset="assets/img/deco-bloom-320.avif 320w, assets/img/deco-bloom-520.avif 520w" sizes="(min-width:600px) 280px, 180px">
+    <source type="image/webp" srcset="assets/img/deco-bloom-320.webp 320w, assets/img/deco-bloom-520.webp 520w" sizes="(min-width:600px) 280px, 180px">
+    <img src="assets/img/deco-bloom-520.png" width="520" height="466" loading="lazy" decoding="async" alt="">
+  </picture>
   <div class="container">
     <div class="reveal">
       <span class="section-eyebrow">I nostri lavori</span>
@@ -1234,51 +1686,74 @@ section { padding: 5rem 1.5rem; }
       <p class="section-sub">Una selezione dei giardini che abbiamo curato e trasformato.</p>
     </div>
     <div class="galleria-grid">
-      <div class="gal-item pop" data-lb>
+      <button type="button" class="gal-item pop" data-lb aria-label="Ingrandisci: Giardino completo con prato, vialetto in pietra e vista panoramica sulle montagne">
         <picture>
           <source type="image/avif" srcset="assets/img/gal-6-480.avif 480w, assets/img/gal-6-800.avif 800w, assets/img/gal-6-1200.avif 1200w" sizes="(min-width:600px) 66vw, 92vw">
           <source type="image/webp" srcset="assets/img/gal-6-480.webp 480w, assets/img/gal-6-800.webp 800w, assets/img/gal-6-1200.webp 1200w" sizes="(min-width:600px) 66vw, 92vw">
           <img src="assets/img/gal-6-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Giardino completo con prato, vialetto in pietra e vista panoramica sulle montagne">
         </picture>
-      </div>
-      <div class="gal-item pop reveal-delay-1" data-lb>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-1" data-lb aria-label="Ingrandisci: Prato curato con bordura in corteccia e rose rosa lungo il muro di pietra">
         <picture>
           <source type="image/avif" srcset="assets/img/gal-1-480.avif 480w, assets/img/gal-1-800.avif 800w, assets/img/gal-1-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/gal-1-480.webp 480w, assets/img/gal-1-800.webp 800w, assets/img/gal-1-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/gal-1-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato curato con bordura in corteccia e rose rosa lungo il muro di pietra">
         </picture>
-      </div>
-      <div class="gal-item pop reveal-delay-2" data-lb>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-2" data-lb aria-label="Ingrandisci: Prato lungo un muro di pietra con vialetto e aiuola curata">
         <picture>
           <source type="image/avif" srcset="assets/img/gal-2-480.avif 480w, assets/img/gal-2-800.avif 800w, assets/img/gal-2-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/gal-2-480.webp 480w, assets/img/gal-2-800.webp 800w, assets/img/gal-2-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/gal-2-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato lungo un muro di pietra con vialetto e aiuola curata">
         </picture>
-      </div>
-      <div class="gal-item pop reveal-delay-3" data-lb>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-3" data-lb aria-label="Ingrandisci: Angolo barbecue con prato, rose bianche e fioriera in mattoni">
         <picture>
           <source type="image/avif" srcset="assets/img/gal-3-480.avif 480w, assets/img/gal-3-800.avif 800w, assets/img/gal-3-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/gal-3-480.webp 480w, assets/img/gal-3-800.webp 800w, assets/img/gal-3-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/gal-3-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Angolo barbecue con prato, rose bianche e fioriera in mattoni">
         </picture>
-      </div>
-      <div class="gal-item pop reveal-delay-1" data-lb>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-1" data-lb aria-label="Ingrandisci: Bordura in corteccia con peonia in fiore e prato curvo">
         <picture>
           <source type="image/avif" srcset="assets/img/gal-4-480.avif 480w, assets/img/gal-4-800.avif 800w, assets/img/gal-4-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/gal-4-480.webp 480w, assets/img/gal-4-800.webp 800w, assets/img/gal-4-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/gal-4-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Bordura in corteccia con peonia in fiore e prato curvo">
         </picture>
-      </div>
-      <div class="gal-item pop reveal-delay-2" data-lb>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-2" data-lb aria-label="Ingrandisci: Vialetto in pietra e prato curvo al tramonto con rose">
         <picture>
           <source type="image/avif" srcset="assets/img/chi-siamo-480.avif 480w, assets/img/chi-siamo-800.avif 800w, assets/img/chi-siamo-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <source type="image/webp" srcset="assets/img/chi-siamo-480.webp 480w, assets/img/chi-siamo-800.webp 800w, assets/img/chi-siamo-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
           <img src="assets/img/chi-siamo-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Vialetto in pietra e prato curvo al tramonto con rose">
         </picture>
-      </div>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-3" data-lb aria-label="Ingrandisci: Aiuole in ghiaia con piante ornamentali davanti a un edificio commerciale">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-7-480.avif 480w, assets/img/gal-7-800.avif 800w, assets/img/gal-7-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-7-480.webp 480w, assets/img/gal-7-800.webp 800w, assets/img/gal-7-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <img src="assets/img/gal-7-1200.jpg" width="1170" height="1560" loading="lazy" decoding="async" alt="Aiuole in ghiaia con piante ornamentali e alberelli davanti a un edificio commerciale">
+        </picture>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-1" data-lb aria-label="Ingrandisci: Bordura in ghiaia con cerchi di corteccia e graminacee ornamentali">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-8-480.avif 480w, assets/img/gal-8-800.avif 800w, assets/img/gal-8-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-8-480.webp 480w, assets/img/gal-8-800.webp 800w, assets/img/gal-8-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <img src="assets/img/gal-8-1200.jpg" width="1170" height="1560" loading="lazy" decoding="async" alt="Bordura in ghiaia con cerchi di corteccia e graminacee ornamentali in un'area commerciale">
+        </picture>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-2" data-lb aria-label="Ingrandisci: Aiuole con rose e ulivi lungo un vialetto in pietra">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-9-480.avif 480w, assets/img/gal-9-800.avif 800w, assets/img/gal-9-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-9-480.webp 480w, assets/img/gal-9-800.webp 800w, assets/img/gal-9-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <img src="assets/img/gal-9-1200.jpg" width="1170" height="1560" loading="lazy" decoding="async" alt="Aiuole con rose e ulivi lungo un vialetto in pietra in un giardino residenziale">
+        </picture>
+      </button>
     </div>
   </div>
 </section>
+
+</main>
 
 <!-- FOOTER -->
 <footer class="footer" id="contatti">
@@ -1324,9 +1799,9 @@ section { padding: 5rem 1.5rem; }
 </a>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox">
-  <button class="lb-close" aria-label="Chiudi">&times;</button>
-  <img src="" alt="">
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Immagine ingrandita">
+  <button type="button" class="lb-close" id="lbClose" aria-label="Chiudi">&times;</button>
+  <img id="lbImg" src="" alt="">
 </div>
 
 <script>
@@ -1349,6 +1824,32 @@ section { padding: 5rem 1.5rem; }
     nav.classList.toggle('scrolled', window.scrollY > 50);
   }, { passive: true });
 
+  // ── Menu mobile ──
+  var navToggle = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  function closeMenu() {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Apri il menu');
+  }
+  function openMenu() {
+    navLinks.classList.add('open');
+    navToggle.setAttribute('aria-expanded', 'true');
+    navToggle.setAttribute('aria-label', 'Chiudi il menu');
+  }
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function() {
+      if (navLinks.classList.contains('open')) closeMenu(); else openMenu();
+    });
+    navLinks.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeMenu); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && navLinks.classList.contains('open')) { closeMenu(); navToggle.focus(); }
+    });
+    document.addEventListener('click', function(e) {
+      if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !navToggle.contains(e.target)) closeMenu();
+    });
+  }
+
   // ── WhatsApp flottante: nascondilo quando il wizard è a schermo ──
   // così non copre mai i controlli "Avanti/Invia" del form.
   var waFloat = document.querySelector('.wa-float');
@@ -1362,6 +1863,24 @@ section { padding: 5rem 1.5rem; }
     waObserver.observe(prevSection);
   }
 
+  // ── Parallax leggero sulla foto hero (solo transform, 60fps) ──
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var heroImg = document.querySelector('.hero-bg img');
+  if (heroImg && !prefersReduced) {
+    var heroTicking = false;
+    var applyParallax = function() {
+      var y = window.scrollY;
+      if (y <= window.innerHeight) {
+        heroImg.style.transform = 'scale(1.08) translate3d(0, ' + (y * 0.16) + 'px, 0)';
+      }
+      heroTicking = false;
+    };
+    window.addEventListener('scroll', function() {
+      if (!heroTicking) { requestAnimationFrame(applyParallax); heroTicking = true; }
+    }, { passive: true });
+    applyParallax();
+  }
+
   // ── B/A slider ──
   var slider = document.getElementById('baSlider');
   var divider = document.getElementById('baDivider');
@@ -1370,12 +1889,19 @@ section { padding: 5rem 1.5rem; }
   var beforeImg = slider.querySelector('.ba-before');
   var dragging = false;
 
+  function setFraction(p) {
+    p = Math.max(0, Math.min(1, p));
+    var pct = p * 100;
+    afterImg.style.clipPath = 'inset(0 0 0 ' + pct + '%)';
+    divider.style.left = pct + '%';
+    knob.style.left = pct + '%';
+    var val = Math.round(pct);
+    slider.setAttribute('aria-valuenow', String(val));
+    slider.setAttribute('aria-valuetext', val + '% visibile il dopo');
+  }
   function setPos(x) {
     var r = slider.getBoundingClientRect();
-    var p = Math.max(0, Math.min(1, (x - r.left) / r.width));
-    afterImg.style.clipPath = 'inset(0 0 0 ' + (p * 100) + '%)';
-    divider.style.left = (p * 100) + '%';
-    knob.style.left = (p * 100) + '%';
+    setFraction((x - r.left) / r.width);
   }
   slider.addEventListener('pointerdown', function(e) {
     dragging = true;
@@ -1385,6 +1911,15 @@ section { padding: 5rem 1.5rem; }
   slider.addEventListener('pointermove', function(e) { if (dragging) setPos(e.clientX); });
   slider.addEventListener('pointerup', function() { dragging = false; });
   slider.addEventListener('pointercancel', function() { dragging = false; });
+  // Controllo da tastiera (frecce / Home / End)
+  slider.addEventListener('keydown', function(e) {
+    var cur = parseInt(slider.getAttribute('aria-valuenow'), 10);
+    if (isNaN(cur)) cur = 50;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); setFraction((cur - 5) / 100); }
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); setFraction((cur + 5) / 100); }
+    else if (e.key === 'Home') { e.preventDefault(); setFraction(0); }
+    else if (e.key === 'End') { e.preventDefault(); setFraction(1); }
+  });
 
   var tabs = document.querySelectorAll('.ba-tab');
   var baBeforeAvif = document.getElementById('baBeforeAvif');
@@ -1401,21 +1936,24 @@ section { padding: 5rem 1.5rem; }
       afterAlt: 'Dopo: angolo barbecue con prato, rose bianche e muretto in pietra' },
     '3': { before: 'ba3-before', after: 'ba3-after',
       beforeAlt: 'Prima: giardino incolto e invaso dalle erbacce',
-      afterAlt: 'Dopo: prato curvo con bordura in corteccia, rose e peonia' }
+      afterAlt: 'Dopo: prato curvo con bordura in corteccia, rose e peonia' },
+    '4': { before: 'ba4-before', after: 'ba4-after',
+      beforeAlt: 'Prima: area verde di un edificio commerciale con prato incolto e parcheggio',
+      afterAlt: 'Dopo: aiuole in ghiaia con piante ornamentali e alberelli davanti all\'edificio commerciale' },
+    '5': { before: 'ba5-before', after: 'ba5-after',
+      beforeAlt: 'Prima: giardino completamente invaso dalle erbacce',
+      afterAlt: 'Dopo: prato curato con vialetto in pietra e bordura in corteccia' }
   };
   function srcsetFor(base, ext) {
     return ['600', '900', '1200'].map(function(w) {
       return 'assets/img/' + base + '-' + w + '.' + ext + ' ' + w + 'w';
     }).join(', ');
   }
-  function resetSlider() {
-    afterImg.style.clipPath = 'inset(0 0 0 50%)';
-    divider.style.left = '50%'; knob.style.left = '50%';
-  }
+  function resetSlider() { setFraction(0.5); }
   tabs.forEach(function(t) {
     t.addEventListener('click', function() {
-      tabs.forEach(function(x) { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
-      t.classList.add('active'); t.setAttribute('aria-selected', 'true');
+      tabs.forEach(function(x) { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
+      t.classList.add('active'); t.setAttribute('aria-pressed', 'true');
       var p = pairs[t.dataset.pair];
       baBeforeAvif.srcset = srcsetFor(p.before, 'avif');
       baBeforeWebp.srcset = srcsetFor(p.before, 'webp');
@@ -1431,80 +1969,145 @@ section { padding: 5rem 1.5rem; }
   var step = 1;
   var totalSteps = 4;
   var answers = {};
+  var submitting = false;
   var steps = document.querySelectorAll('.prev-step');
   var dots = document.querySelectorAll('.prev-dot');
   var backBtn = document.getElementById('prevBack');
   var nextBtn = document.getElementById('prevNext');
+  var prevForm = document.getElementById('prevForm');
+  var prevError = document.getElementById('prevError');
+  var prevErrorText = document.getElementById('prevErrorText');
+  var prevStatus = document.getElementById('prevStatus');
+  var WA_NUMBER = '393209517477';
+  var WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
+  function hideError() { prevError.hidden = true; }
+  function showError(msg) {
+    prevErrorText.textContent = msg || "Seleziona un'opzione per continuare.";
+    prevError.hidden = false;
+    var a = document.querySelector('.prev-step.active');
+    if (a) { a.classList.remove('invalid'); void a.offsetWidth; a.classList.add('invalid'); }
+  }
 
-  function showStep(n) {
+  function showStep(n, dir) {
     steps.forEach(function(s) { s.classList.remove('active'); });
-    document.querySelector('[data-step="' + n + '"]').classList.add('active');
+    var active = document.querySelector('[data-step="' + n + '"]');
+    active.setAttribute('data-dir', dir === 'back' ? 'back' : 'next');
+    active.classList.add('active');
     dots.forEach(function(d, i) {
       d.classList.remove('active', 'done');
       if (i + 1 === n) d.classList.add('active');
       else if (i + 1 < n) d.classList.add('done');
     });
     backBtn.classList.toggle('hidden', n === 1);
+    prevStatus.textContent = 'Passo ' + n + ' di ' + totalSteps;
+    hideError();
     if (n === totalSteps) {
-      nextBtn.textContent = '';
       nextBtn.classList.add('wa');
-      nextBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Invia su WhatsApp';
+      nextBtn.innerHTML = WA_ICON + 'Invia la richiesta';
     } else {
       nextBtn.classList.remove('wa');
       nextBtn.innerHTML = 'Avanti &#8594;';
     }
+    if (dir) { active.setAttribute('tabindex', '-1'); active.focus(); }
   }
 
   document.querySelectorAll('.prev-option').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var siblings = btn.parentElement.querySelectorAll('.prev-option');
-      siblings.forEach(function(s) { s.classList.remove('selected'); });
-      btn.classList.add('selected');
+      siblings.forEach(function(x) { x.classList.remove('selected'); x.setAttribute('aria-pressed', 'false'); });
+      btn.classList.add('selected'); btn.setAttribute('aria-pressed', 'true');
       answers['step' + step] = btn.dataset.value;
+      hideError();
     });
   });
 
+  function buildMessage() {
+    var notes = document.getElementById('prevNotes').value.trim();
+    var msg = 'Buongiorno, vorrei un preventivo.\n';
+    if (answers.step1) msg += '\nServizio: ' + answers.step1;
+    if (answers.step2) msg += '\nDimensione: ' + answers.step2;
+    if (answers.step3) msg += '\nZona: ' + answers.step3;
+    if (notes) msg += '\nNote: ' + notes;
+    return msg;
+  }
+  function showSuccess(waUrl, ok) {
+    var title = ok ? 'Richiesta inviata!' : 'Ti apriamo WhatsApp';
+    var msg = ok
+      ? 'Abbiamo ricevuto la tua richiesta: ti ricontattiamo a breve con un preventivo su misura. Nel frattempo si è aperto WhatsApp per scriverci subito.'
+      : 'Si è aperto WhatsApp con la tua richiesta già compilata: inviala e ti rispondiamo al più presto. Se la finestra non si è aperta, usa il pulsante qui sotto.';
+    prevForm.innerHTML =
+      '<div class="prev-success" role="status">' +
+        '<div class="prev-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>' +
+        '<h3>' + title + '</h3>' +
+        '<p>' + msg + '</p>' +
+        '<a class="prev-success-wa" href="' + waUrl + '" target="_blank" rel="noopener">' + WA_ICON + 'Apri WhatsApp</a>' +
+      '</div>';
+  }
+  function submitToNetlify() {
+    var notes = document.getElementById('prevNotes').value.trim();
+    var bot = document.getElementById('prevBotField');
+    var body = new URLSearchParams({
+      'form-name': 'preventivo',
+      'servizio': answers.step1 || '',
+      'dimensione': answers.step2 || '',
+      'zona': answers.step3 || '',
+      'note': notes,
+      'bot-field': bot ? bot.value : ''
+    }).toString();
+    return fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body
+    }).then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); });
+  }
   nextBtn.addEventListener('click', function() {
-    if (step < totalSteps) {
-      step++;
-      showStep(step);
-    } else {
-      var notes = document.getElementById('prevNotes').value;
-      var msg = 'Buongiorno, vorrei un preventivo.\n';
-      if (answers.step1) msg += '\nServizio: ' + answers.step1;
-      if (answers.step2) msg += '\nDimensione: ' + answers.step2;
-      if (answers.step3) msg += '\nZona: ' + answers.step3;
-      if (notes) msg += '\nNote: ' + notes;
-      window.open('https://wa.me/393209517477?text=' + encodeURIComponent(msg), '_blank');
-    }
+    if (submitting) return;
+    if (step >= 1 && step <= 3 && !answers['step' + step]) { showError(); return; }
+    if (step < totalSteps) { step++; showStep(step, 'next'); return; }
+    submitting = true;
+    nextBtn.setAttribute('disabled', '');
+    nextBtn.textContent = 'Invio…';
+    var waUrl = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(buildMessage());
+    // Apri WhatsApp subito (gesto utente: evita il blocco popup)
+    window.open(waUrl, '_blank', 'noopener');
+    // Registra la richiesta su Netlify Forms (record durevole + notifica al titolare)
+    submitToNetlify()
+      .then(function() { showSuccess(waUrl, true); })
+      .catch(function() { showSuccess(waUrl, false); });
   });
 
   backBtn.addEventListener('click', function() {
-    if (step > 1) { step--; showStep(step); }
+    if (step > 1) { step--; showStep(step, 'back'); }
   });
 
-  // ── Lightbox ──
+  // ── Lightbox (dialog con focus-trap) ──
   var lb = document.getElementById('lightbox');
-  var lbImg = lb.querySelector('img');
+  var lbImg = document.getElementById('lbImg');
+  var lbClose = document.getElementById('lbClose');
+  var lbLastFocus = null;
+  function openLb(trigger) {
+    var im = trigger.querySelector('img');
+    lbImg.src = im.src;
+    lbImg.alt = im.alt;
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    lbLastFocus = trigger;
+    lbClose.focus();
+  }
+  function closeLb() {
+    lb.classList.remove('active');
+    document.body.style.overflow = '';
+    if (lbLastFocus) { lbLastFocus.focus(); lbLastFocus = null; }
+  }
   document.querySelectorAll('[data-lb]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      lbImg.src = el.querySelector('img').src;
-      lbImg.alt = el.querySelector('img').alt;
-      lb.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
+    el.addEventListener('click', function() { openLb(el); });
   });
-  lb.addEventListener('click', function(e) {
-    if (e.target !== lbImg) {
-      lb.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-  });
+  lb.addEventListener('click', function(e) { if (e.target !== lbImg) closeLb(); });
+  lbClose.addEventListener('click', closeLb);
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && lb.classList.contains('active')) {
-      lb.classList.remove('active');
-      document.body.style.overflow = '';
-    }
+    if (!lb.classList.contains('active')) return;
+    if (e.key === 'Escape') { closeLb(); }
+    else if (e.key === 'Tab') { e.preventDefault(); lbClose.focus(); }
   });
 
   // ── Smooth scroll ──

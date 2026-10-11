@@ -1,0 +1,13 @@
+{
+  "name": "Lisa Garden",
+  "short_name": "Lisa Garden",
+  "description": "Cura del verde a Vignolo (CN) e dintorni",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f3ec",
+  "theme_color": "#356a39",
+  "icons": [
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
