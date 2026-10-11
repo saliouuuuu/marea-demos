@@ -914,6 +914,21 @@ section { padding: 5rem 1.5rem; }
 }
 .deco-bloom img { width: 100%; height: auto; display: block; }
 @media (max-width: 700px) { .deco-bloom { display: none; } }
+
+/* Edera che ricade dall'angolo in alto a destra di "Prima e Dopo" */
+.prima-dopo .container { position: relative; z-index: 1; }
+.deco-ivy {
+  position: absolute;
+  z-index: 0;
+  top: -24px; right: -16px;
+  width: clamp(150px, 17vw, 230px);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 14px 22px rgba(0,0,0,0.3));
+}
+.deco-ivy img { width: 100%; height: auto; display: block; }
+@media (max-width: 900px) { .deco-ivy { display: none; } }
 .galleria-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1481,6 +1496,11 @@ textarea:focus-visible,
 
 <!-- PRIMA E DOPO -->
 <section class="prima-dopo" id="prima-dopo">
+  <picture class="deco-ivy" aria-hidden="true">
+    <source type="image/avif" srcset="assets/img/deco-ivy-320.avif 320w, assets/img/deco-ivy-520.avif 520w" sizes="(min-width:900px) 240px, 180px">
+    <source type="image/webp" srcset="assets/img/deco-ivy-320.webp 320w, assets/img/deco-ivy-520.webp 520w" sizes="(min-width:900px) 240px, 180px">
+    <img src="assets/img/deco-ivy-520.png" width="520" height="863" loading="lazy" decoding="async" alt="">
+  </picture>
   <div class="container">
     <div class="reveal">
       <span class="section-eyebrow">Risultati concreti</span>
