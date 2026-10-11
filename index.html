@@ -833,7 +833,20 @@ section { padding: 5rem 1.5rem; }
 .prev-textarea::placeholder { color: var(--text-secondary); }
 
 /* ── GALLERIA ── */
-.galleria { background: var(--cream); }
+.galleria { background: var(--cream); position: relative; overflow: hidden; }
+.galleria .container { position: relative; z-index: 1; }
+.deco-bloom {
+  position: absolute;
+  z-index: 0;
+  left: -40px; bottom: -40px;
+  width: clamp(170px, 22vw, 280px);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 16px 24px rgba(20,30,20,0.14));
+}
+.deco-bloom img { width: 100%; height: auto; display: block; }
+@media (max-width: 700px) { .deco-bloom { display: none; } }
 .galleria-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1557,6 +1570,11 @@ textarea:focus-visible,
 
 <!-- GALLERIA -->
 <section class="galleria" id="galleria">
+  <picture class="deco-bloom" aria-hidden="true">
+    <source type="image/avif" srcset="assets/img/deco-bloom-320.avif 320w, assets/img/deco-bloom-520.avif 520w" sizes="(min-width:600px) 280px, 180px">
+    <source type="image/webp" srcset="assets/img/deco-bloom-320.webp 320w, assets/img/deco-bloom-520.webp 520w" sizes="(min-width:600px) 280px, 180px">
+    <img src="assets/img/deco-bloom-520.png" width="520" height="466" loading="lazy" decoding="async" alt="">
+  </picture>
   <div class="container">
     <div class="reveal">
       <span class="section-eyebrow">I nostri lavori</span>
