@@ -1253,6 +1253,7 @@ textarea:focus-visible,
 .prima-dopo button:focus-visible,
 .ba-slider:focus-visible,
 .footer a:focus-visible,
+.finale a:focus-visible,
 .hero a:focus-visible,
 .nav:not(.scrolled) .nav-links a:focus-visible {
   outline-color: #eef3e9;
@@ -1469,6 +1470,127 @@ textarea:focus-visible,
   70%, 100% { scale: 1.6; opacity: 0; }
 }
 
+/* ── FINALE: isola fiorita + invito al preventivo ── */
+.finale {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(to bottom, transparent 65%, var(--ink)),
+    radial-gradient(110% 75% at 72% 38%, #2b3b2f 0%, var(--ink-soft) 42%, var(--ink) 100%);
+}
+@media (max-width: 767px) { .finale { padding-bottom: 3rem; } }
+.finale-inner { display: grid; gap: 2.5rem; align-items: center; }
+@media (min-width: 860px) {
+  .finale-inner { grid-template-columns: 1.05fr 0.95fr; gap: 4rem; }
+  .finale-scene { order: 2; }
+}
+.finale .section-eyebrow { color: var(--sage); }
+.finale .section-title { color: #fff; }
+.finale .section-title .light { color: var(--sage); }
+.finale .section-sub { color: rgba(255,255,255,0.74); }
+.finale-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+.finale-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s, background-color 0.3s;
+}
+.finale-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+@media (max-width: 520px) { .finale-btn { flex: 1 1 100%; justify-content: center; } }
+.finale-btn--primary { background: var(--surface); color: var(--ink); }
+.finale-btn--ghost { color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+.finale-btn--ghost svg { color: var(--whatsapp); }
+.finale-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+.finale-btn--ghost:hover { background: rgba(255,255,255,0.08); }
+.finale-btn:active { transform: scale(0.98); }
+.finale-call { display: inline-block; margin-top: 1.25rem; font-size: var(--fz-sm); color: rgba(255,255,255,0.72); }
+.finale-call a { white-space: nowrap; color: #fff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,0.35); }
+.finale-call a:hover { text-decoration-color: currentColor; }
+.finale-zones {
+  margin-top: 2rem;
+  font-size: var(--fz-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+}
+.finale-zones span { white-space: nowrap; }
+.finale-zones span:not(:last-child)::after { content: "\00b7"; margin-left: 0.6rem; }
+
+.finale-scene {
+  position: relative;
+  width: min(68vw, 290px);
+  margin: 0 auto;
+}
+@media (min-width: 860px) { .finale-scene { width: min(100%, 390px); } }
+.finale-glow {
+  position: absolute;
+  inset: -12% -30% 0;
+  background: radial-gradient(closest-side, rgba(236, 196, 196, 0.26), rgba(143, 174, 132, 0.14) 55%, transparent 78%);
+  animation: finaleGlow 7s ease-in-out infinite;
+  pointer-events: none;
+}
+.finale-shadow {
+  position: absolute;
+  left: 16%; right: 22%;
+  bottom: -7%;
+  height: 8%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0,0,0,0.5), transparent);
+  animation: finaleShadow 7s ease-in-out infinite;
+}
+.finale-island {
+  position: relative;
+  display: block;
+  animation: islandFloat 7s ease-in-out infinite;
+}
+.finale-island img { display: block; width: 100%; height: auto; }
+.finale-mote {
+  position: absolute;
+  top: 34%;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 244, 214, 0.95);
+  box-shadow: 0 0 8px 2px rgba(255, 232, 190, 0.45);
+  opacity: 0;
+  animation: moteRise 9s linear infinite;
+  pointer-events: none;
+}
+.finale-mote:nth-of-type(1) { left: 24%; animation-delay: 0s; }
+.finale-mote:nth-of-type(2) { left: 41%; top: 26%; animation-delay: -2.2s; animation-duration: 11s; }
+.finale-mote:nth-of-type(3) { left: 58%; animation-delay: -4.6s; width: 3px; height: 3px; }
+.finale-mote:nth-of-type(4) { left: 72%; top: 30%; animation-delay: -6.8s; animation-duration: 10s; }
+.finale-mote:nth-of-type(5) { left: 33%; top: 38%; animation-delay: -8.1s; width: 3px; height: 3px; animation-duration: 12s; }
+.finale-mote:nth-of-type(6) { left: 64%; top: 22%; animation-delay: -3.4s; }
+@keyframes islandFloat {
+  0%, 100% { translate: 0 0;     rotate: -1deg; }
+  50%      { translate: 0 -14px; rotate: 0.8deg; }
+}
+@keyframes finaleShadow {
+  0%, 100% { scale: 1;    opacity: 0.9; }
+  50%      { scale: 0.84; opacity: 0.55; }
+}
+@keyframes finaleGlow {
+  0%, 100% { opacity: 0.75; scale: 0.96; }
+  50%      { opacity: 1;    scale: 1.04; }
+}
+@keyframes moteRise {
+  0%   { opacity: 0;   translate: 0 0; }
+  15%  { opacity: 0.9; }
+  70%  { opacity: 0.5; }
+  100% { opacity: 0;   translate: 14px -150px; }
+}
+/* fuori schermo le animazioni si fermano: niente lavoro inutile */
+.finale.is-offscreen .finale-scene * { animation-play-state: paused; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -1481,7 +1603,9 @@ textarea:focus-visible,
   /* nessun movimento ambientale o parallax */
   .blob, .leaf-float,
   .hero-deco, .deco-plant, .deco-fern, .deco-bloom, .deco-ivy,
-  .wa-float::after { animation: none !important; }
+  .wa-float::after,
+  .finale-glow, .finale-shadow, .finale-island { animation: none !important; }
+  .finale-mote { display: none; }
   .hero-glass > * { opacity: 1 !important; translate: none !important; animation: none !important; }
   .hero-bg img { transform: scale(1.04) !important; }
 }
@@ -1862,6 +1986,41 @@ textarea:focus-visible,
   </div>
 </section>
 
+<!-- FINALE -->
+<section class="finale" id="inizia" aria-labelledby="finaleTitle">
+  <div class="container finale-inner">
+    <div class="finale-scene reveal" aria-hidden="true">
+      <div class="finale-glow"></div>
+      <div class="finale-shadow"></div>
+      <picture class="finale-island">
+        <source type="image/avif" srcset="assets/img/island-400.avif 400w, assets/img/island-600.avif 600w, assets/img/island-800.avif 800w" sizes="(min-width:860px) 390px, 68vw">
+        <source type="image/webp" srcset="assets/img/island-400.webp 400w, assets/img/island-600.webp 600w, assets/img/island-800.webp 800w" sizes="(min-width:860px) 390px, 68vw">
+        <img src="assets/img/island-600.png" width="600" height="858" loading="lazy" decoding="async" alt="">
+      </picture>
+      <span class="finale-mote"></span>
+      <span class="finale-mote"></span>
+      <span class="finale-mote"></span>
+      <span class="finale-mote"></span>
+      <span class="finale-mote"></span>
+      <span class="finale-mote"></span>
+    </div>
+    <div class="finale-copy reveal reveal-delay-1">
+      <span class="section-eyebrow">Il prossimo giardino</span>
+      <h2 class="section-title" id="finaleTitle">Ogni spazio può fiorire. <span class="light">Anche il tuo.</span></h2>
+      <p class="section-sub">Che sia un angolo da sistemare o un giardino da ripensare da zero, raccontaci com'è oggi: ti rispondiamo con una proposta su misura.</p>
+      <div class="finale-actions">
+        <a href="#preventivo" class="finale-btn finale-btn--primary">Richiedi un preventivo gratuito</a>
+        <a href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo." class="finale-btn finale-btn--ghost">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Scrivi su WhatsApp
+        </a>
+      </div>
+      <p class="finale-call">Preferisci parlarne a voce? Chiama il <a href="tel:+393209517477">320 951 7477</a></p>
+      <p class="finale-zones"><span>Vignolo</span><span>Borgo San Dalmazzo</span><span>Cuneo</span><span>Boves</span></p>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <!-- FOOTER -->
@@ -1926,6 +2085,15 @@ textarea:focus-visible,
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
   reveals.forEach(function(el) { observer.observe(el); });
+
+  // ── Finale: anima l'isola solo quando è sullo schermo ──
+  var finale = document.querySelector('.finale');
+  if (finale) {
+    finale.classList.add('is-offscreen');
+    new IntersectionObserver(function(entries) {
+      finale.classList.toggle('is-offscreen', !entries[0].isIntersecting);
+    }).observe(finale);
+  }
 
   // ── Nav scroll ──
   var nav = document.getElementById('nav');
