@@ -347,6 +347,9 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   filter: drop-shadow(0 12px 22px rgba(0,0,0,0.4));
 }
 .hero-deco img { width: 100%; height: auto; display: block; }
+/* caricate dopo l'evento load (fuori dal percorso critico), poi in dissolvenza */
+.hero-deco { opacity: 0; transition: opacity 0.9s var(--ease); }
+.hero-deco.is-loaded { opacity: 1; }
 .hero-deco--left { left: -26px; width: clamp(140px, 21vw, 300px); }
 .hero-deco--right { right: -24px; width: clamp(120px, 17vw, 250px); }
 @media (max-width: 600px) {
@@ -1404,6 +1407,68 @@ textarea:focus-visible,
 .prev-success-wa svg { width: 20px; height: 20px; }
 .prev-next[disabled] { opacity: 0.6; pointer-events: none; }
 
+/* ── Animazioni aggiuntive (sobrie) ──
+   Usano le proprietà singole translate/rotate per non interferire
+   con i transform di hover/press già definiti. */
+
+/* 1. Entrata a cascata degli elementi dell'hero.
+   Titolo e sottotitolo restano visibili dal primo frame (solo scivolano),
+   così non ritardano il Largest Contentful Paint; occhiello e bottone
+   fanno anche la dissolvenza. */
+.hero-glass > * {
+  translate: 0 14px;
+  animation: heroItemIn 0.9s var(--ease-out) forwards;
+}
+.hero-glass > .hero-eyebrow,
+.hero-glass > .hero-cta { opacity: 0; }
+.hero-glass > :nth-child(1) { animation-delay: 0.25s; }
+.hero-glass > :nth-child(2) { animation-delay: 0.35s; }
+.hero-glass > :nth-child(3) { animation-delay: 0.5s; }
+.hero-glass > :nth-child(4) { animation-delay: 0.7s; }
+@keyframes heroItemIn {
+  to { opacity: 1; translate: 0 0; }
+}
+
+/* 2. Piante che ondeggiano lentamente, come mosse dal vento */
+.hero-deco,
+.deco-plant,
+.deco-fern,
+.deco-bloom {
+  transform-origin: 50% 100%;
+  animation: sway 7s ease-in-out infinite;
+}
+.hero-deco--right { animation-duration: 8.5s; animation-delay: -2.5s; }
+.deco-fern { animation-duration: 8s; animation-delay: -1.5s; }
+.deco-bloom { animation-duration: 9s; animation-delay: -4s; }
+.deco-ivy {
+  transform-origin: 50% 0;
+  animation: sway 10s ease-in-out infinite;
+}
+@keyframes sway {
+  0%, 100% { rotate: -1.2deg; }
+  50%      { rotate: 1.2deg; }
+}
+
+/* 4. Icone dei servizi: piccolo movimento in hover */
+.servizio-icon { transition: rotate 0.4s var(--ease-out), scale 0.4s var(--ease-out); }
+.servizio:hover .servizio-icon { rotate: -8deg; scale: 1.08; }
+
+/* 5. Impulso discreto attorno al bottone WhatsApp */
+.wa-float::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--whatsapp);
+  opacity: 0;
+  pointer-events: none;
+  animation: waPulse 3.6s ease-out 2.5s infinite;
+}
+@keyframes waPulse {
+  0%        { scale: 1;   opacity: 0.55; }
+  70%, 100% { scale: 1.6; opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -1414,7 +1479,10 @@ textarea:focus-visible,
   /* i contenuti rivelati allo scroll restano sempre visibili */
   .reveal, .pop { opacity: 1 !important; transform: none !important; }
   /* nessun movimento ambientale o parallax */
-  .blob, .leaf-float { animation: none !important; }
+  .blob, .leaf-float,
+  .hero-deco, .deco-plant, .deco-fern, .deco-bloom, .deco-ivy,
+  .wa-float::after { animation: none !important; }
+  .hero-glass > * { opacity: 1 !important; translate: none !important; animation: none !important; }
   .hero-bg img { transform: scale(1.04) !important; }
 }
 </style>
@@ -1452,14 +1520,14 @@ textarea:focus-visible,
   </div>
   <div class="hero-overlay"></div>
   <picture class="hero-deco hero-deco--left" aria-hidden="true">
-    <source type="image/avif" srcset="assets/img/deco-plant-320.avif 320w, assets/img/deco-plant-520.avif 520w" sizes="(min-width:600px) 280px, 150px">
-    <source type="image/webp" srcset="assets/img/deco-plant-320.webp 320w, assets/img/deco-plant-520.webp 520w" sizes="(min-width:600px) 280px, 150px">
-    <img src="assets/img/deco-plant-520.png" width="520" height="477" loading="eager" decoding="async" alt="">
+    <source type="image/avif" data-srcset="assets/img/deco-plant-320.avif 320w, assets/img/deco-plant-520.avif 520w" sizes="(min-width:600px) 280px, 150px">
+    <source type="image/webp" data-srcset="assets/img/deco-plant-320.webp 320w, assets/img/deco-plant-520.webp 520w" sizes="(min-width:600px) 280px, 150px">
+    <img data-src="assets/img/deco-plant-520.png" width="520" height="477" decoding="async" alt="">
   </picture>
   <picture class="hero-deco hero-deco--right" aria-hidden="true">
-    <source type="image/avif" srcset="assets/img/deco-fern-320.avif 320w, assets/img/deco-fern-520.avif 520w" sizes="(min-width:600px) 250px, 140px">
-    <source type="image/webp" srcset="assets/img/deco-fern-320.webp 320w, assets/img/deco-fern-520.webp 520w" sizes="(min-width:600px) 250px, 140px">
-    <img src="assets/img/deco-fern-520.png" width="520" height="506" loading="eager" decoding="async" alt="">
+    <source type="image/avif" data-srcset="assets/img/deco-fern-320.avif 320w, assets/img/deco-fern-520.avif 520w" sizes="(min-width:600px) 250px, 140px">
+    <source type="image/webp" data-srcset="assets/img/deco-fern-320.webp 320w, assets/img/deco-fern-520.webp 520w" sizes="(min-width:600px) 250px, 140px">
+    <img data-src="assets/img/deco-fern-520.png" width="520" height="506" decoding="async" alt="">
   </picture>
   <div class="hero-content">
     <div class="hero-glass">
@@ -1904,6 +1972,21 @@ textarea:focus-visible,
     waObserver.observe(prevSection);
   }
 
+  // ── Piante decorative dell'hero: caricate dopo il load della pagina,
+  // così non rubano banda all'immagine e al testo principali ──
+  // Le piante sono decorative: entrano dopo la card dell'hero, senza
+  // contendere banda alla foto principale.
+  function loadHeroDeco() {
+    document.querySelectorAll('.hero-deco').forEach(function(pic) {
+      pic.querySelectorAll('source[data-srcset]').forEach(function(s) { s.srcset = s.dataset.srcset; });
+      var img = pic.querySelector('img[data-src]');
+      if (!img) return;
+      img.addEventListener('load', function() { pic.classList.add('is-loaded'); }, { once: true });
+      img.src = img.dataset.src;
+    });
+  }
+  window.addEventListener('load', function() { setTimeout(loadHeroDeco, 1200); });
+
   // ── Parallax leggero sulla foto hero (solo transform, 60fps) ──
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var heroImg = document.querySelector('.hero-bg img');
@@ -1961,6 +2044,33 @@ textarea:focus-visible,
     else if (e.key === 'Home') { e.preventDefault(); setFraction(0); }
     else if (e.key === 'End') { e.preventDefault(); setFraction(1); }
   });
+
+  // Suggerimento: la prima volta che lo slider entra in vista il cursore
+  // oscilla brevemente, per far capire che si può trascinare.
+  var baTouched = false;
+  slider.addEventListener('pointerdown', function() { baTouched = true; });
+  slider.addEventListener('keydown', function() { baTouched = true; });
+  function playSliderHint() {
+    var start = null;
+    var dur = 1600;
+    function frame(t) {
+      if (baTouched) return;
+      if (start === null) start = t;
+      var k = Math.min(1, (t - start) / dur);
+      // oscillazione smorzata attorno al 50%
+      setFraction(0.5 + Math.sin(k * Math.PI * 2) * 0.14 * (1 - k));
+      if (k < 1) requestAnimationFrame(frame); else setFraction(0.5);
+    }
+    requestAnimationFrame(frame);
+  }
+  if (!prefersReduced && 'IntersectionObserver' in window) {
+    var hintObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { hintObserver.disconnect(); setTimeout(playSliderHint, 500); }
+      });
+    }, { threshold: 0.6 });
+    hintObserver.observe(slider);
+  }
 
   var tabs = document.querySelectorAll('.ba-tab');
   var baBeforeAvif = document.getElementById('baBeforeAvif');
