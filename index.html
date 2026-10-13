@@ -1261,38 +1261,98 @@ section { padding: 5rem 1.5rem; }
   background-size: 300px auto;
   opacity: 0.5;
 }
+/* Filtri per tipo di lavoro */
+.gal-filters {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  margin: 2rem -1.5rem 0;
+  padding: 0.25rem 1.5rem;
+  scrollbar-width: none;
+}
+.gal-filters::-webkit-scrollbar { display: none; }
+.gal-filter {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 42px;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.65);
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+.gal-filter span { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.gal-filter:hover { border-color: var(--green); }
+.gal-filter[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.gal-filter[aria-pressed="true"] span { color: var(--sage); }
+.gal-filter:active { transform: scale(0.97); }
+@media (min-width: 768px) {
+  .gal-filters { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding-inline: 0; }
+}
+
+/* Mosaico: celle quadrate, foto alte (1x2) e grandi (2x2).
+   2 colonne sul telefono, 4 da 900px; l'ordine riempie le righe senza buchi. */
 .galleria-grid {
+  --gal-gap: 0.6rem;
+  --gal-cell: calc((min(100vw, 1080px + 3rem) - 3rem - var(--gal-gap)) / 2);
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-top: 3rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: var(--gal-cell);
+  grid-auto-flow: dense;
+  gap: var(--gal-gap);
+  margin-top: 1.25rem;
 }
-@media (min-width: 600px) {
-  .galleria-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-}
-.gal-item {
-  border-radius: var(--radius);
-  overflow: hidden;
-  aspect-ratio: 1;
-  cursor: zoom-in;
-}
-.gal-item:first-child {
-  grid-column: span 2;
-  aspect-ratio: 2/1;
-}
-@media (min-width: 600px) {
-  .gal-item:first-child {
-    grid-column: span 2;
-    grid-row: span 2;
-    aspect-ratio: auto;
+@media (min-width: 900px) {
+  .galleria-grid {
+    --gal-gap: 0.9rem;
+    --gal-cell: calc((min(100vw - 4rem, 1080px) - 3 * var(--gal-gap)) / 4);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+.gal-item {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: zoom-in;
+  background: var(--stone);
+}
+.gal-item[hidden] { display: none; }
+.gal-item.is-tall { grid-row: span 2; }
+.gal-item.is-big { grid-column: span 2; grid-row: span 2; }
+.gal-item picture { display: block; width: 100%; height: 100%; }
 .gal-item img {
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform 0.6s var(--ease-out);
 }
 .gal-item:hover img { transform: scale(1.06); }
+.gal-cap {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 2.4rem 0.9rem 0.8rem;
+  background: linear-gradient(to top, rgba(12,18,14,0.72), rgba(12,18,14,0));
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  text-align: left;
+  pointer-events: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.gal-item.is-big .gal-cap { font-size: 0.95rem; padding: 3rem 1.1rem 1rem; }
+@media (min-width: 900px) {
+  .gal-cap { opacity: 0.92; transition: opacity 0.3s; }
+  .gal-item:hover .gal-cap { opacity: 1; }
+}
 
 /* ── FOOTER ── */
 .footer {
@@ -1957,7 +2017,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 .gal-item::after {
   content: "";
   position: absolute;
-  right: 12px; bottom: 12px;
+  right: 12px; top: 12px;
   width: 40px; height: 40px;
   border-radius: 50%;
   background: rgba(23, 34, 27, 0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6'/%3E%3Cpath d='M20 20l-4.2-4.2M11 8.5v5M8.5 11h5'/%3E%3C/svg%3E") center / 20px no-repeat;
@@ -2419,71 +2479,111 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     <div class="reveal">
       <span class="section-eyebrow">I nostri lavori</span>
       <h2 class="section-title">Galleria <span class="light">progetti.</span></h2>
-      <p class="section-sub">Una selezione dei giardini che abbiamo curato e trasformato.</p>
+      <p class="section-sub">Una selezione dei giardini che abbiamo curato e trasformato. Tocca una foto per ingrandirla.</p>
     </div>
-    <div class="galleria-grid">
-      <button type="button" class="gal-item pop" data-lb aria-label="Ingrandisci: Giardino completo con prato, vialetto in pietra e vista panoramica sulle montagne">
+    <div class="gal-filters" role="group" aria-label="Filtra i lavori">
+      <button type="button" class="gal-filter" data-filter="tutti" aria-pressed="true">Tutti<span>12</span></button>
+      <button type="button" class="gal-filter" data-filter="prati" aria-pressed="false">Prati<span>5</span></button>
+      <button type="button" class="gal-filter" data-filter="aiuole" aria-pressed="false">Aiuole<span>2</span></button>
+      <button type="button" class="gal-filter" data-filter="corten" aria-pressed="false">Ghiaia e corten<span>3</span></button>
+      <button type="button" class="gal-filter" data-filter="commerciale" aria-pressed="false">Commerciali<span>2</span></button>
+    </div>
+    <div class="galleria-grid" id="galGrid">
+      <button type="button" class="gal-item pop is-big" data-cat="prati" data-lb aria-label="Ingrandisci: Prato rasato a strisce davanti a una villa con la facciata rossa">
         <picture>
-          <source type="image/avif" srcset="assets/img/gal-6-480.avif 480w, assets/img/gal-6-800.avif 800w, assets/img/gal-6-1200.avif 1200w" sizes="(min-width:600px) 66vw, 92vw">
-          <source type="image/webp" srcset="assets/img/gal-6-480.webp 480w, assets/img/gal-6-800.webp 800w, assets/img/gal-6-1200.webp 1200w" sizes="(min-width:600px) 66vw, 92vw">
-          <img src="assets/img/gal-6-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Giardino completo con prato, vialetto in pietra e vista panoramica sulle montagne">
+          <source type="image/avif" srcset="assets/img/gal-10-480.avif 480w, assets/img/gal-10-800.avif 800w, assets/img/gal-10-1200.avif 1200w" sizes="(min-width: 900px) 540px, calc(100vw - 3rem)">
+          <source type="image/webp" srcset="assets/img/gal-10-480.webp 480w, assets/img/gal-10-800.webp 800w, assets/img/gal-10-1200.webp 1200w" sizes="(min-width: 900px) 540px, calc(100vw - 3rem)">
+          <img src="assets/img/gal-10-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato rasato a strisce davanti a una villa con la facciata rossa">
         </picture>
+        <span class="gal-cap" aria-hidden="true">Prato a strisce davanti alla villa</span>
       </button>
-      <button type="button" class="gal-item pop reveal-delay-1" data-lb aria-label="Ingrandisci: Prato curato con bordura in corteccia e rose rosa lungo il muro di pietra">
+      <button type="button" class="gal-item pop is-tall reveal-delay-2" data-cat="prati" data-lb aria-label="Ingrandisci: Prato all'inglese con bordure in ghiaia rossa e piante, vista sulle colline">
         <picture>
-          <source type="image/avif" srcset="assets/img/gal-1-480.avif 480w, assets/img/gal-1-800.avif 800w, assets/img/gal-1-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <source type="image/webp" srcset="assets/img/gal-1-480.webp 480w, assets/img/gal-1-800.webp 800w, assets/img/gal-1-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <img src="assets/img/gal-1-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato curato con bordura in corteccia e rose rosa lungo il muro di pietra">
+          <source type="image/avif" srcset="assets/img/gal-11-480.avif 480w, assets/img/gal-11-800.avif 800w, assets/img/gal-11-1200.avif 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-11-480.webp 480w, assets/img/gal-11-800.webp 800w, assets/img/gal-11-1200.webp 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <img src="assets/img/gal-11-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure in ghiaia rossa e piante, vista sulle colline">
         </picture>
+        <span class="gal-cap" aria-hidden="true">Prato all'inglese e ghiaia rossa</span>
       </button>
-      <button type="button" class="gal-item pop reveal-delay-2" data-lb aria-label="Ingrandisci: Prato lungo un muro di pietra con vialetto e aiuola curata">
+      <button type="button" class="gal-item pop is-tall reveal-delay-3" data-cat="corten" data-lb aria-label="Ingrandisci: Vasche in acciaio corten con rosmarino lungo il muro, ghiaia chiara e ghiaia scura attorno al rubinetto">
         <picture>
-          <source type="image/avif" srcset="assets/img/gal-2-480.avif 480w, assets/img/gal-2-800.avif 800w, assets/img/gal-2-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <source type="image/webp" srcset="assets/img/gal-2-480.webp 480w, assets/img/gal-2-800.webp 800w, assets/img/gal-2-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <img src="assets/img/gal-2-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato lungo un muro di pietra con vialetto e aiuola curata">
+          <source type="image/avif" srcset="assets/img/gal-12-480.avif 480w, assets/img/gal-12-800.avif 800w, assets/img/gal-12-1200.avif 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-12-480.webp 480w, assets/img/gal-12-800.webp 800w, assets/img/gal-12-1200.webp 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <img src="assets/img/gal-12-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Vasche in acciaio corten con rosmarino lungo il muro, ghiaia chiara e ghiaia scura attorno al rubinetto">
         </picture>
+        <span class="gal-cap" aria-hidden="true">Vasche in corten e ghiaia</span>
       </button>
-      <button type="button" class="gal-item pop reveal-delay-3" data-lb aria-label="Ingrandisci: Angolo barbecue con prato, rose bianche e fioriera in mattoni">
+      <button type="button" class="gal-item pop is-tall" data-cat="aiuole" data-lb aria-label="Ingrandisci: Aiuole con rose e ulivi lungo un vialetto in pietra in un giardino residenziale">
         <picture>
-          <source type="image/avif" srcset="assets/img/gal-3-480.avif 480w, assets/img/gal-3-800.avif 800w, assets/img/gal-3-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <source type="image/webp" srcset="assets/img/gal-3-480.webp 480w, assets/img/gal-3-800.webp 800w, assets/img/gal-3-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <img src="assets/img/gal-3-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Angolo barbecue con prato, rose bianche e fioriera in mattoni">
-        </picture>
-      </button>
-      <button type="button" class="gal-item pop reveal-delay-1" data-lb aria-label="Ingrandisci: Bordura in corteccia con peonia in fiore e prato curvo">
-        <picture>
-          <source type="image/avif" srcset="assets/img/gal-4-480.avif 480w, assets/img/gal-4-800.avif 800w, assets/img/gal-4-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <source type="image/webp" srcset="assets/img/gal-4-480.webp 480w, assets/img/gal-4-800.webp 800w, assets/img/gal-4-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <img src="assets/img/gal-4-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Bordura in corteccia con peonia in fiore e prato curvo">
-        </picture>
-      </button>
-      <button type="button" class="gal-item pop reveal-delay-2" data-lb aria-label="Ingrandisci: Vialetto in pietra e prato curvo al tramonto con rose">
-        <picture>
-          <source type="image/avif" srcset="assets/img/chi-siamo-480.avif 480w, assets/img/chi-siamo-800.avif 800w, assets/img/chi-siamo-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <source type="image/webp" srcset="assets/img/chi-siamo-480.webp 480w, assets/img/chi-siamo-800.webp 800w, assets/img/chi-siamo-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <img src="assets/img/chi-siamo-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Vialetto in pietra e prato curvo al tramonto con rose">
-        </picture>
-      </button>
-      <button type="button" class="gal-item pop reveal-delay-3" data-lb aria-label="Ingrandisci: Aiuole in ghiaia con piante ornamentali davanti a un edificio commerciale">
-        <picture>
-          <source type="image/avif" srcset="assets/img/gal-7-480.avif 480w, assets/img/gal-7-800.avif 800w, assets/img/gal-7-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <source type="image/webp" srcset="assets/img/gal-7-480.webp 480w, assets/img/gal-7-800.webp 800w, assets/img/gal-7-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <img src="assets/img/gal-7-1200.jpg" width="1170" height="1560" loading="lazy" decoding="async" alt="Aiuole in ghiaia con piante ornamentali e alberelli davanti a un edificio commerciale">
-        </picture>
-      </button>
-      <button type="button" class="gal-item pop reveal-delay-1" data-lb aria-label="Ingrandisci: Bordura in ghiaia con cerchi di corteccia e graminacee ornamentali">
-        <picture>
-          <source type="image/avif" srcset="assets/img/gal-8-480.avif 480w, assets/img/gal-8-800.avif 800w, assets/img/gal-8-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <source type="image/webp" srcset="assets/img/gal-8-480.webp 480w, assets/img/gal-8-800.webp 800w, assets/img/gal-8-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <img src="assets/img/gal-8-1200.jpg" width="1170" height="1560" loading="lazy" decoding="async" alt="Bordura in ghiaia con cerchi di corteccia e graminacee ornamentali in un'area commerciale">
-        </picture>
-      </button>
-      <button type="button" class="gal-item pop reveal-delay-2" data-lb aria-label="Ingrandisci: Aiuole con rose e ulivi lungo un vialetto in pietra">
-        <picture>
-          <source type="image/avif" srcset="assets/img/gal-9-480.avif 480w, assets/img/gal-9-800.avif 800w, assets/img/gal-9-1200.avif 1200w" sizes="(min-width:600px) 33vw, 46vw">
-          <source type="image/webp" srcset="assets/img/gal-9-480.webp 480w, assets/img/gal-9-800.webp 800w, assets/img/gal-9-1200.webp 1200w" sizes="(min-width:600px) 33vw, 46vw">
+          <source type="image/avif" srcset="assets/img/gal-9-480.avif 480w, assets/img/gal-9-800.avif 800w, assets/img/gal-9-1200.avif 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-9-480.webp 480w, assets/img/gal-9-800.webp 800w, assets/img/gal-9-1200.webp 1200w" sizes="(min-width: 900px) 270px, 46vw">
           <img src="assets/img/gal-9-1200.jpg" width="1170" height="1345" loading="lazy" decoding="async" alt="Aiuole con rose e ulivi lungo un vialetto in pietra in un giardino residenziale">
         </picture>
+        <span class="gal-cap" aria-hidden="true">Aiuole con rose e ulivi</span>
+      </button>
+      <button type="button" class="gal-item pop is-tall reveal-delay-2" data-cat="aiuole" data-lb aria-label="Ingrandisci: Bordura in corteccia con peonia in fiore e prato curvo">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-4-480.avif 480w, assets/img/gal-4-800.avif 800w, assets/img/gal-4-1200.avif 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-4-480.webp 480w, assets/img/gal-4-800.webp 800w, assets/img/gal-4-1200.webp 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <img src="assets/img/gal-4-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Bordura in corteccia con peonia in fiore e prato curvo">
+        </picture>
+        <span class="gal-cap" aria-hidden="true">Bordura con peonia</span>
+      </button>
+      <button type="button" class="gal-item pop is-big reveal-delay-3" data-cat="corten" data-lb aria-label="Ingrandisci: Giardino in ghiaia chiara con piante ornamentali e vasche in corten lungo il muro e la recinzione bianca">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-13-480.avif 480w, assets/img/gal-13-800.avif 800w, assets/img/gal-13-1200.avif 1200w" sizes="(min-width: 900px) 540px, calc(100vw - 3rem)">
+          <source type="image/webp" srcset="assets/img/gal-13-480.webp 480w, assets/img/gal-13-800.webp 800w, assets/img/gal-13-1200.webp 1200w" sizes="(min-width: 900px) 540px, calc(100vw - 3rem)">
+          <img src="assets/img/gal-13-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Giardino in ghiaia chiara con piante ornamentali e vasche in corten lungo il muro e la recinzione bianca">
+        </picture>
+        <span class="gal-cap" aria-hidden="true">Giardino in ghiaia e corten</span>
+      </button>
+      <button type="button" class="gal-item pop is-tall" data-cat="prati" data-lb aria-label="Ingrandisci: Prato curato con bordura in corteccia e rose rosa lungo il muro di pietra">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-1-480.avif 480w, assets/img/gal-1-800.avif 800w, assets/img/gal-1-1200.avif 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-1-480.webp 480w, assets/img/gal-1-800.webp 800w, assets/img/gal-1-1200.webp 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <img src="assets/img/gal-1-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato curato con bordura in corteccia e rose rosa lungo il muro di pietra">
+        </picture>
+        <span class="gal-cap" aria-hidden="true">Prato e bordura con rose</span>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-2" data-cat="corten" data-lb aria-label="Ingrandisci: Rosmarino che ricade da una vasca in acciaio corten accanto alla ghiaia chiara">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-14-480.avif 480w, assets/img/gal-14-800.avif 800w, assets/img/gal-14-1200.avif 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-14-480.webp 480w, assets/img/gal-14-800.webp 800w, assets/img/gal-14-1200.webp 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <img src="assets/img/gal-14-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Rosmarino che ricade da una vasca in acciaio corten accanto alla ghiaia chiara">
+        </picture>
+        <span class="gal-cap" aria-hidden="true">Rosmarino nella vasca in corten</span>
+      </button>
+      <button type="button" class="gal-item pop is-tall reveal-delay-3" data-cat="prati" data-lb aria-label="Ingrandisci: Prato lungo un muro di pietra con vialetto e aiuola curata">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-2-480.avif 480w, assets/img/gal-2-800.avif 800w, assets/img/gal-2-1200.avif 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-2-480.webp 480w, assets/img/gal-2-800.webp 800w, assets/img/gal-2-1200.webp 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <img src="assets/img/gal-2-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato lungo un muro di pietra con vialetto e aiuola curata">
+        </picture>
+        <span class="gal-cap" aria-hidden="true">Prato lungo il muretto in pietra</span>
+      </button>
+      <button type="button" class="gal-item pop" data-cat="prati" data-lb aria-label="Ingrandisci: Angolo barbecue con prato, rose bianche e fioriera in mattoni">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-3-480.avif 480w, assets/img/gal-3-800.avif 800w, assets/img/gal-3-1200.avif 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-3-480.webp 480w, assets/img/gal-3-800.webp 800w, assets/img/gal-3-1200.webp 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <img src="assets/img/gal-3-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Angolo barbecue con prato, rose bianche e fioriera in mattoni">
+        </picture>
+        <span class="gal-cap" aria-hidden="true">Angolo barbecue</span>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-2" data-cat="commerciale" data-lb aria-label="Ingrandisci: Aiuole in ghiaia con piante ornamentali e alberelli davanti a un edificio commerciale">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-7-480.avif 480w, assets/img/gal-7-800.avif 800w, assets/img/gal-7-1200.avif 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-7-480.webp 480w, assets/img/gal-7-800.webp 800w, assets/img/gal-7-1200.webp 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <img src="assets/img/gal-7-1200.jpg" width="1170" height="1560" loading="lazy" decoding="async" alt="Aiuole in ghiaia con piante ornamentali e alberelli davanti a un edificio commerciale">
+        </picture>
+        <span class="gal-cap" aria-hidden="true">Aiuole davanti a un negozio</span>
+      </button>
+      <button type="button" class="gal-item pop reveal-delay-3" data-cat="commerciale" data-lb aria-label="Ingrandisci: Bordura in ghiaia con cerchi di corteccia e graminacee ornamentali in un'area commerciale">
+        <picture>
+          <source type="image/avif" srcset="assets/img/gal-8-480.avif 480w, assets/img/gal-8-800.avif 800w, assets/img/gal-8-1200.avif 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <source type="image/webp" srcset="assets/img/gal-8-480.webp 480w, assets/img/gal-8-800.webp 800w, assets/img/gal-8-1200.webp 1200w" sizes="(min-width: 900px) 270px, 46vw">
+          <img src="assets/img/gal-8-1200.jpg" width="1170" height="1560" loading="lazy" decoding="async" alt="Bordura in ghiaia con cerchi di corteccia e graminacee ornamentali in un'area commerciale">
+        </picture>
+        <span class="gal-cap" aria-hidden="true">Ghiaia e graminacee</span>
       </button>
     </div>
   </div>
@@ -3239,7 +3339,8 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   var lbClose = document.getElementById('lbClose');
   var lbPrev = document.getElementById('lbPrev');
   var lbNext = document.getElementById('lbNext');
-  var lbItems = Array.prototype.slice.call(document.querySelectorAll('[data-lb]'));
+  var lbAll = Array.prototype.slice.call(document.querySelectorAll('[data-lb]'));
+  var lbItems = lbAll;
   var lbIndex = 0;
   var lbLastFocus = null;
   function lbShow(i, dir) {
@@ -3274,6 +3375,8 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     setTimeout(function() { lbShow(lbIndex + dir, dir); }, 160);
   }
   function openLb(trigger) {
+    // sfoglia solo le foto del filtro attivo
+    lbItems = lbAll.filter(function(el) { return !el.hidden; });
     lbShow(lbItems.indexOf(trigger));
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -3285,8 +3388,57 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     document.body.style.overflow = '';
     if (lbLastFocus) { lbLastFocus.focus(); lbLastFocus = null; }
   }
-  lbItems.forEach(function(el) {
+  lbAll.forEach(function(el) {
     el.addEventListener('click', function() { openLb(el); });
+  });
+
+  // ── Galleria: filtri per tipo di lavoro, con passaggio animato ──
+  var galFilters = document.querySelectorAll('.gal-filter');
+  var galItems = Array.prototype.slice.call(document.querySelectorAll('.gal-item'));
+  var galWide = window.matchMedia('(min-width: 900px)');
+  var galCat = 'tutti';
+  galItems.forEach(function(el, i) {
+    el.style.viewTransitionName = 'gal-' + i;
+    el.dataset.shape = el.classList.contains('is-big') ? 'big' : el.classList.contains('is-tall') ? 'tall' : '';
+  });
+  // Con un filtro attivo le forme si ricalcolano per riempire le righe senza buchi
+  function shapesFor(n) {
+    var out = [];
+    if (!galWide.matches) {             // 2 colonne: una grande se dispari, poi coppie alte
+      if (n % 2) out.push('big');
+      while (out.length < n) out.push('tall');
+      return out;
+    }
+    while (out.length < n) {            // 4 colonne: righe da grande+2 alte, 2 grandi o 4 alte
+      var left = n - out.length;
+      if (left === 4) out.push('tall', 'tall', 'tall', 'tall');
+      else if (left % 3 === 0 || left === 1) out.push('big', 'tall', 'tall');
+      else out.push('big', 'big');
+    }
+    return out.slice(0, n);
+  }
+  function setShape(el, shape) {
+    el.classList.toggle('is-big', shape === 'big');
+    el.classList.toggle('is-tall', shape === 'tall');
+  }
+  function applyFilter(cat) {
+    galCat = cat;
+    var shown = galItems.filter(function(el) { return cat === 'tutti' || el.dataset.cat === cat; });
+    var shapes = cat === 'tutti' ? null : shapesFor(shown.length);
+    galItems.forEach(function(el) {
+      var k = shown.indexOf(el);
+      el.hidden = k < 0;
+      if (k >= 0) { el.classList.add('visible'); setShape(el, shapes ? shapes[k] : el.dataset.shape); }
+    });
+    galFilters.forEach(function(b) { b.setAttribute('aria-pressed', b.dataset.filter === cat ? 'true' : 'false'); });
+  }
+  if (galWide.addEventListener) galWide.addEventListener('change', function() { if (galCat !== 'tutti') applyFilter(galCat); });
+  galFilters.forEach(function(b) {
+    b.addEventListener('click', function() {
+      var cat = b.dataset.filter;
+      if (document.startViewTransition && !prefersReduced) document.startViewTransition(function() { applyFilter(cat); });
+      else applyFilter(cat);
+    });
   });
   lb.addEventListener('click', function(e) {
     if (e.target === lb || e.target.classList.contains('lb-figure')) closeLb();
