@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagina non trovata | Lisa Garden</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#356a39">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<style>
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/assets/fonts/inter-latin-wght-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/assets/fonts/fraunces-latin-wght-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/assets/fonts/fraunces-latin-wght-normal.woff2') format('woff2');
+}
+:root {
+  --ink: #17221b;
+  --ink-soft: #243029;
+  --green: #356a39;
+  --sage: #8fae84;
+  --whatsapp: #25D366;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.5rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  color: rgba(255,255,255,0.78);
+  background: radial-gradient(110% 75% at 50% 30%, #2b3b2f 0%, var(--ink-soft) 45%, var(--ink) 100%);
+  -webkit-font-smoothing: antialiased;
+  text-align: center;
+}
+main { max-width: 34rem; }
+.leaf {
+  width: 64px; height: 64px;
+  margin: 0 auto 1.75rem;
+  color: var(--sage);
+  transform-origin: 50% 100%;
+  animation: sway 6s ease-in-out infinite;
+}
+@keyframes sway { 0%, 100% { rotate: -6deg; } 50% { rotate: 6deg; } }
+.code {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 0.75rem;
+}
+h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 450;
+  font-size: clamp(2.2rem, 1.6rem + 3vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+h1 em { font-style: italic; color: var(--sage); }
+p { font-size: 1.05rem; line-height: 1.6; }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 2rem; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.3s, background-color 0.3s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn--primary { background: #fff; color: var(--ink); }
+.btn--ghost { color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+.btn--ghost:hover { background: rgba(255,255,255,0.08); }
+.btn svg { width: 20px; height: 20px; color: var(--whatsapp); }
+a:focus-visible { outline: 3px solid #eef3e9; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .leaf { animation: none; } .btn { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <svg class="leaf" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+    <path d="M24 44C24 30 26 18 38 6C40 20 36 34 24 44Z" fill="currentColor" opacity="0.35"/>
+    <path d="M24 44C24 32 22 22 10 12C8 24 12 36 24 44Z" fill="currentColor" opacity="0.6"/>
+    <path d="M24 44V22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  <p class="code">Errore 404</p>
+  <h1>Questo sentiero <em>non porta da nessuna parte.</em></h1>
+  <p>La pagina che cerchi non esiste o è stata spostata. Torna al giardino principale, oppure scrivici direttamente.</p>
+  <div class="actions">
+    <a class="btn btn--primary" href="/">Torna alla home</a>
+    <a class="btn btn--ghost" href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo.">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Scrivi su WhatsApp
+    </a>
+  </div>
+</main>
+</body>
+</html>
