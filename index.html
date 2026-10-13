@@ -726,101 +726,253 @@ section { padding: 5rem 1.5rem; }
 .ba-cta-btn:hover { transform: scale(1.04); box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
 .ba-cta-btn:active { transform: scale(0.98); }
 
-.ba-tabs {
+/* Selettore dei lavori, confronto e fasi.
+   Mobile: lavori in una riga scorrevole, confronto a tutta larghezza, fasi sotto.
+   Desktop: confronto a sinistra, lavori e descrizione a destra. */
+.pd {
+  display: grid;
+  grid-template-areas: "picker" "stage" "info" "cta";
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.pd-picker {
+  grid-area: picker;
   display: flex;
-  gap: 0.5rem;
-  margin-top: 2.5rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
+  gap: 0.6rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1.5rem;
+  margin-inline: -1.5rem;
+  padding: 0.25rem 1.5rem 0.5rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
-.ba-tab {
-  padding: 0.5rem 1.2rem;
-  border-radius: 50px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: rgba(255,255,255,0.62);
+.pd-picker::-webkit-scrollbar { display: none; }
+.pd-pick {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.4rem 1rem 0.4rem 0.4rem;
+  border-radius: 16px;
   background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: all 0.3s var(--ease);
-  letter-spacing: 0.01em;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.72);
+  text-align: left;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
-.ba-tab:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
-.ba-tab.active {
-  background: var(--leaf);
-  border-color: var(--leaf);
-  color: var(--surface);
+.pd-pick:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.pd-pick[aria-pressed="true"] {
+  background: rgba(143,174,132,0.18);
+  border-color: var(--sage);
+  color: #fff;
 }
+.pd-pick img {
+  width: 40px; height: 50px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.pd-pick-text { display: grid; gap: 0.1rem; }
+.pd-pick-title { font-size: 0.86rem; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; }
+.pd-pick-meta { font-size: 0.72rem; color: rgba(255,255,255,0.55); white-space: nowrap; }
+.pd-pick[aria-pressed="true"] .pd-pick-meta { color: var(--sage); }
 
+.pd-stage { grid-area: stage; min-width: 0; }
 .ba-slider {
   position: relative;
   width: 100%;
-  max-width: 720px;
-  aspect-ratio: 4/3;
-  border-radius: var(--radius);
+  aspect-ratio: 4 / 5;
+  border-radius: 24px;
   overflow: hidden;
   cursor: col-resize;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: none;
+  touch-action: pan-y;
+  background: #0f1712;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.38);
+  --p: 50%;
 }
-.ba-slider img {
+.pd-layer {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
+  inset: 0;
+  opacity: 0;
   pointer-events: none;
 }
-.ba-after { clip-path: inset(0 0 0 50%); }
+.pd-layer img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pd-layer.is-before { opacity: 1; z-index: 1; }
+.pd-layer.is-after { opacity: 1; z-index: 2; clip-path: inset(0 0 0 var(--p)); }
+.ba-slider.is-loading .pd-layer { opacity: 0.35; transition: opacity 0.3s; }
 .ba-divider {
   position: absolute;
   top: 0; bottom: 0;
-  left: 50%;
+  left: var(--p);
   width: 2px;
-  background: var(--surface);
+  margin-left: -1px;
+  background: #fff;
+  box-shadow: 0 0 14px rgba(255,255,255,0.55);
   z-index: 5;
-  transform: translateX(-50%);
   pointer-events: none;
 }
 .ba-knob {
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 48px; height: 48px;
-  background: var(--surface);
+  top: 50%; left: var(--p);
+  width: 52px; height: 52px;
+  margin: -26px 0 0 -26px;
   border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 6px 22px rgba(0,0,0,0.35);
   z-index: 6;
   pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  gap: 8px;
+  transition: scale 0.25s var(--ease-out);
 }
+.ba-slider.is-dragging .ba-knob { scale: 1.12; }
 .ba-knob svg { width: 12px; height: 12px; color: var(--charcoal); }
 .ba-tag {
   position: absolute;
-  bottom: 16px;
-  padding: 0.3rem 0.8rem;
-  border-radius: 8px;
-  font-size: 0.7rem;
+  bottom: 14px;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: #fff;
   z-index: 4;
   pointer-events: none;
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: opacity 0.25s;
 }
-.ba-tag-before {
-  left: 16px;
-  background: rgba(0,0,0,0.5);
-  color: var(--surface);
-  border: 1px solid rgba(255,255,255,0.1);
+.ba-tag-before { left: 14px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.12); }
+.ba-tag-after { right: 14px; background: rgba(53,106,57,0.85); border: 1px solid rgba(255,255,255,0.18); }
+
+/* Fasi del cantiere */
+.pd-timeline {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.25rem;
+  --fill: 0%;
 }
-.ba-tag-after {
-  right: 16px;
-  background: rgba(61, 122, 40, 0.8);
-  color: var(--surface);
-  border: 1px solid rgba(255,255,255,0.15);
+.pd-timeline[hidden] { display: none; }
+.pd-timeline::before,
+.pd-timeline::after {
+  content: "";
+  position: absolute;
+  top: 21px;
+  left: 22px;
+  height: 2px;
+  border-radius: 2px;
+}
+.pd-timeline::before { right: 22px; background: rgba(255,255,255,0.14); }
+.pd-timeline::after { width: calc((100% - 44px) * var(--fill)); background: var(--sage); transition: width 0.45s var(--ease-out); }
+.pd-step {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  min-width: 44px;
+  padding: 12px 0 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.55);
+  transition: color 0.3s;
+}
+.pd-step-dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--charcoal);
+  border: 2px solid rgba(255,255,255,0.3);
+  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.pd-step.is-done .pd-step-dot { border-color: var(--sage); }
+.pd-step.is-current { color: #fff; }
+.pd-step.is-current .pd-step-dot { background: var(--sage); border-color: var(--sage); box-shadow: 0 0 0 6px rgba(143,174,132,0.22); }
+
+.pd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-top: 1.1rem;
+}
+.pd-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding: 0.55rem 1.15rem 0.55rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+.pd-play:hover { background: rgba(255,255,255,0.14); }
+.pd-play-icon {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--sage);
+  color: var(--charcoal);
+  display: grid;
+  place-items: center;
+}
+.pd-play-icon svg { width: 12px; height: 12px; }
+.pd-play.is-playing .pd-play-icon { background: #fff; }
+.pd-hint { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+
+.pd-info { grid-area: info; display: grid; gap: 0.5rem; max-width: 46ch; }
+.pd-kind {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+.pd-title {
+  font-family: var(--font-display);
+  font-weight: 450;
+  font-size: var(--fz-xl);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-wrap: balance;
+}
+.pd-desc { font-size: var(--fz-base); line-height: 1.6; color: rgba(255,255,255,0.68); }
+.pd .ba-cta { grid-area: cta; margin-top: 0.5rem; }
+
+@media (min-width: 900px) {
+  .pd {
+    grid-template-columns: minmax(0, 470px) minmax(0, 1fr);
+    grid-template-areas: "stage picker" "stage info" "stage cta";
+    grid-template-rows: auto auto 1fr;
+    column-gap: 4rem;
+    row-gap: 2rem;
+    margin-top: 3rem;
+  }
+  .pd-picker {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+  }
+  .pd-pick-title { white-space: normal; }
+  .pd .ba-cta { align-self: end; }
 }
 
 /* ── CHI SIAMO ── */
@@ -1290,7 +1442,7 @@ section { padding: 5rem 1.5rem; }
 .prev-next:active,
 .nav-cta-link:active { transform: scale(0.97); }
 .prev-option:active { transform: scale(0.99); }
-.ba-tab:active { transform: scale(0.96); }
+.pd-pick:active, .pd-step:active, .pd-play:active { transform: scale(0.97); }
 .gal-item:hover { box-shadow: var(--shadow-md); }
 
 /* Scena decorativa di sfondo in "Chi siamo":
@@ -1870,10 +2022,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 .lightbox button:focus-visible { outline-color: #eef3e9; }
 @media (max-width: 767px) { .lightbox .lb-figure img { max-height: 68vh; } }
 
-/* Prima/dopo: dissolvenza al cambio lavoro, etichette che lasciano spazio */
-.ba-slider img { transition: opacity 0.35s var(--ease); }
-.ba-slider.is-loading img { opacity: 0.35; }
-.ba-tag { transition: opacity 0.25s; }
 
 /* Preventivo inviato: piccola festa di foglie */
 .prev-success-icon { position: relative; }
@@ -2043,37 +2191,87 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     <div class="reveal">
       <span class="section-eyebrow">Risultati concreti</span>
       <h2 class="section-title">Prima e <span class="light">dopo.</span></h2>
-      <p class="section-sub">Trascina il cursore per scoprire la trasformazione.</p>
+      <p class="section-sub">Stessa inquadratura, dal primo giorno al lavoro finito. Trascina il cursore o guarda la trasformazione.</p>
     </div>
-    <div class="ba-tabs reveal" role="group" aria-label="Scegli il lavoro da confrontare">
-      <button type="button" class="ba-tab active" data-pair="1" aria-pressed="true">Giardino privato</button>
-      <button type="button" class="ba-tab" data-pair="2" aria-pressed="false">Angolo barbecue</button>
-      <button type="button" class="ba-tab" data-pair="5" aria-pressed="false">Da incolto a prato</button>
-      <button type="button" class="ba-tab" data-pair="4" aria-pressed="false">Area commerciale</button>
-      <button type="button" class="ba-tab" data-pair="3" aria-pressed="false">Aiuola fiorita</button>
-    </div>
-    <div class="ba-slider pop" id="baSlider" tabindex="0" role="slider" aria-label="Confronto prima e dopo: trascina, oppure usa le frecce sinistra e destra" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% visibile il dopo">
-      <picture>
-        <source id="baBeforeAvif" type="image/avif" srcset="assets/img/ba1-before-600.avif 600w, assets/img/ba1-before-900.avif 900w, assets/img/ba1-before-1200.avif 1200w" sizes="(min-width:800px) 720px, 92vw">
-        <source id="baBeforeWebp" type="image/webp" srcset="assets/img/ba1-before-600.webp 600w, assets/img/ba1-before-900.webp 900w, assets/img/ba1-before-1200.webp 1200w" sizes="(min-width:800px) 720px, 92vw">
-        <img class="ba-before" id="baBeforeImg" src="assets/img/ba1-before-1200.jpg" width="1200" height="900" decoding="async" alt="Prima: prato in posa, zolle d'erba su terreno preparato" draggable="false">
+    <div class="pd" id="pd">
+      <div class="pd-picker" role="group" aria-label="Scegli il lavoro">
+      <button type="button" class="pd-pick" data-project="corten" aria-pressed="true">
+        <picture><source type="image/avif" srcset="assets/img/pd-corten-thumb.avif"><img src="assets/img/pd-corten-thumb.webp" width="112" height="140" loading="lazy" decoding="async" alt=""></picture>
+        <span class="pd-pick-text"><span class="pd-pick-title">Ghiaia e vasche in corten</span><span class="pd-pick-meta">4 fasi</span></span>
+      </button>
+      <button type="button" class="pd-pick" data-project="barbecue" aria-pressed="false">
+        <picture><source type="image/avif" srcset="assets/img/pd-barbecue-thumb.avif"><img src="assets/img/pd-barbecue-thumb.webp" width="112" height="140" loading="lazy" decoding="async" alt=""></picture>
+        <span class="pd-pick-text"><span class="pd-pick-title">Angolo barbecue</span><span class="pd-pick-meta">4 fasi</span></span>
+      </button>
+      <button type="button" class="pd-pick" data-project="scalini" aria-pressed="false">
+        <picture><source type="image/avif" srcset="assets/img/pd-scalini-thumb.avif"><img src="assets/img/pd-scalini-thumb.webp" width="112" height="140" loading="lazy" decoding="async" alt=""></picture>
+        <span class="pd-pick-text"><span class="pd-pick-title">Da erbacce a prato</span><span class="pd-pick-meta">Prima e dopo</span></span>
+      </button>
+      <button type="button" class="pd-pick" data-project="aiuola" aria-pressed="false">
+        <picture><source type="image/avif" srcset="assets/img/pd-aiuola-thumb.avif"><img src="assets/img/pd-aiuola-thumb.webp" width="112" height="140" loading="lazy" decoding="async" alt=""></picture>
+        <span class="pd-pick-text"><span class="pd-pick-title">Aiuola curva</span><span class="pd-pick-meta">3 fasi</span></span>
+      </button>
+      <button type="button" class="pd-pick" data-project="recinto" aria-pressed="false">
+        <picture><source type="image/avif" srcset="assets/img/pd-recinto-thumb.avif"><img src="assets/img/pd-recinto-thumb.webp" width="112" height="140" loading="lazy" decoding="async" alt=""></picture>
+        <span class="pd-pick-text"><span class="pd-pick-title">Aiuola lungo la recinzione</span><span class="pd-pick-meta">Prima e dopo</span></span>
+      </button>
+      <button type="button" class="pd-pick" data-project="commerciale" aria-pressed="false">
+        <picture><source type="image/avif" srcset="assets/img/pd-commerciale-thumb.avif"><img src="assets/img/pd-commerciale-thumb.webp" width="112" height="140" loading="lazy" decoding="async" alt=""></picture>
+        <span class="pd-pick-text"><span class="pd-pick-title">Area verde commerciale</span><span class="pd-pick-meta">Prima e dopo</span></span>
+      </button>
+      </div>
+      <div class="pd-stage">
+        <div class="ba-slider" id="baSlider" tabindex="0" role="slider" aria-label="Confronto prima e dopo: trascina, oppure usa le frecce sinistra e destra" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% visibile il dopo">
+          <div class="pd-layers" id="pdLayers">
+      <picture class="pd-layer is-before" data-i="0">
+        <source type="image/avif" srcset="assets/img/pd-corten-scavo-480.avif 480w, assets/img/pd-corten-scavo-720.avif 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <source type="image/webp" srcset="assets/img/pd-corten-scavo-480.webp 480w, assets/img/pd-corten-scavo-720.webp 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <img src="assets/img/pd-corten-scavo-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Prima: terreno scavato con il mini escavatore e piante in vaso in attesa" draggable="false">
       </picture>
-      <picture>
-        <source id="baAfterAvif" type="image/avif" srcset="assets/img/ba1-after-600.avif 600w, assets/img/ba1-after-900.avif 900w, assets/img/ba1-after-1200.avif 1200w" sizes="(min-width:800px) 720px, 92vw">
-        <source id="baAfterWebp" type="image/webp" srcset="assets/img/ba1-after-600.webp 600w, assets/img/ba1-after-900.webp 900w, assets/img/ba1-after-1200.webp 1200w" sizes="(min-width:800px) 720px, 92vw">
-        <img class="ba-after" id="baAfterImg" src="assets/img/ba1-after-1200.jpg" width="1200" height="900" decoding="async" alt="Dopo: prato curato con bordura in corteccia e vialetto in pietra" draggable="false">
+      <picture class="pd-layer" data-i="1">
+        <source type="image/avif" srcset="assets/img/pd-corten-telo-480.avif 480w, assets/img/pd-corten-telo-720.avif 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <source type="image/webp" srcset="assets/img/pd-corten-telo-480.webp 480w, assets/img/pd-corten-telo-720.webp 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <img src="assets/img/pd-corten-telo-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Telo: telo antierba steso e piante disposte nei vasi" draggable="false">
       </picture>
-      <div class="ba-divider" id="baDivider"></div>
-      <div class="ba-knob" id="baKnob" aria-hidden="true">
+      <picture class="pd-layer" data-i="2">
+        <source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif 480w, assets/img/pd-corten-ghiaia-720.avif 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Irrigazione: impianto a goccia sul telo e prima ghiaia" draggable="false">
+      </picture>
+      <picture class="pd-layer is-after" data-i="3">
+        <source type="image/avif" srcset="assets/img/pd-corten-finito-480.avif 480w, assets/img/pd-corten-finito-720.avif 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <source type="image/webp" srcset="assets/img/pd-corten-finito-480.webp 480w, assets/img/pd-corten-finito-720.webp 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <img src="assets/img/pd-corten-finito-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Dopo: aiuola in ghiaia chiara con piante e vasche in corten lungo il muro e la recinzione" draggable="false">
+      </picture>
+          </div>
+      <div class="ba-divider" aria-hidden="true"></div>
+      <div class="ba-knob" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
-      <span class="ba-tag ba-tag-before">Prima</span>
-      <span class="ba-tag ba-tag-after">Dopo</span>
-    </div>
-    <div class="ba-cta reveal">
-      <p class="ba-cta-text">Immagina il tuo spazio trasformato così.</p>
-      <a href="#preventivo" class="ba-cta-btn">Richiedi un preventivo gratuito</a>
+          <span class="ba-tag ba-tag-before" id="baTagBefore">Scavo</span>
+          <span class="ba-tag ba-tag-after" id="baTagAfter">Finito</span>
+        </div>
+        <div class="pd-timeline" id="pdTimeline" role="group" aria-label="Fasi del lavoro: scegli da quale confrontare">
+        <button type="button" class="pd-step is-current" data-i="0" aria-pressed="true"><span class="pd-step-dot" aria-hidden="true"></span>Scavo</button>
+        <button type="button" class="pd-step" data-i="1" aria-pressed="false"><span class="pd-step-dot" aria-hidden="true"></span>Telo</button>
+        <button type="button" class="pd-step" data-i="2" aria-pressed="false"><span class="pd-step-dot" aria-hidden="true"></span>Irrigazione</button>
+        <button type="button" class="pd-step" data-i="3" aria-pressed="false"><span class="pd-step-dot" aria-hidden="true"></span>Finito</button>
+        </div>
+        <div class="pd-actions">
+          <button type="button" class="pd-play" id="pdPlay"><span class="pd-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg></span><span id="pdPlayLabel">Guarda la trasformazione</span></button>
+          <span class="pd-hint">Trascina il cursore per confrontare</span>
+        </div>
+      </div>
+      <div class="pd-info" aria-live="polite">
+        <p class="pd-kind" id="pdKind">Giardino residenziale</p>
+        <h3 class="pd-title" id="pdTitle">Ghiaia e vasche in corten</h3>
+        <p class="pd-desc" id="pdDesc">Scavo con mini escavatore, telo antierba, impianto a goccia, ghiaia chiara e vasche in acciaio corten lungo muro e recinzione.</p>
+      </div>
+      <div class="ba-cta">
+        <p class="ba-cta-text">Immagina il tuo spazio trasformato così.</p>
+        <a href="#preventivo" class="ba-cta-btn">Richiedi un preventivo gratuito</a>
+      </div>
     </div>
   </div>
 </section>
@@ -2485,127 +2683,423 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     applyParallax();
   }
 
-  // ── B/A slider ──
+  // ── Prima e dopo: confronto a più fasi ──
+  // Ogni lavoro ha le sue fasi, tutte riprese e allineate sulla stessa
+  // inquadratura. A sinistra del cursore la fase scelta, a destra il finito.
+  var PROJECTS = [
+    {
+      "id": "corten",
+      "title": "Ghiaia e vasche in corten",
+      "kind": "Giardino residenziale",
+      "desc": "Scavo con mini escavatore, telo antierba, impianto a goccia, ghiaia chiara e vasche in acciaio corten lungo muro e recinzione.",
+      "w": [
+        480,
+        720
+      ],
+      "stages": [
+        {
+          "key": "scavo",
+          "label": "Scavo",
+          "alt": "terreno scavato con il mini escavatore e piante in vaso in attesa"
+        },
+        {
+          "key": "telo",
+          "label": "Telo",
+          "alt": "telo antierba steso e piante disposte nei vasi"
+        },
+        {
+          "key": "ghiaia",
+          "label": "Irrigazione",
+          "alt": "impianto a goccia sul telo e prima ghiaia"
+        },
+        {
+          "key": "finito",
+          "label": "Finito",
+          "alt": "aiuola in ghiaia chiara con piante e vasche in corten lungo il muro e la recinzione"
+        }
+      ]
+    },
+    {
+      "id": "barbecue",
+      "title": "Angolo barbecue",
+      "kind": "Giardino in montagna",
+      "desc": "Pulizia dalle erbacce, muretto in tufo, aiuola piantata e prato nuovo davanti alla piazzola del barbecue.",
+      "w": [
+        480,
+        720
+      ],
+      "stages": [
+        {
+          "key": "prima",
+          "label": "Prima",
+          "alt": "angolo del giardino invaso dalle erbacce"
+        },
+        {
+          "key": "muretto",
+          "label": "Muretto",
+          "alt": "muretto in tufo in costruzione su terra livellata"
+        },
+        {
+          "key": "aiuola",
+          "label": "Aiuola",
+          "alt": "aiuola nel muretto piantata e piazzola del barbecue pronta"
+        },
+        {
+          "key": "finito",
+          "label": "Finito",
+          "alt": "prato nuovo, muretto in tufo con aiuola e piazzola del barbecue"
+        }
+      ]
+    },
+    {
+      "id": "scalini",
+      "title": "Da erbacce a prato",
+      "kind": "Giardino in montagna",
+      "desc": "Le erbacce lasciano spazio a un prato nuovo, un vialetto in pietra e bordure in corteccia.",
+      "w": [
+        480,
+        720
+      ],
+      "stages": [
+        {
+          "key": "prima",
+          "label": "Prima",
+          "alt": "giardino coperto di erbacce visto dagli scalini in pietra"
+        },
+        {
+          "key": "finito",
+          "label": "Dopo",
+          "alt": "prato nuovo con vialetto in pietra e bordure in corteccia visto dagli scalini"
+        }
+      ]
+    },
+    {
+      "id": "aiuola",
+      "title": "Aiuola curva",
+      "kind": "Giardino in montagna",
+      "desc": "Bordura curva, prato nuovo e aiuola pacciamata con rose e peonie lungo la recinzione.",
+      "w": [
+        480,
+        720,
+        960
+      ],
+      "stages": [
+        {
+          "key": "prima",
+          "label": "Prima",
+          "alt": "prato secco accanto al vialetto in pietra"
+        },
+        {
+          "key": "bordura",
+          "label": "Bordura",
+          "alt": "bordura curva posata sulla terra lavorata"
+        },
+        {
+          "key": "finito",
+          "label": "Finito",
+          "alt": "prato nuovo con bordura curva e aiuola pacciamata con rose e peonie"
+        }
+      ]
+    },
+    {
+      "id": "recinto",
+      "title": "Aiuola lungo la recinzione",
+      "kind": "Giardino residenziale",
+      "desc": "Vasca in corten lungo la recinzione e ghiaia dove prima c'era solo terra smossa.",
+      "w": [
+        480,
+        720,
+        960
+      ],
+      "stages": [
+        {
+          "key": "scavo",
+          "label": "Scavo",
+          "alt": "mini escavatore al lavoro sulla terra smossa lungo la recinzione"
+        },
+        {
+          "key": "finito",
+          "label": "Dopo",
+          "alt": "vasca in corten piantata lungo la recinzione e aiuola in ghiaia"
+        }
+      ]
+    },
+    {
+      "id": "commerciale",
+      "title": "Area verde commerciale",
+      "kind": "Spazio commerciale",
+      "desc": "Il prato davanti alle vetrine diventa un'aiuola in ghiaia con piante ornamentali.",
+      "w": [
+        480,
+        720,
+        960
+      ],
+      "stages": [
+        {
+          "key": "prima",
+          "label": "Prima",
+          "alt": "striscia di prato davanti alle vetrine di un edificio commerciale"
+        },
+        {
+          "key": "finito",
+          "label": "Dopo",
+          "alt": "aiuola in ghiaia con piante ornamentali davanti alle vetrine"
+        }
+      ]
+    }
+  ];
+  var PD_SIZES = '(min-width: 900px) 470px, calc(100vw - 3rem)';
   var slider = document.getElementById('baSlider');
-  var divider = document.getElementById('baDivider');
-  var knob = document.getElementById('baKnob');
-  var afterImg = slider.querySelector('.ba-after');
-  var beforeImg = slider.querySelector('.ba-before');
-  var dragging = false;
-  var tagBefore = slider.querySelector('.ba-tag-before');
-  var tagAfter = slider.querySelector('.ba-tag-after');
+  var layersBox = document.getElementById('pdLayers');
+  var tagBefore = document.getElementById('baTagBefore');
+  var tagAfter = document.getElementById('baTagAfter');
+  var timeline = document.getElementById('pdTimeline');
+  var playBtn = document.getElementById('pdPlay');
+  var playLabel = document.getElementById('pdPlayLabel');
+  var picks = document.querySelectorAll('.pd-pick');
+  var pdKind = document.getElementById('pdKind');
+  var pdTitle = document.getElementById('pdTitle');
+  var pdDesc = document.getElementById('pdDesc');
 
+  var proj = PROJECTS[0];
+  var layers = [];          // un <picture> per fase
+  var cmp = 0;              // fase a sinistra del cursore
+  var frac = 0.5;           // posizione del cursore (0 = tutto finito, 1 = tutta la fase)
+  var animToken = 0;
+  var playing = false;
+  var seenIntro = false;
+
+  function srcset(id, key, ext) {
+    return proj.w.map(function(w) { return 'assets/img/pd-' + id + '-' + key + '-' + w + '.' + ext + ' ' + w + 'w'; }).join(', ');
+  }
+  function buildLayers() {
+    var n = proj.stages.length;
+    layersBox.innerHTML = proj.stages.map(function(st, i) {
+      var pre = i === n - 1 ? 'Dopo: ' : (i === 0 ? 'Prima: ' : st.label + ': ');
+      return '<picture class="pd-layer" data-i="' + i + '">' +
+        '<source type="image/avif" srcset="' + srcset(proj.id, st.key, 'avif') + '" sizes="' + PD_SIZES + '">' +
+        '<source type="image/webp" srcset="' + srcset(proj.id, st.key, 'webp') + '" sizes="' + PD_SIZES + '">' +
+        '<img src="assets/img/pd-' + proj.id + '-' + st.key + '-720.jpg" width="720" height="900" decoding="async" alt="' + pre + st.alt + '" draggable="false">' +
+        '</picture>';
+    }).join('');
+    layers = Array.prototype.slice.call(layersBox.children);
+  }
+  function ready(i) {
+    var img = layers[i] && layers[i].querySelector('img');
+    if (!img) return Promise.resolve();
+    if (img.complete && img.naturalWidth) return Promise.resolve();
+    return new Promise(function(res) {
+      img.addEventListener('load', res, { once: true });
+      img.addEventListener('error', res, { once: true });
+    });
+  }
+  // Mostra la fase b a sinistra e la fase a a destra del cursore
+  function showPair(b, a) {
+    layers.forEach(function(l, i) {
+      l.classList.toggle('is-before', i === b);
+      l.classList.toggle('is-after', i === a);
+    });
+    tagBefore.textContent = proj.stages[b].label;
+    tagAfter.textContent = proj.stages[a].label;
+  }
   function setFraction(p) {
-    p = Math.max(0, Math.min(1, p));
-    var pct = p * 100;
-    afterImg.style.clipPath = 'inset(0 0 0 ' + pct + '%)';
-    divider.style.left = pct + '%';
-    knob.style.left = pct + '%';
-    tagBefore.style.opacity = p < 0.18 ? 0 : 1;
-    tagAfter.style.opacity = p > 0.82 ? 0 : 1;
-    var val = Math.round(pct);
+    frac = Math.max(0, Math.min(1, p));
+    var pct = frac * 100;
+    slider.style.setProperty('--p', pct + '%');
+    tagBefore.style.opacity = frac < 0.18 ? 0 : 1;
+    tagAfter.style.opacity = frac > 0.82 ? 0 : 1;
+    var val = Math.round(100 - pct);
     slider.setAttribute('aria-valuenow', String(val));
     slider.setAttribute('aria-valuetext', val + '% visibile il dopo');
   }
-  function setPos(x) {
+  function fractionAt(x) {
     var r = slider.getBoundingClientRect();
-    setFraction((x - r.left) / r.width);
+    return (x - r.left) / r.width;
   }
-  slider.addEventListener('pointerdown', function(e) {
-    dragging = true;
-    slider.setPointerCapture(e.pointerId);
-    setPos(e.clientX);
+  function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function animateTo(target, dur) {
+    var token = ++animToken;
+    if (prefersReduced || !dur) { setFraction(target); return Promise.resolve(true); }
+    var from = frac, start = null;
+    return new Promise(function(res) {
+      function step(t) {
+        if (token !== animToken) return res(false);
+        if (start === null) start = t;
+        var k = Math.min(1, (t - start) / dur);
+        setFraction(from + (target - from) * ease(k));
+        if (k < 1) requestAnimationFrame(step); else res(true);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  function wait(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+  function renderTimeline(current) {
+    var n = proj.stages.length;
+    timeline.hidden = n < 3;
+    if (n < 3) return;
+    if (timeline.children.length !== n || timeline.dataset.project !== proj.id) {
+      timeline.dataset.project = proj.id;
+      timeline.innerHTML = proj.stages.map(function(st, i) {
+        return '<button type="button" class="pd-step" data-i="' + i + '" aria-pressed="false"><span class="pd-step-dot" aria-hidden="true"></span>' + st.label + '</button>';
+      }).join('');
+    }
+    Array.prototype.forEach.call(timeline.children, function(b, i) {
+      b.classList.toggle('is-current', i === current);
+      b.classList.toggle('is-done', i < current);
+      b.setAttribute('aria-pressed', i === current ? 'true' : 'false');
+    });
+    timeline.style.setProperty('--fill', String(current / (n - 1)));
+  }
+
+  // Confronta la fase i con il finito; i = ultima mostra tutto il finito
+  function compare(i) {
+    stopPlay();
+    var last = proj.stages.length - 1;
+    if (i >= last) {
+      renderTimeline(last);
+      animateTo(0, 700);
+      return;
+    }
+    var changed = i !== cmp;
+    cmp = i;
+    showPair(cmp, last);
+    renderTimeline(cmp);
+    ready(cmp).then(function() {
+      if (changed && !prefersReduced) { setFraction(1); animateTo(0.5, 900); }
+      else animateTo(0.5, 500);
+    });
+  }
+
+  // La trasformazione completa: ogni fase lascia il posto alla successiva
+  function setPlaying(on) {
+    playing = on;
+    playBtn.classList.toggle('is-playing', on);
+    playLabel.textContent = on ? 'Ferma' : 'Guarda la trasformazione';
+    playBtn.querySelector('path').setAttribute('d', on ? 'M7 5h3.5v14H7zM13.5 5H17v14h-3.5z' : 'M8 5.5v13l10.5-6.5z');
+  }
+  function stopPlay() {
+    if (!playing) return;
+    setPlaying(false);
+    animToken++;
+  }
+  function play() {
+    if (playing) { stopPlay(); showPair(cmp, proj.stages.length - 1); renderTimeline(cmp); animateTo(0.5, 500); return; }
+    setPlaying(true);
+    var p0 = proj, last = proj.stages.length - 1, i = 0;
+    var alive = function() { return playing && proj === p0; };
+    showPair(0, 1); renderTimeline(0); setFraction(1);
+    function next() {
+      if (!alive()) return;
+      if (i >= last) {
+        // fine: torna al confronto con il cursore a metà
+        cmp = 0; showPair(0, last); setFraction(0); renderTimeline(0);
+        wait(900).then(function() {
+          if (!alive()) return;
+          animateTo(0.5, 1000).then(function() { if (alive()) setPlaying(false); });
+        });
+        return;
+      }
+      Promise.all([ready(i), ready(i + 1)]).then(function() { return wait(i === 0 ? 700 : 350); }).then(function() {
+        if (!alive()) return;
+        return animateTo(0, 1500).then(function(done) {
+          if (!done || !alive()) return;
+          i++;
+          renderTimeline(i);
+          if (i < last) { showPair(i, i + 1); setFraction(1); }
+          next();
+        });
+      });
+    }
+    next();
+  }
+  playBtn.addEventListener('click', play);
+
+  // Cambio lavoro
+  function selectProject(id) {
+    var p = PROJECTS.filter(function(x) { return x.id === id; })[0];
+    if (!p || p === proj) return;
+    stopPlay();
+    proj = p;
+    picks.forEach(function(b) { b.setAttribute('aria-pressed', b.dataset.project === id ? 'true' : 'false'); });
+    pdKind.textContent = p.kind; pdTitle.textContent = p.title; pdDesc.textContent = p.desc;
+    slider.classList.add('is-loading');
+    buildLayers();
+    cmp = 0;
+    var last = p.stages.length - 1;
+    showPair(0, last); renderTimeline(0); setFraction(1);
+    Promise.all([ready(0), ready(last)]).then(function() {
+      if (proj !== p) return;
+      slider.classList.remove('is-loading');
+      animateTo(0.5, 900);
+    });
+  }
+  picks.forEach(function(b) {
+    b.addEventListener('click', function() { selectProject(b.dataset.project); });
   });
-  slider.addEventListener('pointermove', function(e) { if (dragging) setPos(e.clientX); });
-  slider.addEventListener('pointerup', function() { dragging = false; });
-  slider.addEventListener('pointercancel', function() { dragging = false; });
-  // Controllo da tastiera (frecce / Home / End)
-  slider.addEventListener('keydown', function(e) {
-    var cur = parseInt(slider.getAttribute('aria-valuenow'), 10);
-    if (isNaN(cur)) cur = 50;
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); setFraction((cur - 5) / 100); }
-    else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); setFraction((cur + 5) / 100); }
-    else if (e.key === 'Home') { e.preventDefault(); setFraction(0); }
-    else if (e.key === 'End') { e.preventDefault(); setFraction(1); }
+  timeline.addEventListener('click', function(e) {
+    var b = e.target.closest('.pd-step');
+    if (b) compare(parseInt(b.dataset.i, 10));
   });
 
-  // Suggerimento: la prima volta che lo slider entra in vista il cursore
-  // oscilla brevemente, per far capire che si può trascinare.
-  var baTouched = false;
-  slider.addEventListener('pointerdown', function() { baTouched = true; });
-  slider.addEventListener('keydown', function() { baTouched = true; });
-  function playSliderHint() {
-    var start = null;
-    var dur = 1600;
-    function frame(t) {
-      if (baTouched) return;
-      if (start === null) start = t;
-      var k = Math.min(1, (t - start) / dur);
-      // oscillazione smorzata attorno al 50%
-      setFraction(0.5 + Math.sin(k * Math.PI * 2) * 0.14 * (1 - k));
-      if (k < 1) requestAnimationFrame(frame); else setFraction(0.5);
+  // Trascinamento: su telefono parte solo con un gesto orizzontale,
+  // così lo scorrimento verticale della pagina resta libero
+  var ptr = null;
+  slider.addEventListener('pointerdown', function(e) {
+    stopPlay(); animToken++;
+    ptr = { id: e.pointerId, x: e.clientX, y: e.clientY, drag: false };
+    if (e.pointerType === 'mouse') {
+      ptr.drag = true;
+      slider.setPointerCapture(e.pointerId);
+      slider.classList.add('is-dragging');
+      setFraction(fractionAt(e.clientX));
     }
-    requestAnimationFrame(frame);
+  });
+  slider.addEventListener('pointermove', function(e) {
+    if (!ptr || e.pointerId !== ptr.id) return;
+    if (!ptr.drag) {
+      var dx = Math.abs(e.clientX - ptr.x), dy = Math.abs(e.clientY - ptr.y);
+      if (dx > 6 && dx > dy) {
+        ptr.drag = true;
+        try { slider.setPointerCapture(e.pointerId); } catch (err) {}
+        slider.classList.add('is-dragging');
+      } else if (dy > 10) { ptr = null; return; }
+    }
+    if (ptr.drag) setFraction(fractionAt(e.clientX));
+  });
+  function endPtr(e) {
+    if (ptr && !ptr.drag && e.type === 'pointerup') animateTo(fractionAt(e.clientX), 350);
+    ptr = null;
+    slider.classList.remove('is-dragging');
   }
+  slider.addEventListener('pointerup', endPtr);
+  slider.addEventListener('pointercancel', endPtr);
+  slider.addEventListener('keydown', function(e) {
+    var step = null;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') step = -0.05;
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') step = 0.05;
+    if (step !== null) { e.preventDefault(); stopPlay(); animToken++; setFraction(frac - step); }
+    else if (e.key === 'Home') { e.preventDefault(); stopPlay(); setFraction(1); }
+    else if (e.key === 'End') { e.preventDefault(); stopPlay(); setFraction(0); }
+  });
+
+  // Avvio: costruisce le fasi e, la prima volta che il confronto è ben
+  // visibile, mostra da solo la trasformazione (non con «riduci movimento»)
+  buildLayers();
+  showPair(0, proj.stages.length - 1);
+  renderTimeline(0);
+  setFraction(0.5);
   if (!prefersReduced && 'IntersectionObserver' in window) {
-    var hintObserver = new IntersectionObserver(function(entries) {
+    var introObserver = new IntersectionObserver(function(entries) {
       entries.forEach(function(e) {
-        if (e.isIntersecting) { hintObserver.disconnect(); setTimeout(playSliderHint, 500); }
+        if (e.isIntersecting && !seenIntro) {
+          seenIntro = true; introObserver.disconnect();
+          setTimeout(function() { if (!playing && frac === 0.5) play(); }, 400);
+        }
       });
     }, { threshold: 0.6 });
-    hintObserver.observe(slider);
+    introObserver.observe(slider);
   }
-
-  var tabs = document.querySelectorAll('.ba-tab');
-  var baBeforeAvif = document.getElementById('baBeforeAvif');
-  var baBeforeWebp = document.getElementById('baBeforeWebp');
-  var baAfterAvif = document.getElementById('baAfterAvif');
-  var baAfterWebp = document.getElementById('baAfterWebp');
-  var BA_SIZES = '(min-width:800px) 720px, 92vw';
-  var pairs = {
-    '1': { before: 'ba1-before', after: 'ba1-after',
-      beforeAlt: "Prima: prato in posa, zolle d'erba su terreno preparato",
-      afterAlt: 'Dopo: prato curato con bordura in corteccia e vialetto in pietra' },
-    '2': { before: 'ba2-before', after: 'ba2-after',
-      beforeAlt: 'Prima: angolo barbecue con fioriera in mattoni in costruzione su terreno nudo',
-      afterAlt: 'Dopo: angolo barbecue con prato, rose bianche e muretto in pietra' },
-    '3': { before: 'ba3-before', after: 'ba3-after',
-      beforeAlt: 'Prima: giardino incolto e invaso dalle erbacce',
-      afterAlt: 'Dopo: prato curvo con bordura in corteccia, rose e peonia' },
-    '4': { before: 'ba4-before', after: 'ba4-after',
-      beforeAlt: 'Prima: area verde di un edificio commerciale con prato incolto e parcheggio',
-      afterAlt: 'Dopo: aiuole in ghiaia con piante ornamentali e alberelli davanti all\'edificio commerciale' },
-    '5': { before: 'ba5-before', after: 'ba5-after',
-      beforeAlt: 'Prima: giardino completamente invaso dalle erbacce',
-      afterAlt: 'Dopo: prato curato con vialetto in pietra e bordura in corteccia' }
-  };
-  function srcsetFor(base, ext) {
-    return ['600', '900', '1200'].map(function(w) {
-      return 'assets/img/' + base + '-' + w + '.' + ext + ' ' + w + 'w';
-    }).join(', ');
-  }
-  function resetSlider() { setFraction(0.5); }
-  tabs.forEach(function(t) {
-    t.addEventListener('click', function() {
-      tabs.forEach(function(x) { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
-      t.classList.add('active'); t.setAttribute('aria-pressed', 'true');
-      var p = pairs[t.dataset.pair];
-      baBeforeAvif.srcset = srcsetFor(p.before, 'avif');
-      baBeforeWebp.srcset = srcsetFor(p.before, 'webp');
-      baAfterAvif.srcset = srcsetFor(p.after, 'avif');
-      baAfterWebp.srcset = srcsetFor(p.after, 'webp');
-      slider.classList.add('is-loading');
-      var pending = 2;
-      var done = function() { if (--pending <= 0) slider.classList.remove('is-loading'); };
-      [beforeImg, afterImg].forEach(function(im) {
-        im.addEventListener('load', done, { once: true });
-        im.addEventListener('error', done, { once: true });
-      });
-      beforeImg.src = 'assets/img/' + p.before + '-1200.jpg'; beforeImg.alt = p.beforeAlt;
-      afterImg.src = 'assets/img/' + p.after + '-1200.jpg'; afterImg.alt = p.afterAlt;
-      resetSlider();
-    });
-  });
 
   // ── Preventivo form ──
   var step = 1;
