@@ -210,13 +210,15 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   opacity: 0.2;
   pointer-events: none;
   animation: morph 22s ease-in-out infinite alternate;
+  will-change: transform;
   z-index: 0;
 }
+/* solo transform: la sfocatura viene calcolata una volta e poi solo spostata */
 @keyframes morph {
-  0%   { border-radius: 42% 58% 61% 39% / 45% 51% 49% 55%; transform: rotate(0deg) scale(1); }
-  33%  { border-radius: 58% 42% 39% 61% / 55% 45% 55% 45%; transform: rotate(20deg) scale(1.08); }
-  66%  { border-radius: 39% 61% 55% 45% / 61% 39% 45% 55%; transform: rotate(-15deg) scale(0.96); }
-  100% { border-radius: 61% 39% 45% 55% / 39% 61% 51% 49%; transform: rotate(10deg) scale(1.05); }
+  0%   { transform: rotate(0deg) scale(1); }
+  33%  { transform: rotate(20deg) scale(1.08); }
+  66%  { transform: rotate(-15deg) scale(0.96); }
+  100% { transform: rotate(10deg) scale(1.05); }
 }
 
 /* ── FLOATING LEAVES ── */
@@ -344,9 +346,8 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   bottom: -14px;
   z-index: 1;
   pointer-events: none;
-  filter: drop-shadow(0 12px 22px rgba(0,0,0,0.4));
 }
-.hero-deco img { width: 100%; height: auto; display: block; }
+.hero-deco img { width: 100%; height: auto; display: block; filter: drop-shadow(0 12px 22px rgba(0,0,0,0.4)); }
 /* caricate dopo l'evento load (fuori dal percorso critico), poi in dissolvenza */
 .hero-deco { opacity: 0; transition: opacity 0.9s var(--ease); }
 .hero-deco.is-loaded { opacity: 1; }
@@ -928,9 +929,8 @@ section { padding: 5rem 1.5rem; }
   height: auto;
   pointer-events: none;
   opacity: 0.9;
-  filter: drop-shadow(0 16px 24px rgba(20,30,20,0.14));
 }
-.deco-bloom img { width: 100%; height: auto; display: block; }
+.deco-bloom img { width: 100%; height: auto; display: block; filter: drop-shadow(0 16px 24px rgba(20,30,20,0.14)); }
 @media (max-width: 700px) { .deco-bloom { display: none; } }
 
 /* Edera che ricade dall'angolo in alto a destra di "Prima e Dopo" */
@@ -943,9 +943,8 @@ section { padding: 5rem 1.5rem; }
   height: auto;
   pointer-events: none;
   opacity: 0.9;
-  filter: drop-shadow(0 14px 22px rgba(0,0,0,0.3));
 }
-.deco-ivy img { width: 100%; height: auto; display: block; }
+.deco-ivy img { width: 100%; height: auto; display: block; filter: drop-shadow(0 14px 22px rgba(0,0,0,0.3)); }
 @media (max-width: 900px) { .deco-ivy { display: none; } }
 
 /* Texture di foglie molto tenue nello sfondo delle sezioni chiare */
@@ -1197,9 +1196,8 @@ section { padding: 5rem 1.5rem; }
   height: auto;
   pointer-events: none;
   opacity: 0.95;
-  filter: drop-shadow(0 16px 24px rgba(20,30,20,0.16));
 }
-.deco-plant img { width: 100%; height: auto; display: block; }
+.deco-plant img { width: 100%; height: auto; display: block; filter: drop-shadow(0 16px 24px rgba(20,30,20,0.16)); }
 @media (max-width: 600px) { .deco-plant { display: none; } }
 
 .deco-fern {
@@ -1211,9 +1209,8 @@ section { padding: 5rem 1.5rem; }
   height: auto;
   pointer-events: none;
   opacity: 0.9;
-  filter: drop-shadow(0 16px 22px rgba(20,30,20,0.12));
 }
-.deco-fern img { width: 100%; height: auto; display: block; }
+.deco-fern img { width: 100%; height: auto; display: block; filter: drop-shadow(0 16px 22px rgba(20,30,20,0.12)); }
 @media (max-width: 700px) { .deco-fern { display: none; } }
 
 /* ── Accessibilità (FASE 4) ── */
@@ -1588,8 +1585,8 @@ textarea:focus-visible,
   70%  { opacity: 0.5; }
   100% { opacity: 0;   translate: 14px -150px; }
 }
-/* fuori schermo le animazioni si fermano: niente lavoro inutile */
-.finale.is-offscreen .finale-scene * { animation-play-state: paused; }
+/* fuori schermo le animazioni ambientali si fermano: niente lavoro inutile */
+section.is-offscreen *, section.is-offscreen *::after { animation-play-state: paused !important; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -2086,14 +2083,11 @@ textarea:focus-visible,
   }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
   reveals.forEach(function(el) { observer.observe(el); });
 
-  // ── Finale: anima l'isola solo quando è sullo schermo ──
-  var finale = document.querySelector('.finale');
-  if (finale) {
-    finale.classList.add('is-offscreen');
-    new IntersectionObserver(function(entries) {
-      finale.classList.toggle('is-offscreen', !entries[0].isIntersecting);
-    }).observe(finale);
-  }
+  // ── Animazioni ambientali solo nelle sezioni sullo schermo ──
+  var ambientObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) { e.target.classList.toggle('is-offscreen', !e.isIntersecting); });
+  });
+  document.querySelectorAll('main > section').forEach(function(sec) { ambientObserver.observe(sec); });
 
   // ── Nav scroll ──
   var nav = document.getElementById('nav');
