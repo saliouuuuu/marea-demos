@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lisagarden.netlify.app/sitemap.xml
+Sitemap: https://andrealisagarden.it/sitemap.xml
