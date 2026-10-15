@@ -1,6 +1,34 @@
 [build]
   publish = "."
 
+# ── Un solo indirizzo: i vecchi .netlify.app portano al dominio ──
+# Senza queste regole il sito risponde anche da andrealisagarden.netlify.app
+# e dal vecchio lisagarden.netlify.app: tre indirizzi con lo stesso contenuto.
+# Valgono solo per questi host: le anteprime (deploy-preview-N--...) restano libere.
+[[redirects]]
+  from = "https://andrealisagarden.netlify.app/*"
+  to = "https://andrealisagarden.it/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://andrealisagarden.netlify.app/*"
+  to = "https://andrealisagarden.it/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://lisagarden.netlify.app/*"
+  to = "https://andrealisagarden.it/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://lisagarden.netlify.app/*"
+  to = "https://andrealisagarden.it/:splat"
+  status = 301
+  force = true
+
 # ── Header di sicurezza (tutte le pagine) ──
 [[headers]]
   for = "/*"
