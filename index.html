@@ -1053,18 +1053,6 @@ section { padding: 5rem 1.5rem; }
   position: relative;
   overflow: hidden;
 }
-.chi-glass {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: saturate(160%) blur(24px);
-  -webkit-backdrop-filter: saturate(160%) blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: var(--radius);
-  padding: 2rem 1.75rem;
-  box-shadow: 0 8px 32px rgba(28, 44, 20, 0.06);
-}
-@media (min-width: 768px) {
-  .chi-glass { padding: 2.5rem; }
-}
 /* Testata: titolo a sinistra, ritratto del titolare a destra.
    Il ritratto prende una quota della larghezza della scheda e il titolo il resto,
    calcolato perché «giardiniere,» stia sempre sulla sua riga. */
@@ -1101,17 +1089,73 @@ section { padding: 5rem 1.5rem; }
   .chi-head .section-title { font-size: min(calc(100cqi / 5.7), 2rem); }
   .chi-owner { order: -1; width: auto; grid-template-columns: 64px 1fr; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; }
 }
-.chi-head + p { margin-top: 1.25rem; }
+
+/* Dove lavoriamo: percorso con i comuni serviti. Verticale su telefono,
+   orizzontale da tablet; la linea si traccia quando entra in vista. */
+.route { padding-bottom: 2.25rem; margin-bottom: 3rem; border-bottom: 1px solid var(--line); }
+.route-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--leaf);
+  margin-bottom: 1.1rem;
+}
+.route-stops { list-style: none; position: relative; }
+.route-stops::before {
+  content: "";
+  position: absolute;
+  left: 5px; top: 0.9rem; bottom: 1.1rem;
+  border-left: 2px dotted rgba(53, 106, 57, 0.55);
+  transform-origin: 50% 0;
+  transform: scaleY(0);
+  transition: transform 1.3s var(--ease-out) 0.25s;
+}
+.route.visible .route-stops::before { transform: scaleY(1); }
+.route-stops li {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0 0 1rem 2rem;
+}
+.route-stops li:last-child { padding-bottom: 0; }
+.route-stops li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.62em;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 2px solid var(--green);
+}
+.route-stops li.is-home::before { background: var(--green); box-shadow: 0 0 0 5px rgba(53, 106, 57, 0.16); }
+.route-name { font-family: var(--font-display); font-size: 1.45rem; font-weight: 450; letter-spacing: -0.01em; color: var(--ink); line-height: 1.2; }
+.route-note { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); }
+@media (min-width: 720px) {
+  .route-stops { display: flex; justify-content: space-between; gap: 1rem; }
+  .route-stops::before {
+    left: 6px; right: 6px; top: 6px; bottom: auto;
+    border-left: 0;
+    border-top: 2px dotted rgba(53, 106, 57, 0.55);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+  }
+  .route.visible .route-stops::before { transform: scaleX(1); }
+  .route-stops li { flex-direction: column; align-items: flex-start; gap: 0.2rem; padding: 1.7rem 0 0; }
+  .route-stops li::before { top: 0; }
+  .route-name { font-size: 1.7rem; }
+}
 
 .chi-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2.5rem;
-  align-items: center;
-  margin-top: 3rem;
+  align-items: start;
 }
 @media (min-width: 768px) {
-  .chi-grid { grid-template-columns: 1fr 1fr; gap: 4rem; }
+  .chi-grid { grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: 4rem; }
+  .chi-photo { position: sticky; top: 6rem; }
 }
 .chi-photo {
   border-radius: var(--radius);
@@ -1119,12 +1163,55 @@ section { padding: 5rem 1.5rem; }
   aspect-ratio: 4/3;
   position: relative;
 }
+@media (min-width: 768px) { .chi-photo { aspect-ratio: 4/5; } }
 .chi-photo img {
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform 6s var(--ease);
 }
 .chi-photo:hover img { transform: scale(1.04); }
+/* Tre blocchi: l'azienda, come lavoriamo, chi c'è dietro */
+.chi-blocks { margin-top: 1.75rem; border-top: 1px solid var(--line); }
+.chi-block { display: grid; gap: 0.55rem; padding: 1.4rem 0; border-bottom: 1px solid var(--line); }
+.chi-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--green);
+  padding-top: 0.3rem;
+}
+@container chi (min-width: 440px) {
+  .chi-block { grid-template-columns: 7.5rem minmax(0, 1fr); gap: 1.5rem; }
+}
+.chi-body > :last-child { margin-bottom: 0; }
+.chi-cred {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-weight: 500 !important;
+  color: var(--ink) !important;
+}
+.chi-cred svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 0.15rem; color: var(--green); }
+/* Segnaposto ben riconoscibili, da sostituire con i contenuti veri */
+.ph-text {
+  border: 1.5px dashed #b4781f;
+  background: rgba(247, 235, 201, 0.7);
+  color: #6b4400 !important;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  font-size: 0.92rem !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+}
+.ph-text strong {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
 .chi-text p {
   font-size: 1rem;
   color: var(--text-secondary);
@@ -1136,8 +1223,8 @@ section { padding: 5rem 1.5rem; }
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  margin: 1.5rem 0 2rem;
+  gap: 0.8rem;
+  margin: 1.1rem 0 0;
 }
 .chi-list li {
   display: flex;
@@ -1159,6 +1246,7 @@ section { padding: 5rem 1.5rem; }
 }
 .chi-check svg { width: 12px; height: 12px; color: var(--surface); }
 .chi-cta {
+  margin-top: 1.9rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -1661,7 +1749,7 @@ section { padding: 5rem 1.5rem; }
   right: -34px; bottom: -44px;
   width: clamp(260px, 34vw, 460px);
   height: auto;
-  opacity: 0.74;
+  opacity: 0.42;
   filter: saturate(0.92);
   -webkit-mask-image: radial-gradient(135% 135% at 80% 84%, #000 40%, rgba(0,0,0,0.4) 66%, transparent 88%);
           mask-image: radial-gradient(135% 135% at 80% 84%, #000 40%, rgba(0,0,0,0.4) 66%, transparent 88%);
@@ -2257,9 +2345,9 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   <div class="nav-inner">
     <a class="nav-logo" href="#main">Lisa <span>Garden</span></a>
     <ul class="nav-links" id="navLinks">
+      <li><a href="#chi-siamo">Chi siamo</a></li>
       <li><a href="#servizi">Servizi</a></li>
       <li><a href="#prima-dopo">Prima e Dopo</a></li>
-      <li><a href="#chi-siamo">Chi siamo</a></li>
       <li><a href="#galleria">Lavori</a></li>
       <li><a href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo." class="nav-cta-link">Preventivo</a></li>
     </ul>
@@ -2315,6 +2403,95 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     <svg class="grass-layer grass-back" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMax slice" focusable="false"><path d="M-36 141Q-28 86 -6 31Q-9 73 -18 141ZM-5 141Q3 105 19 69Q18 97 14 141ZM22 141Q27 103 39 65Q38 94 34 141ZM39 141Q45 106 68 70Q62 97 50 141ZM68 141Q73 102 87 62Q85 92 79 141ZM77 141Q80 106 82 71Q85 98 88 141ZM118 141Q125 82 140 24Q140 68 136 141ZM136 141Q144 100 170 60Q165 91 152 141ZM168 141Q172 98 170 55Q174 88 179 141ZM173 141Q177 98 194 55Q190 88 182 141ZM201 141Q207 98 212 54Q214 87 215 141ZM227 141Q233 71 226 1Q235 54 245 141ZM258 141Q265 66 274 -9Q276 48 275 141ZM281 141Q287 95 314 49Q307 84 292 141ZM293 141Q300 86 307 30Q310 72 311 141ZM325 141Q330 92 350 43Q345 80 335 141ZM356 141Q362 65 358 -10Q366 47 374 141ZM372 141Q378 90 406 38Q399 77 384 141ZM402 141Q405 98 402 54Q407 87 413 141ZM417 141Q420 87 414 34Q420 75 427 141ZM461 141Q466 92 481 42Q478 80 472 141ZM482 141Q487 94 513 46Q506 82 492 141ZM487 141Q492 93 511 44Q507 81 497 141ZM533 141Q537 89 546 37Q546 76 543 141ZM536 141Q544 83 576 25Q567 69 550 141ZM577 141Q584 80 606 18Q602 65 591 141ZM594 141Q598 98 605 55Q606 88 605 141ZM629 141Q634 80 641 19Q643 65 643 141ZM630 141Q636 99 643 56Q646 88 647 141ZM672 141Q679 85 702 29Q698 72 687 141ZM687 141Q693 87 716 33Q711 74 701 141ZM718 141Q724 98 739 55Q738 88 733 141ZM726 141Q732 91 743 41Q744 79 741 141ZM771 141Q777 89 794 36Q791 76 784 141ZM791 141Q799 84 827 26Q821 70 808 141ZM816 141Q822 80 836 18Q835 65 830 141ZM827 141Q834 83 854 26Q850 70 841 141ZM864 141Q871 86 886 32Q885 73 880 141ZM886 141Q894 95 910 48Q909 84 903 141ZM914 141Q919 105 935 70Q933 97 927 141ZM928 141Q932 87 942 34Q941 75 937 141ZM951 141Q955 94 955 46Q959 82 963 141ZM974 141Q979 105 993 69Q992 96 987 141ZM1010 141Q1013 100 1020 58Q1021 90 1019 141ZM1022 141Q1029 81 1037 21Q1039 67 1039 141ZM1042 141Q1047 74 1054 7Q1056 58 1056 141ZM1080 141Q1087 80 1112 19Q1106 66 1093 141ZM1105 141Q1111 83 1127 24Q1125 69 1120 141ZM1138 141Q1145 80 1173 19Q1166 65 1150 141ZM1138 141Q1143 103 1142 65Q1147 94 1153 141ZM1178 141Q1183 82 1184 23Q1188 68 1191 141ZM1192 141Q1200 80 1231 18Q1224 65 1210 141Z"/></svg>
     <svg class="grass-layer grass-mid" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMax slice" focusable="false"><path d="M-33 141Q-28 101 -22 61Q-20 91 -21 141ZM-8 141Q-5 104 -2 66Q0 95 2 141ZM-2 141Q1 104 5 68Q7 96 8 141ZM20 141Q25 106 34 72Q34 98 30 141ZM34 141Q38 102 36 63Q41 93 46 141ZM57 141Q62 102 66 62Q69 92 71 141ZM77 141Q83 100 86 59Q90 90 93 141ZM91 141Q95 102 94 63Q98 93 102 141ZM112 141Q116 117 122 92Q122 111 120 141ZM126 141Q130 116 135 91Q137 110 138 141ZM152 141Q155 99 150 57Q156 89 162 141ZM161 141Q164 116 163 92Q167 110 171 141ZM176 141Q180 110 184 78Q187 102 188 141ZM200 141Q206 118 220 95Q219 112 214 141ZM208 141Q212 117 209 94Q215 112 222 141ZM234 141Q238 104 241 67Q242 95 244 141ZM250 141Q256 116 269 92Q269 111 265 141ZM264 141Q267 104 273 67Q273 95 272 141ZM290 141Q296 97 309 53Q308 87 303 141ZM316 141Q320 114 335 87Q331 108 325 141ZM327 141Q332 114 346 87Q345 108 339 141ZM336 141Q341 112 359 82Q355 104 347 141ZM363 141Q368 97 372 53Q375 86 377 141ZM380 141Q384 109 402 77Q397 101 388 141ZM390 141Q395 108 414 76Q410 101 402 141ZM410 141Q414 108 420 76Q421 100 421 141ZM433 141Q437 100 451 58Q448 90 441 141ZM451 141Q455 100 459 59Q461 90 462 141ZM466 141Q470 105 473 70Q475 97 477 141ZM496 141Q500 110 513 79Q511 103 505 141ZM503 141Q510 103 522 64Q522 93 519 141ZM515 141Q520 103 535 66Q532 94 525 141ZM547 141Q551 104 563 67Q562 95 557 141ZM557 141Q562 117 572 94Q572 112 569 141ZM574 141Q578 101 583 61Q584 91 584 141ZM602 141Q607 114 617 87Q616 107 613 141ZM619 141Q622 116 621 91Q624 110 628 141ZM630 141Q635 108 645 75Q645 100 642 141ZM640 141Q645 114 660 87Q657 107 650 141ZM666 141Q669 116 669 91Q672 110 675 141ZM686 141Q690 117 688 93Q693 111 698 141ZM704 141Q711 97 735 53Q730 86 719 141ZM716 141Q722 108 743 75Q738 100 728 141ZM737 141Q740 112 737 82Q742 105 748 141ZM756 141Q762 96 765 51Q769 85 772 141ZM770 141Q773 117 770 94Q774 112 778 141ZM797 141Q799 97 794 53Q799 87 805 141ZM814 141Q819 103 823 65Q827 94 830 141ZM822 141Q826 86 826 31Q830 73 833 141ZM848 141Q852 108 851 75Q856 100 861 141ZM872 141Q877 101 880 61Q883 91 885 141ZM883 141Q887 112 885 82Q890 105 895 141ZM908 141Q913 101 913 61Q917 91 921 141ZM914 141Q918 110 938 79Q933 103 922 141ZM930 141Q936 115 942 89Q945 109 945 141ZM955 141Q959 96 959 52Q963 86 966 141ZM974 141Q976 104 972 68Q977 96 983 141ZM997 141Q1003 103 1010 65Q1012 94 1012 141ZM1004 141Q1008 97 1022 53Q1019 86 1013 141ZM1025 141Q1030 118 1037 96Q1039 113 1039 141ZM1040 141Q1045 99 1064 56Q1060 88 1051 141ZM1071 141Q1074 110 1073 79Q1076 103 1080 141ZM1088 141Q1092 97 1108 53Q1105 86 1097 141ZM1098 141Q1100 114 1098 87Q1102 108 1106 141ZM1113 141Q1118 116 1127 90Q1127 110 1126 141ZM1141 141Q1145 98 1141 55Q1147 88 1154 141ZM1155 141Q1161 115 1179 90Q1175 109 1167 141ZM1163 141Q1168 113 1173 84Q1175 106 1175 141ZM1196 141Q1202 98 1221 54Q1218 87 1209 141ZM1208 141Q1213 114 1227 88Q1224 108 1218 141Z"/></svg>
     <svg class="grass-layer grass-front" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMax slice" focusable="false"><path d="M-39 141Q-33 126 -26 111Q-24 122 -25 141ZM-20 141Q-15 120 -6 99Q-6 115 -7 141ZM-3 141Q0 118 0 95Q4 113 7 141ZM1 141Q6 117 15 93Q15 111 13 141ZM13 141Q19 108 35 76Q33 101 27 141ZM32 141Q36 117 45 93Q44 111 40 141ZM42 141Q46 114 45 86Q50 107 56 141ZM61 141Q65 119 79 97Q76 114 70 141ZM81 141Q85 120 90 98Q92 115 93 141ZM95 141Q97 121 96 101Q99 116 102 141ZM103 141Q108 117 116 93Q117 111 116 141ZM125 141Q128 118 126 95Q129 113 133 141ZM125 141Q129 114 129 88Q133 108 138 141ZM148 141Q153 128 163 114Q163 125 160 141ZM160 141Q165 122 168 104Q172 118 175 141ZM174 141Q178 117 184 93Q185 111 184 141ZM195 141Q199 125 201 109Q204 121 207 141ZM209 141Q213 124 225 107Q224 120 218 141ZM221 141Q224 117 221 93Q225 111 230 141ZM227 141Q231 111 240 81Q239 104 236 141ZM239 141Q243 124 243 107Q247 120 251 141ZM265 141Q270 119 276 97Q277 114 276 141ZM281 141Q284 114 293 87Q292 107 288 141ZM292 141Q296 119 297 96Q301 113 304 141ZM304 141Q308 108 318 76Q318 101 315 141ZM311 141Q316 118 320 94Q323 112 325 141ZM323 141Q328 115 343 88Q342 108 336 141ZM338 141Q344 119 354 98Q354 114 351 141ZM354 141Q357 121 357 101Q360 116 363 141ZM369 141Q374 129 385 116Q385 126 383 141ZM378 141Q382 115 379 89Q384 109 390 141ZM403 141Q406 126 410 112Q412 123 412 141ZM407 141Q412 114 420 88Q421 108 420 141ZM424 141Q427 118 439 95Q437 113 431 141ZM437 141Q441 130 445 118Q448 127 449 141ZM450 141Q454 121 461 100Q462 116 462 141ZM471 141Q474 117 480 93Q481 111 479 141ZM486 141Q491 116 502 90Q501 109 497 141ZM490 141Q496 118 513 94Q510 112 503 141ZM512 141Q516 116 515 92Q520 111 525 141ZM524 141Q527 124 527 106Q530 120 532 141ZM531 141Q536 115 540 89Q543 109 545 141ZM556 141Q561 126 574 112Q573 123 570 141ZM568 141Q573 114 576 87Q579 107 582 141ZM587 141Q591 116 605 91Q602 110 595 141ZM594 141Q598 120 600 100Q603 116 605 141ZM611 141Q616 120 630 100Q628 115 623 141ZM619 141Q623 115 624 90Q627 109 630 141ZM638 141Q642 125 645 109Q648 121 651 141ZM646 141Q649 115 654 89Q655 108 655 141ZM665 141Q669 109 671 77Q674 101 676 141ZM685 141Q689 123 698 104Q698 118 695 141ZM687 141Q690 126 691 112Q694 123 696 141ZM704 141Q710 128 721 116Q721 125 718 141ZM722 141Q726 112 733 84Q734 105 734 141ZM728 141Q733 114 744 87Q744 107 741 141ZM752 141Q756 113 753 84Q759 106 765 141ZM769 141Q773 120 775 99Q778 115 779 141ZM772 141Q775 119 790 97Q786 114 779 141ZM797 141Q801 114 807 88Q808 108 807 141ZM801 141Q807 113 815 85Q816 106 815 141ZM820 141Q824 118 840 94Q836 112 828 141ZM831 141Q834 125 840 109Q840 121 839 141ZM841 141Q845 107 848 74Q851 99 854 141ZM866 141Q870 116 886 90Q882 109 874 141ZM870 141Q873 118 872 96Q876 113 880 141ZM889 141Q893 113 892 85Q896 107 901 141ZM911 141Q914 123 916 106Q918 119 919 141ZM923 141Q927 117 935 92Q935 111 933 141ZM927 141Q931 122 936 102Q938 117 938 141ZM943 141Q947 121 958 102Q957 117 953 141ZM955 141Q958 128 963 116Q964 125 964 141ZM976 141Q981 113 983 85Q987 106 990 141ZM985 141Q989 128 990 115Q992 125 994 141ZM997 141Q1002 113 1010 85Q1012 106 1010 141ZM1017 141Q1022 118 1031 95Q1032 112 1030 141ZM1029 141Q1033 121 1037 102Q1039 117 1039 141ZM1038 141Q1041 106 1043 70Q1046 97 1048 141ZM1056 141Q1060 115 1071 89Q1070 109 1066 141ZM1076 141Q1081 125 1092 109Q1091 121 1087 141ZM1081 141Q1086 114 1096 87Q1096 107 1093 141ZM1093 141Q1096 124 1094 107Q1098 120 1102 141ZM1113 141Q1117 120 1132 100Q1129 115 1123 141ZM1128 141Q1133 122 1135 103Q1138 117 1141 141ZM1142 141Q1144 109 1141 77Q1145 101 1150 141ZM1157 141Q1160 116 1158 90Q1163 110 1168 141ZM1168 141Q1171 122 1175 102Q1176 117 1176 141ZM1181 141Q1183 129 1187 116Q1188 126 1188 141ZM1195 141Q1199 115 1196 90Q1200 109 1206 141ZM1212 141Q1217 117 1224 93Q1226 111 1226 141ZM-10 133H1210V141H-10Z"/></svg>
+  </div>
+</section>
+
+<!-- CHI SIAMO -->
+<section class="chi-siamo" id="chi-siamo">
+  <div class="deco-scene" aria-hidden="true">
+    <span class="deco-halo"></span>
+    <span class="deco-ring"></span>
+    <picture class="deco-rock">
+      <source type="image/avif" srcset="assets/img/deco-rock-320.avif 320w, assets/img/deco-rock-520.avif 520w, assets/img/deco-rock-760.avif 760w" sizes="(min-width:1000px) 460px, (min-width:600px) 38vw, 70vw">
+      <source type="image/webp" srcset="assets/img/deco-rock-320.webp 320w, assets/img/deco-rock-520.webp 520w, assets/img/deco-rock-760.webp 760w" sizes="(min-width:1000px) 460px, (min-width:600px) 38vw, 70vw">
+      <img src="assets/img/deco-rock-760.png" width="760" height="468" loading="lazy" decoding="async" alt="">
+    </picture>
+  </div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="route reveal">
+      <p class="route-title" id="routeTitle">Dove lavoriamo</p>
+      <ol class="route-stops" aria-labelledby="routeTitle">
+        <li class="is-home"><span class="route-name">Vignolo</span><span class="route-note">Sede</span></li>
+        <li><span class="route-name">Borgo San Dalmazzo</span></li>
+        <li><span class="route-name">Cuneo</span></li>
+        <li><span class="route-name">Boves</span></li>
+      </ol>
+    </div>
+    <div class="chi-grid">
+      <div class="chi-photo pop">
+        <picture>
+          <source type="image/avif" srcset="assets/img/prato-curvo-vialetto-pietra-rose-480.avif 480w, assets/img/prato-curvo-vialetto-pietra-rose-800.avif 800w, assets/img/prato-curvo-vialetto-pietra-rose-1200.avif 1200w" sizes="(min-width:768px) 48vw, 92vw">
+          <source type="image/webp" srcset="assets/img/prato-curvo-vialetto-pietra-rose-480.webp 480w, assets/img/prato-curvo-vialetto-pietra-rose-800.webp 800w, assets/img/prato-curvo-vialetto-pietra-rose-1200.webp 1200w" sizes="(min-width:768px) 48vw, 92vw">
+          <img src="assets/img/prato-curvo-vialetto-pietra-rose-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato curvo con bordura in corteccia, vialetto in pietra e rose in un giardino di montagna curato da Lisa Garden">
+        </picture>
+      </div>
+      <div class="chi-text reveal">
+        <div class="chi-head">
+          <div class="chi-head-text">
+            <span class="section-eyebrow">Chi siamo</span>
+            <h2 class="section-title">Il tuo giardiniere,<br><span class="light">non un call center.</span></h2>
+          </div>
+          <figure class="chi-owner">
+            <picture>
+              <source type="image/avif" srcset="assets/img/andrea-lisa-titolare-lisa-garden-240.avif 240w, assets/img/andrea-lisa-titolare-lisa-garden-360.avif 360w" sizes="(min-width: 768px) 150px, 112px">
+              <source type="image/webp" srcset="assets/img/andrea-lisa-titolare-lisa-garden-240.webp 240w, assets/img/andrea-lisa-titolare-lisa-garden-360.webp 360w" sizes="(min-width: 768px) 150px, 112px">
+              <img src="assets/img/andrea-lisa-titolare-lisa-garden-360.jpg" width="360" height="450" loading="lazy" decoding="async" alt="Andrea Lisa, titolare di Lisa Garden, con la polo verde dell'azienda">
+            </picture>
+            <figcaption><strong>Andrea Lisa</strong><span>Titolare</span></figcaption>
+          </figure>
+        </div>
+        <div class="chi-blocks">
+          <div class="chi-block">
+            <h3 class="chi-label">L'azienda</h3>
+            <div class="chi-body">
+              <p>Lisa Garden è la ditta individuale di Andrea Lisa, con sede a Vignolo (CN). Ogni progetto è seguito direttamente dal titolare, dalla prima visita alla consegna.</p>
+            </div>
+          </div>
+          <div class="chi-block">
+            <h3 class="chi-label">Come lavoriamo</h3>
+            <div class="chi-body">
+              <p>Niente intermediari, niente sorprese. Un unico referente che conosce il territorio, le sue piante e le sue stagioni.</p>
+              <ul class="chi-list">
+                <li>
+                  <div class="chi-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  Gestione diretta e personale di ogni progetto
+                </li>
+                <li>
+                  <div class="chi-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  Contatto artigianale, preventivi su misura
+                </li>
+                <li>
+                  <div class="chi-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  Operativi a Vignolo, Borgo San Dalmazzo, Cuneo e Boves
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="chi-block">
+            <h3 class="chi-label">Andrea Lisa</h3>
+            <div class="chi-body">
+              <p class="chi-cred"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><span>Responsabile tecnico per la manutenzione delle aree verdi (DGR 39-8764/2019)</span></p>
+              <!-- PLACEHOLDER: biografia di Andrea Lisa (testo da inserire) -->
+              <p class="ph-text"><strong>Segnaposto</strong>Qui va la biografia di Andrea Lisa. Testo da inserire.</p>
+            </div>
+          </div>
+        </div>
+        <a href="tel:+393209517477" class="chi-cta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          Chiama il 320 951 7477
+        </a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2467,70 +2644,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       <div class="ba-cta">
         <p class="ba-cta-text">Immagina il tuo spazio trasformato così.</p>
         <a href="#preventivo" class="ba-cta-btn">Richiedi un preventivo gratuito</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CHI SIAMO -->
-<section class="chi-siamo" id="chi-siamo">
-  <div class="deco-scene" aria-hidden="true">
-    <span class="deco-halo"></span>
-    <span class="deco-ring"></span>
-    <picture class="deco-rock">
-      <source type="image/avif" srcset="assets/img/deco-rock-320.avif 320w, assets/img/deco-rock-520.avif 520w, assets/img/deco-rock-760.avif 760w" sizes="(min-width:1000px) 460px, (min-width:600px) 38vw, 70vw">
-      <source type="image/webp" srcset="assets/img/deco-rock-320.webp 320w, assets/img/deco-rock-520.webp 520w, assets/img/deco-rock-760.webp 760w" sizes="(min-width:1000px) 460px, (min-width:600px) 38vw, 70vw">
-      <img src="assets/img/deco-rock-760.png" width="760" height="468" loading="lazy" decoding="async" alt="">
-    </picture>
-  </div>
-  <div class="container" style="position: relative; z-index: 2;">
-    <div class="chi-grid">
-      <div class="chi-photo pop">
-        <picture>
-          <source type="image/avif" srcset="assets/img/prato-curvo-vialetto-pietra-rose-480.avif 480w, assets/img/prato-curvo-vialetto-pietra-rose-800.avif 800w, assets/img/prato-curvo-vialetto-pietra-rose-1200.avif 1200w" sizes="(min-width:768px) 48vw, 92vw">
-          <source type="image/webp" srcset="assets/img/prato-curvo-vialetto-pietra-rose-480.webp 480w, assets/img/prato-curvo-vialetto-pietra-rose-800.webp 800w, assets/img/prato-curvo-vialetto-pietra-rose-1200.webp 1200w" sizes="(min-width:768px) 48vw, 92vw">
-          <img src="assets/img/prato-curvo-vialetto-pietra-rose-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato curvo con bordura in corteccia, vialetto in pietra e rose in un giardino di montagna curato da Lisa Garden">
-        </picture>
-      </div>
-      <div class="chi-text chi-glass reveal">
-        <div class="chi-head">
-          <div class="chi-head-text">
-            <span class="section-eyebrow">Chi siamo</span>
-            <h2 class="section-title">Il tuo giardiniere,<br><span class="light">non un call center.</span></h2>
-          </div>
-          <figure class="chi-owner">
-            <picture>
-              <source type="image/avif" srcset="assets/img/andrea-lisa-titolare-lisa-garden-240.avif 240w, assets/img/andrea-lisa-titolare-lisa-garden-360.avif 360w" sizes="(min-width: 768px) 150px, 112px">
-              <source type="image/webp" srcset="assets/img/andrea-lisa-titolare-lisa-garden-240.webp 240w, assets/img/andrea-lisa-titolare-lisa-garden-360.webp 360w" sizes="(min-width: 768px) 150px, 112px">
-              <img src="assets/img/andrea-lisa-titolare-lisa-garden-360.jpg" width="360" height="450" loading="lazy" decoding="async" alt="Andrea Lisa, titolare di Lisa Garden, con la polo verde dell'azienda">
-            </picture>
-            <figcaption><strong>Andrea Lisa</strong><span>Titolare</span></figcaption>
-          </figure>
-        </div>
-        <p>Lisa Garden è la ditta individuale di Andrea Lisa, con sede a Vignolo (CN). Ogni progetto è seguito direttamente dal titolare, dalla prima visita alla consegna.</p>
-        <p>Niente intermediari, niente sorprese. Un unico referente che conosce il territorio, le sue piante e le sue stagioni.</p>
-        <ul class="chi-list">
-          <li>
-            <div class="chi-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            Gestione diretta e personale di ogni progetto
-          </li>
-          <li>
-            <div class="chi-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            Contatto artigianale, preventivi su misura
-          </li>
-          <li>
-            <div class="chi-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            Operativi a Vignolo, Borgo San Dalmazzo, Cuneo e Boves
-          </li>
-          <li>
-            <div class="chi-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            Responsabile tecnico per la manutenzione delle aree verdi (DGR 39-8764/2019)
-          </li>
-        </ul>
-        <a href="tel:+393209517477" class="chi-cta">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-          Chiama il 320 951 7477
-        </a>
       </div>
     </div>
   </div>
@@ -2780,9 +2893,9 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     <div>
       <h4>Navigazione</h4>
       <ul class="footer-links">
+        <li><a href="#chi-siamo">Chi siamo</a></li>
         <li><a href="#servizi">Servizi</a></li>
         <li><a href="#prima-dopo">Prima e Dopo</a></li>
-        <li><a href="#chi-siamo">Chi siamo</a></li>
         <li><a href="#preventivo">Preventivo</a></li>
         <li><a href="#galleria">Lavori</a></li>
       </ul>
