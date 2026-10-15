@@ -706,53 +706,102 @@ section { padding: 5rem 1.5rem; }
 .servizi-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-top: 3rem;
-}
-@media (min-width: 600px) {
-  .servizi-grid { grid-template-columns: 1fr 1fr; }
+  gap: 3.25rem 1.5rem;
+  margin-top: 3.5rem;
+  counter-reset: servizio;
 }
 .servizio {
-  background: var(--cream);
-  border-radius: var(--radius);
-  padding: 2rem 1.5rem;
   position: relative;
-  overflow: hidden;
-  transition: transform 0.4s var(--ease-out), box-shadow 0.4s;
+  width: 88%;
+  counter-increment: servizio;
 }
-.servizio:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+.servizio:nth-child(even) { margin-left: auto; }
+@media (min-width: 640px) {
+  .servizi-grid { grid-template-columns: 1fr 1fr; gap: 4rem 2rem; }
+  .servizio { width: 100%; }
+  .servizio:nth-child(even) { margin-top: 3rem; }
+}
+@media (min-width: 960px) {
+  .servizi-grid { grid-template-columns: repeat(3, 1fr); gap: 4.5rem 2.25rem; }
+  .servizio:nth-child(even) { margin-top: 0; }
+  .servizio:nth-child(3n+2) { margin-top: 3.5rem; }
+}
+.servizio-photo {
+  position: relative;
+  aspect-ratio: 5 / 6;
+  border-radius: 999px 999px var(--radius-sm) var(--radius-sm);
+  background: var(--cream);
+  box-shadow: 0 18px 40px -22px rgba(23, 34, 27, 0.35);
+}
+.servizio-photo picture {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.servizio-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: scale 0.9s var(--ease-out);
+}
+@media (hover: hover) {
+  .servizio:hover .servizio-photo img { scale: 1.05; }
 }
 .servizio-icon {
+  position: absolute;
+  right: 12%; bottom: -22px;
   width: 48px; height: 48px;
-  border-radius: 14px;
+  border-radius: 50%;
   background: linear-gradient(135deg, var(--leaf), var(--leaf-bright));
+  border: 3px solid var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.25rem;
 }
 .servizio-icon svg { width: 22px; height: 22px; color: var(--surface); }
+.servizio-body { padding: 2rem 0.25rem 0; }
+.servizio-body::before {
+  content: counter(servizio, decimal-leading-zero);
+  display: block;
+  font-family: var(--font-display, 'Fraunces', Georgia, serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--leaf);
+  margin-bottom: 0.35rem;
+}
 .servizio h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display, 'Fraunces', Georgia, serif);
+  font-size: 1.4rem;
+  font-weight: 450;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--charcoal);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.55rem;
 }
 .servizio p {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: var(--text-secondary);
-  line-height: 1.55;
+  line-height: 1.6;
   font-weight: 300;
+  max-width: 34ch;
 }
-.servizio-leaf {
-  position: absolute;
-  top: -15px; right: -15px;
-  width: 80px; height: 80px;
-  opacity: 0.04;
-  transform: rotate(25deg);
+/* Segnaposto per le foto ancora da inserire */
+.servizio-photo.is-placeholder {
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  text-align: center;
+  background: #fbf3d6;
+  border: 2px dashed #b88a14;
+  box-shadow: none;
+}
+.servizio-photo.is-placeholder span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7a5a06;
+  line-height: 1.5;
 }
 
 /* ── PRIMA E DOPO ── */
@@ -2209,21 +2258,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 }
 @keyframes drawLine { to { stroke-dashoffset: 0; } }
 
-/* Servizi: luce morbida che segue il puntatore (solo mouse) */
-@media (hover: hover) and (pointer: fine) {
-  .servizio::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.7), transparent 65%);
-    opacity: 0;
-    transition: opacity 0.4s;
-    pointer-events: none;
-  }
-  .servizio:hover::before { opacity: 1; }
-  .servizio > :not(.servizio-leaf) { position: relative; }
-}
-
 /* Galleria: icona "ingrandisci" al passaggio */
 .gal-item { position: relative; }
 .gal-item::after {
@@ -2517,38 +2551,101 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       <p class="section-sub">Dalla manutenzione alla creazione completa, ogni intervento su misura per il tuo giardino.</p>
     </div>
     <div class="servizi-grid">
-      <div class="servizio reveal reveal-delay-1">
-        <svg class="servizio-leaf" viewBox="0 0 80 80" fill="currentColor" style="color: var(--leaf)"><ellipse cx="40" cy="40" rx="35" ry="25" transform="rotate(-30 40 40)"/></svg>
-        <div class="servizio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/></svg>
+      <article class="servizio reveal reveal-delay-1">
+        <div class="servizio-photo">
+          <picture>
+            <source type="image/avif" srcset="assets/img/prato-a-strisce-villa-facciata-rossa-480.avif 480w, assets/img/prato-a-strisce-villa-facciata-rossa-800.avif 800w" sizes="(min-width: 960px) 30vw, (min-width: 640px) 46vw, 86vw">
+            <source type="image/webp" srcset="assets/img/prato-a-strisce-villa-facciata-rossa-480.webp 480w, assets/img/prato-a-strisce-villa-facciata-rossa-800.webp 800w" sizes="(min-width: 960px) 30vw, (min-width: 640px) 46vw, 86vw">
+            <img src="assets/img/prato-a-strisce-villa-facciata-rossa-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato rasato a strisce davanti a una villa dalla facciata rossa">
+          </picture>
+          <div class="servizio-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/></svg>
+          </div>
         </div>
-        <h3>Manutenzione del verde</h3>
-        <p>Interventi ordinari e straordinari per mantenere il tuo giardino curato in ogni stagione dell'anno.</p>
-      </div>
-      <div class="servizio reveal reveal-delay-2">
-        <svg class="servizio-leaf" viewBox="0 0 80 80" fill="currentColor" style="color: var(--leaf)"><ellipse cx="40" cy="40" rx="35" ry="25" transform="rotate(-30 40 40)"/></svg>
-        <div class="servizio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+        <div class="servizio-body">
+          <h3>Manutenzione del verde</h3>
+          <p>Interventi ordinari e straordinari per mantenere il tuo giardino curato in ogni stagione dell'anno.</p>
         </div>
-        <h3>Cura piante e siepi</h3>
-        <p>Potatura professionale, sfalcio e cura delle siepi per dare forma e salute alle tue piante.</p>
-      </div>
-      <div class="servizio reveal reveal-delay-3">
-        <svg class="servizio-leaf" viewBox="0 0 80 80" fill="currentColor" style="color: var(--leaf)"><ellipse cx="40" cy="40" rx="35" ry="25" transform="rotate(-30 40 40)"/></svg>
-        <div class="servizio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v6m0 0a6 6 0 016 6c0 4.5-6 8-6 8s-6-3.5-6-8a6 6 0 016-6z"/></svg>
+      </article>
+      <article class="servizio reveal reveal-delay-2">
+        <!-- PLACEHOLDER: foto per "Cura piante e siepi". Sostituire il blocco <span> con un <picture> (vedi gli altri box). -->
+        <div class="servizio-photo is-placeholder">
+          <span>Foto da inserire<br>Cura di piante e siepi</span>
+          <div class="servizio-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+          </div>
         </div>
-        <h3>Sistemi di irrigazione</h3>
-        <p>Progettazione, installazione e manutenzione di impianti di irrigazione su misura.</p>
-      </div>
-      <div class="servizio reveal reveal-delay-4">
-        <svg class="servizio-leaf" viewBox="0 0 80 80" fill="currentColor" style="color: var(--leaf)"><ellipse cx="40" cy="40" rx="35" ry="25" transform="rotate(-30 40 40)"/></svg>
-        <div class="servizio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 3v4m-4 0h8M7 11V8a1 1 0 011-1h8a1 1 0 011 1v3"/></svg>
+        <div class="servizio-body">
+          <h3>Cura piante e siepi</h3>
+          <p>Potatura professionale, sfalcio e cura delle siepi per dare forma e salute alle tue piante.</p>
         </div>
-        <h3>Realizzazione aree verdi</h3>
-        <p>Nuovi prati con semina o rotoli, aiuole fiorite e progettazione di spazi verdi completi.</p>
-      </div>
+      </article>
+      <article class="servizio reveal reveal-delay-3">
+        <div class="servizio-photo">
+          <picture>
+            <source type="image/avif" srcset="assets/img/giardino-corten-irrigazione-goccia-480.avif 480w, assets/img/giardino-corten-irrigazione-goccia-720.avif 720w" sizes="(min-width: 960px) 30vw, (min-width: 640px) 46vw, 86vw">
+            <source type="image/webp" srcset="assets/img/giardino-corten-irrigazione-goccia-480.webp 480w, assets/img/giardino-corten-irrigazione-goccia-720.webp 720w" sizes="(min-width: 960px) 30vw, (min-width: 640px) 46vw, 86vw">
+            <img src="assets/img/giardino-corten-irrigazione-goccia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Linea di irrigazione a goccia stesa sul telo antierba, in un'aiuola con ghiaia bianca">
+          </picture>
+          <div class="servizio-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6m0 0a6 6 0 016 6c0 4.5-6 8-6 8s-6-3.5-6-8a6 6 0 016-6z"/></svg>
+          </div>
+        </div>
+        <div class="servizio-body">
+          <h3>Sistemi di irrigazione</h3>
+          <p>Progettazione, installazione e manutenzione di impianti di irrigazione su misura.</p>
+        </div>
+      </article>
+      <article class="servizio reveal reveal-delay-1">
+        <div class="servizio-photo">
+          <picture>
+            <source type="image/avif" srcset="assets/img/prato-inglese-ghiaia-rossa-colline-480.avif 480w, assets/img/prato-inglese-ghiaia-rossa-colline-800.avif 800w" sizes="(min-width: 960px) 30vw, (min-width: 640px) 46vw, 86vw">
+            <source type="image/webp" srcset="assets/img/prato-inglese-ghiaia-rossa-colline-480.webp 480w, assets/img/prato-inglese-ghiaia-rossa-colline-800.webp 800w" sizes="(min-width: 960px) 30vw, (min-width: 640px) 46vw, 86vw">
+            <img src="assets/img/prato-inglese-ghiaia-rossa-colline-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure di ghiaia rossa e vista sulle colline">
+          </picture>
+          <div class="servizio-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 3v4m-4 0h8M7 11V8a1 1 0 011-1h8a1 1 0 011 1v3"/></svg>
+          </div>
+        </div>
+        <div class="servizio-body">
+          <h3>Realizzazione aree verdi</h3>
+          <p>Nuovi prati con semina o rotoli, aiuole fiorite e progettazione di spazi verdi completi.</p>
+        </div>
+      </article>
+      <article class="servizio reveal reveal-delay-2">
+        <!-- DA CONFERMARE CON IL CLIENTE: box aggiunto in base ai lavori in galleria -->
+        <div class="servizio-photo">
+          <picture>
+            <source type="image/avif" srcset="assets/img/rosmarino-vasca-corten-ghiaia-chiara-480.avif 480w, assets/img/rosmarino-vasca-corten-ghiaia-chiara-800.avif 800w" sizes="(min-width: 960px) 30vw, (min-width: 640px) 46vw, 86vw">
+            <source type="image/webp" srcset="assets/img/rosmarino-vasca-corten-ghiaia-chiara-480.webp 480w, assets/img/rosmarino-vasca-corten-ghiaia-chiara-800.webp 800w" sizes="(min-width: 960px) 30vw, (min-width: 640px) 46vw, 86vw">
+            <img src="assets/img/rosmarino-vasca-corten-ghiaia-chiara-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Rosmarino che ricade da una vasca in acciaio corten accanto alla ghiaia chiara">
+          </picture>
+          <div class="servizio-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M7 20V12m5 8V6m5 14v-9"/><path d="M5 12c0-2 2-3 2-3s2 1 2 3M10 6c0-2 2-3 2-3s2 1 2 3M15 11c0-2 2-3 2-3s2 1 2 3"/></svg>
+          </div>
+        </div>
+        <div class="servizio-body">
+          <h3>Aiuole, ghiaia e corten</h3>
+          <p>Aiuole con pacciamatura o ghiaia, bordure e vasche in acciaio corten, con telo antierba e irrigazione a goccia.</p>
+        </div>
+      </article>
+      <article class="servizio reveal reveal-delay-3">
+        <!-- DA CONFERMARE CON IL CLIENTE: box aggiunto in base alla foto del fresaceppi -->
+        <div class="servizio-photo">
+          <picture>
+            <source type="image/avif" srcset="assets/img/rimozione-ceppo-fresaceppi-giardino-480.avif 480w, assets/img/rimozione-ceppo-fresaceppi-giardino-800.avif 800w" sizes="(min-width: 960px) 30vw, (min-width: 640px) 46vw, 86vw">
+            <source type="image/webp" srcset="assets/img/rimozione-ceppo-fresaceppi-giardino-480.webp 480w, assets/img/rimozione-ceppo-fresaceppi-giardino-800.webp 800w" sizes="(min-width: 960px) 30vw, (min-width: 640px) 46vw, 86vw">
+            <img src="assets/img/rimozione-ceppo-fresaceppi-giardino-800.jpg" width="800" height="1000" loading="lazy" decoding="async" alt="Fresaceppi al lavoro su un ceppo in un giardino con prato">
+          </picture>
+          <div class="servizio-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="15" rx="8" ry="4"/><path d="M4 15v3c0 2.2 3.6 4 8 4s8-1.8 8-4v-3"/><path d="M8 15c0-1.2 1.8-2 4-2s4 .8 4 2M12 3v6m-2-4l2-2 2 2"/></svg>
+          </div>
+        </div>
+        <div class="servizio-body">
+          <h3>Rimozione ceppi</h3>
+          <p>Fresatura dei ceppi rimasti dopo il taglio di un albero, per liberare il terreno.</p>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -3794,17 +3891,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   document.querySelectorAll('main > section[id]').forEach(function(sec) { spyObserver.observe(sec); });
-
-  // ── Servizi: luce che segue il puntatore ──
-  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    document.querySelectorAll('.servizio').forEach(function(card) {
-      card.addEventListener('pointermove', function(e) {
-        var r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
-      });
-    });
-  }
 })();
 </script>
 </body>
