@@ -784,57 +784,131 @@ section { padding: 5rem 1.5rem; }
 }
 
 /* ── SERVIZI ── */
-.servizi { background: var(--surface); }
-.servizi-grid {
+.servizi { background: var(--surface); position: relative; overflow: hidden; }
+.servizi-head { display: grid; gap: 0; }
+@media (min-width: 1000px) {
+  .servizi-head { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); column-gap: 4rem; align-items: end; }
+  .servizi-head .section-sub { margin-bottom: 1rem; }
+}
+.svc-grid {
   display: grid;
-  grid-template-columns: 1fr;
   gap: 1rem;
-  margin-top: 3rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
 }
-@media (min-width: 600px) {
-  .servizi-grid { grid-template-columns: 1fr 1fr; }
+@media (min-width: 700px) { .svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) {
+  .svc-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.25rem; }
+  .svc--1, .svc--4 { grid-column: span 7; }
+  .svc--2, .svc--3 { grid-column: span 5; }
 }
-.servizio {
-  background: var(--cream);
-  border-radius: var(--radius);
-  padding: 2rem 1.5rem;
+/* Ogni box ha la sua tinta e il suo angolo "a foglia"; stesso sistema per tutti */
+.svc {
+  --tint: 20, 48, 26;
+  --leaf: 150px;
+  --r: 22px;
   position: relative;
-  overflow: hidden;
-  transition: transform 0.4s var(--ease-out), box-shadow 0.4s;
-}
-.servizio:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
-}
-.servizio-icon {
-  width: 48px; height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--leaf), var(--leaf-bright));
+  isolation: isolate;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.25rem;
+  align-items: flex-end;
+  min-height: 430px;
+  overflow: hidden;
+  color: #fff;
+  border-radius: var(--r) var(--leaf) var(--r) var(--r);
+  transition: border-radius 0.9s var(--ease-out), opacity 0.8s var(--ease), transform 0.8s var(--ease-out);
 }
-.servizio-icon svg { width: 22px; height: 22px; color: var(--surface); }
-.servizio h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--charcoal);
-  margin-bottom: 0.5rem;
+.svc--2 { --tint: 46, 52, 22; border-radius: var(--leaf) var(--r) var(--r) var(--r); }
+.svc--3 { --tint: 16, 42, 48; border-radius: var(--r) var(--leaf) var(--r) var(--r); }
+.svc--4 { --tint: 54, 38, 22; border-radius: var(--leaf) var(--r) var(--r) var(--r); }
+@media (min-width: 1000px) { .svc { min-height: 460px; } }
+.svc-media { position: absolute; inset: 0; z-index: -1; }
+.svc-media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: scale(1.1);
+  filter: saturate(0.82);
+  transition: transform 1.4s var(--ease-out), filter 1s var(--ease);
 }
-.servizio p {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  line-height: 1.55;
-  font-weight: 300;
-}
-.servizio-leaf {
+/* velo sfocato: copia minuscola della stessa foto, sfocata una volta sola;
+   all'attivazione sparisce in dissolvenza (solo opacity) */
+.svc-veil {
   position: absolute;
-  top: -15px; right: -15px;
-  width: 80px; height: 80px;
-  opacity: 0.04;
-  transform: rotate(25deg);
+  inset: -24px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(12px) saturate(1.05);
+  opacity: 0.5;
+  transition: opacity 0.9s var(--ease);
+}
+.svc-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, rgba(var(--tint), 0.95) 0%, rgba(var(--tint), 0.7) 38%, rgba(var(--tint), 0.12) 78%, rgba(var(--tint), 0.04) 100%);
+  transition: opacity 0.9s var(--ease);
+}
+.svc-body { position: relative; width: 100%; padding: clamp(1.5rem, 3vw, 2.25rem); }
+/* su touch la descrizione è sempre visibile: più spazio alla foto e velo più scuro sotto il testo */
+@media (hover: none), (pointer: coarse) {
+  .svc { min-height: 500px; }
+  .svc-media::after {
+    background: linear-gradient(0deg, rgba(var(--tint), 0.96) 0%, rgba(var(--tint), 0.86) 46%, rgba(var(--tint), 0.2) 82%, rgba(var(--tint), 0.05) 100%);
+  }
+}
+.svc-num {
+  display: block;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1rem;
+  color: rgba(223, 236, 207, 0.85);
+  margin-bottom: 0.4rem;
+}
+.svc h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 1.3rem + 1vw, 2.15rem);
+  font-weight: 450;
+  line-height: 1.08;
+  letter-spacing: -0.012em;
+  margin-bottom: 0.5rem;
+  text-wrap: balance;
+}
+.svc-tag { font-size: 0.98rem; color: rgba(255,255,255,0.86); max-width: 34ch; }
+.svc-more { display: grid; grid-template-rows: 1fr; }
+.svc-more > div { overflow: hidden; }
+.svc-desc { font-size: 0.92rem; line-height: 1.62; color: rgba(255,255,255,0.8); max-width: 44ch; margin-top: 1rem; }
+.svc-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: 50px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: background-color 0.3s, transform 0.3s var(--ease-out);
+}
+.svc-cta svg { width: 16px; height: 16px; transition: translate 0.35s var(--ease-out); }
+.svc-cta:hover svg { translate: 3px 0; }
+.svc-cta:focus-visible { outline: 3px solid #eef3e9; outline-offset: 3px; }
+
+/* Stato attivo: foto nitida e più vicina, velo che sparisce, angolo che si ammorbidisce.
+   Con il mouse si attiva al passaggio; su touch quando il box è al centro dello schermo. */
+.svc.is-active .svc-media img,
+.svc:focus-within .svc-media img { transform: scale(1); filter: none; }
+.svc.is-active .svc-veil,
+.svc:focus-within .svc-veil { opacity: 0; }
+.svc.is-active, .svc:focus-within { --leaf: 64px; }
+@media (hover: hover) and (pointer: fine) {
+  .svc:hover .svc-media img { transform: scale(1); filter: none; }
+  .svc:hover .svc-veil { opacity: 0; }
+  .svc:hover { --leaf: 64px; }
+  /* la descrizione emerge al passaggio; resta sempre nel codice e per chi usa la tastiera */
+  .svc-more { grid-template-rows: 0fr; transition: grid-template-rows 0.7s var(--ease-out); }
+  .svc-more > div { opacity: 0; translate: 0 12px; transition: opacity 0.5s var(--ease), translate 0.7s var(--ease-out); }
+  .svc:hover .svc-more, .svc:focus-within .svc-more { grid-template-rows: 1fr; }
+  .svc:hover .svc-more > div, .svc:focus-within .svc-more > div { opacity: 1; translate: 0 0; transition-delay: 0.08s; }
 }
 
 /* ── PRIMA E DOPO ── */
@@ -1653,7 +1727,6 @@ section { padding: 5rem 1.5rem; }
 @media (max-width: 900px) { .deco-ivy { display: none; } }
 
 /* Texture di foglie molto tenue nello sfondo delle sezioni chiare */
-.servizi::before,
 .preventivo::before,
 .galleria::before {
   content: "";
@@ -2185,9 +2258,6 @@ textarea:focus-visible,
   50%      { rotate: 1.2deg; }
 }
 
-/* 4. Icone dei servizi: piccolo movimento in hover */
-.servizio-icon { transition: rotate 0.4s var(--ease-out), scale 0.4s var(--ease-out); }
-.servizio:hover .servizio-icon { rotate: -8deg; scale: 1.08; }
 
 /* 5. Impulso discreto attorno al bottone WhatsApp */
 .wa-float::after {
@@ -2376,20 +2446,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 }
 @keyframes drawLine { to { stroke-dashoffset: 0; } }
 
-/* Servizi: luce morbida che segue il puntatore (solo mouse) */
-@media (hover: hover) and (pointer: fine) {
-  .servizio::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.7), transparent 65%);
-    opacity: 0;
-    transition: opacity 0.4s;
-    pointer-events: none;
-  }
-  .servizio:hover::before { opacity: 1; }
-  .servizio > :not(.servizio-leaf) { position: relative; }
-}
 
 /* Galleria: icona "ingrandisci" al passaggio */
 .gal-item { position: relative; }
@@ -2655,59 +2711,92 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 </section>
 
 <!-- SERVIZI -->
-<section class="servizi" id="servizi" style="position: relative; overflow: hidden;">
-  <picture class="deco-plant" aria-hidden="true">
-    <source type="image/avif" srcset="assets/img/deco-plant-320.avif 320w, assets/img/deco-plant-520.avif 520w" sizes="(min-width:600px) 260px, 170px">
-    <source type="image/webp" srcset="assets/img/deco-plant-320.webp 320w, assets/img/deco-plant-520.webp 520w" sizes="(min-width:600px) 260px, 170px">
-    <img src="assets/img/deco-plant-520.png" width="520" height="477" loading="lazy" decoding="async" alt="">
-  </picture>
-  <div class="blob" style="width: 420px; height: 420px; top: -120px; right: -150px; background: linear-gradient(135deg, rgba(138,171,127,0.35), rgba(61,122,40,0.18));"></div>
-  <div class="blob" style="width: 340px; height: 340px; bottom: -100px; left: -120px; background: linear-gradient(135deg, rgba(232,226,216,0.8), rgba(138,171,127,0.25)); animation-delay: -8s;"></div>
-  <div class="leaf-float" style="width: 46px; height: 46px; top: 12%; right: 8%;">
-    <svg viewBox="0 0 48 48" fill="none"><path d="M24 4C12 14 8 26 12 38c12 4 24 0 32-12C36 14 30 8 24 4z" fill="rgba(61,122,40,0.25)"/><path d="M24 4C20 20 20 30 12 38" stroke="rgba(61,122,40,0.4)" stroke-width="1.2" stroke-linecap="round"/></svg>
-  </div>
-  <div class="leaf-float" style="width: 32px; height: 32px; bottom: 18%; right: 15%; animation-delay: -4s;">
-    <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="6" fill="rgba(217,131,166,0.35)"/><circle cx="16" cy="26" r="6" fill="rgba(217,131,166,0.3)"/><circle cx="32" cy="26" r="6" fill="rgba(217,131,166,0.3)"/><circle cx="20" cy="34" r="6" fill="rgba(217,131,166,0.25)"/><circle cx="28" cy="34" r="6" fill="rgba(217,131,166,0.25)"/><circle cx="24" cy="27" r="4" fill="rgba(240,200,90,0.6)"/></svg>
-  </div>
-  <div class="container" style="position: relative; z-index: 2;">
-    <div class="reveal">
-      <span class="section-eyebrow">Cosa facciamo</span>
-      <h2 class="section-title">Tutto per il tuo <span class="light">spazio verde.</span></h2>
-      <p class="section-sub">Dalla manutenzione alla creazione completa, ogni intervento su misura per il tuo giardino.</p>
+<section class="servizi" id="servizi">
+  <div class="container">
+    <div class="servizi-head reveal">
+      <div>
+        <span class="section-eyebrow">Cosa facciamo</span>
+        <h2 class="section-title">Quattro servizi, <span class="light">un solo referente.</span></h2>
+      </div>
+      <p class="section-sub">Dalla manutenzione di tutti i giorni alla realizzazione di un giardino nuovo. Ogni lavoro parte da una visita sul posto e da un preventivo su misura.</p>
     </div>
-    <div class="servizi-grid">
-      <div class="servizio reveal reveal-delay-1">
-        <svg class="servizio-leaf" viewBox="0 0 80 80" fill="currentColor" style="color: var(--leaf)"><ellipse cx="40" cy="40" rx="35" ry="25" transform="rotate(-30 40 40)"/></svg>
-        <div class="servizio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/></svg>
+    <div class="svc-grid">
+      <article class="svc svc--1 reveal">
+        <div class="svc-media">
+          <picture>
+            <source type="image/avif" srcset="assets/img/gal-10-480.avif 480w, assets/img/gal-10-800.avif 800w, assets/img/gal-10-1200.avif 1200w" sizes="(min-width: 1000px) 620px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
+            <source type="image/webp" srcset="assets/img/gal-10-480.webp 480w, assets/img/gal-10-800.webp 800w, assets/img/gal-10-1200.webp 1200w" sizes="(min-width: 1000px) 620px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
+            <img src="assets/img/gal-10-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato rasato a strisce davanti a una villa con la facciata rossa">
+          </picture>
+          <span class="svc-veil" style="background-image:url(data:image/webp;base64,UklGRsoAAABXRUJQVlA4IL4AAACQBACdASoUABsAPt1ipk6opaMiKA1REBuJZAC/OA/MtEWudu+RSqMHkSYLLzAA/tPbecoIgVsbEidulhBtgOSvqBXkc5OvYWnetJc0sySED7mzZR9r/t4R7DVQcitk/skbAmujDjF6V8d73ARQTnOJCCIcI3gxYlT05rMpOU9um5Dt82LsRIhsFfjlcTiyqdTknLhZffKqPEvns9edtsXIVmugGmDUJoI+DlrzNsJvZGnj2/fpx/48I3I1UAAA)" aria-hidden="true"></span>
         </div>
-        <h3>Manutenzione del verde</h3>
-        <p>Interventi ordinari e straordinari per mantenere il tuo giardino curato in ogni stagione dell'anno.</p>
-      </div>
-      <div class="servizio reveal reveal-delay-2">
-        <svg class="servizio-leaf" viewBox="0 0 80 80" fill="currentColor" style="color: var(--leaf)"><ellipse cx="40" cy="40" rx="35" ry="25" transform="rotate(-30 40 40)"/></svg>
-        <div class="servizio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+        <div class="svc-body">
+          <span class="svc-num" aria-hidden="true">01</span>
+          <h3>Manutenzione del verde</h3>
+          <p class="svc-tag">Prato, aiuole e bordi in ordine, tutto l'anno.</p>
+          <div class="svc-more"><div>
+            <p class="svc-desc">Taglio del prato, pulizia di aiuole e vialetti, rimozione delle erbe infestanti e raccolta del verde tagliato. Interventi periodici o singoli, per chi non ha tempo di seguire il giardino o vuole tenerlo curato con continuità.</p>
+            <a href="#preventivo" class="svc-cta" data-servizio="Manutenzione ordinaria">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div></div>
         </div>
-        <h3>Cura piante e siepi</h3>
-        <p>Potatura professionale, sfalcio e cura delle siepi per dare forma e salute alle tue piante.</p>
-      </div>
-      <div class="servizio reveal reveal-delay-3">
-        <svg class="servizio-leaf" viewBox="0 0 80 80" fill="currentColor" style="color: var(--leaf)"><ellipse cx="40" cy="40" rx="35" ry="25" transform="rotate(-30 40 40)"/></svg>
-        <div class="servizio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v6m0 0a6 6 0 016 6c0 4.5-6 8-6 8s-6-3.5-6-8a6 6 0 016-6z"/></svg>
+      </article>
+      <article class="svc svc--2 reveal reveal-delay-1">
+        <div class="svc-media">
+          <picture>
+            <source type="image/avif" srcset="assets/img/arbusti-sagomati-lavanda-rose-440.avif 440w" sizes="(min-width: 1000px) 440px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
+            <source type="image/webp" srcset="assets/img/arbusti-sagomati-lavanda-rose-440.webp 440w" sizes="(min-width: 1000px) 440px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
+            <img src="assets/img/arbusti-sagomati-lavanda-rose-440.jpg" width="440" height="420" loading="lazy" decoding="async" alt="Arbusti sagomati, lavanda e rose in un'aiuola con corteccia lungo un vialetto in pietra">
+          </picture>
+          <span class="svc-veil" style="background-image:url(data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAAAQBQCdASoUABMAPt1mq1EopSOiqAgBEBuJQBOkJA8L4dFPz0GZvZVlUNkfRpuGdVm8AP6qA7vUT4bHmiwuWMMtD2Zy8V5yo1Kka0L6jmsxk5cphMp9lBkkjcDdQOxgV7DBq9lmAoHAn1kf0hs6CiXl2VHugMZKd0BLRbyYvP6jLTIhUIcG5m6O0Dawjaad5VEfriN6NAlpy2A/9fbFk05A/dq0hQz8+0SLSMdnLUQp7WtAAAA=)" aria-hidden="true"></span>
         </div>
-        <h3>Sistemi di irrigazione</h3>
-        <p>Progettazione, installazione e manutenzione di impianti di irrigazione su misura.</p>
-      </div>
-      <div class="servizio reveal reveal-delay-4">
-        <svg class="servizio-leaf" viewBox="0 0 80 80" fill="currentColor" style="color: var(--leaf)"><ellipse cx="40" cy="40" rx="35" ry="25" transform="rotate(-30 40 40)"/></svg>
-        <div class="servizio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 3v4m-4 0h8M7 11V8a1 1 0 011-1h8a1 1 0 011 1v3"/></svg>
+        <div class="svc-body">
+          <span class="svc-num" aria-hidden="true">02</span>
+          <h3>Cura piante e siepi</h3>
+          <p class="svc-tag">Siepi, arbusti e piante ornamentali in forma.</p>
+          <div class="svc-more"><div>
+            <p class="svc-desc">Potatura e rifinitura di siepi, arbusti e piante ornamentali per contenerne la crescita, mantenerne la forma e tenerle in salute. Si interviene nel periodo adatto a ciascuna specie.</p>
+            <a href="#preventivo" class="svc-cta" data-servizio="Potatura e sfalcio">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div></div>
         </div>
-        <h3>Realizzazione aree verdi</h3>
-        <p>Nuovi prati con semina o rotoli, aiuole fiorite e progettazione di spazi verdi completi.</p>
-      </div>
+      </article>
+      <article class="svc svc--3 reveal">
+        <div class="svc-media">
+          <picture>
+            <source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif 480w, assets/img/pd-corten-ghiaia-720.avif 720w" sizes="(min-width: 1000px) 440px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
+            <source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="(min-width: 1000px) 440px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
+            <img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Linea di irrigazione a goccia posata sul telo antierba in un'aiuola con ghiaia chiara">
+          </picture>
+          <span class="svc-veil" style="background-image:url(data:image/webp;base64,UklGRt4AAABXRUJQVlA4INIAAACQBQCdASoUABkAPt1iqk+opSOiKAqpEBuJZQCzkf/jejDzHJYhH7AvjQrvub8wNYrlWINgAAD+6ZzxPMxeL+NkfRl11fvSlZ0LEErdJeaef0fVJ6tgQCQzd9JXHl7Cpl0hwgxEx/MN6wuOT7suajyjWMsyFQwTMwQ0aMP5aYsW2JUKrx/3VQmd/D/ngO+xRwbgMrXgtnPrFxANJYHAtaJink6Fsr+abAiTaMwqWosXiFHLxAEMBy7JKYqZZ5iFwuOf4GZN8HJCbTRBRPAa2n/MeAA=)" aria-hidden="true"></span>
+        </div>
+        <div class="svc-body">
+          <span class="svc-num" aria-hidden="true">03</span>
+          <h3>Sistemi di irrigazione</h3>
+          <p class="svc-tag">L'acqua giusta per ogni zona del giardino.</p>
+          <div class="svc-more"><div>
+            <p class="svc-desc">Progettazione, posa e manutenzione di impianti su misura, anche a goccia per aiuole e vasche. Utile a chi vuole ridurre le annaffiature a mano e dare a prato e piante l'acqua di cui hanno bisogno.</p>
+            <a href="#preventivo" class="svc-cta" data-servizio="Impianto irrigazione">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div></div>
+        </div>
+      </article>
+      <article class="svc svc--4 reveal reveal-delay-1">
+        <div class="svc-media">
+          <picture>
+            <source type="image/avif" srcset="assets/img/gal-11-480.avif 480w, assets/img/gal-11-800.avif 800w, assets/img/gal-11-1200.avif 1200w" sizes="(min-width: 1000px) 620px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
+            <source type="image/webp" srcset="assets/img/gal-11-480.webp 480w, assets/img/gal-11-800.webp 800w, assets/img/gal-11-1200.webp 1200w" sizes="(min-width: 1000px) 620px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
+            <img src="assets/img/gal-11-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure in ghiaia rossa e piante, con le colline sullo sfondo">
+          </picture>
+          <span class="svc-veil" style="background-image:url(data:image/webp;base64,UklGRuwAAABXRUJQVlA4IOAAAADQBQCdASoUABsAPt1eqE4opKOiMBgIARAbiWQAnQAQOiZT9F+QA14M608Wq1EZQc+KFhNedsgAAP2ZpBVpdqXr1xBWHd9Ei6vvV3wnMwNULETUwGvoD4BuTtSuDyp7tazRvrHLTLkj/75PT7TUQFZqYCZCvLSJb1gNe3Ag0qB2i2zPlrJ5DmUoT/O/yZqEcW9Y+XllriSnakmKqcu55FFJzvNfDhK7dqd9L4oi5tggpq4riIDxjJlT1LvWzJlAbKQWlQ46srk9p2EA89lHenSW/jabCCDeOnh4YDlXuAAAAA==)" aria-hidden="true"></span>
+        </div>
+        <div class="svc-body">
+          <span class="svc-num" aria-hidden="true">04</span>
+          <h3>Realizzazione aree verdi</h3>
+          <p class="svc-tag">Dal terreno nudo al giardino finito.</p>
+          <div class="svc-more"><div>
+            <p class="svc-desc">Nuovi prati a semina o in rotoli, aiuole, bordure e pacciamature con corteccia o ghiaia decorativa. Si parte dallo spazio com'è oggi per arrivare a un giardino pensato su misura per chi lo vive.</p>
+            <a href="#preventivo" class="svc-cta" data-servizio="Nuovo giardino">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div></div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -3237,6 +3326,14 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     });
   }
 
+  // ── Servizi: su touch il box al centro dello schermo si "accende" ──
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches && 'IntersectionObserver' in window) {
+    var svcObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { e.target.classList.toggle('is-active', e.isIntersecting); });
+    }, { rootMargin: '-38% 0px -38% 0px' });
+    document.querySelectorAll('.svc').forEach(function(el) { svcObserver.observe(el); });
+  }
+
   // ── Parallax leggero sulla foto hero (solo transform, 60fps) ──
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var heroImg = document.querySelector('.hero-bg img');
@@ -3729,6 +3826,15 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     });
   });
 
+  // Dai box dei servizi: il pulsante porta al preventivo con il servizio già scelto
+  document.querySelectorAll('[data-servizio]').forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (step !== 1) return;
+      var opt = document.querySelector('.prev-step[data-step="1"] .prev-option[data-value="' + link.dataset.servizio + '"]');
+      if (opt) opt.click();
+    });
+  });
+
   function buildMessage() {
     var notes = document.getElementById('prevNotes').value.trim();
     var msg = 'Buongiorno, vorrei un preventivo.\n';
@@ -3989,16 +4095,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   }, { rootMargin: '-45% 0px -50% 0px' });
   document.querySelectorAll('main > section[id]').forEach(function(sec) { spyObserver.observe(sec); });
 
-  // ── Servizi: luce che segue il puntatore ──
-  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    document.querySelectorAll('.servizio').forEach(function(card) {
-      card.addEventListener('pointermove', function(e) {
-        var r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
-      });
-    });
-  }
 })();
 </script>
 </body>
