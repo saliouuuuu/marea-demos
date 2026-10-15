@@ -97,6 +97,10 @@
         {
           "@type": "City",
           "name": "Boves"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Provincia di Cuneo"
         }
       ],
       "knowsAbout": [
@@ -1923,6 +1927,94 @@ section { padding: 5rem 1.5rem; }
   .gal-item:hover .gal-cap { opacity: 1; }
 }
 
+/* ── ZONE ── */
+.zone { background: var(--ivory); position: relative; overflow: hidden; }
+.zone-grid { display: grid; gap: 2.5rem; align-items: center; }
+@media (min-width: 900px) {
+  .zone-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(3rem, 6vw, 6rem); }
+}
+/* schema ad anelli: livelli di vicinanza, non una mappa */
+.zone-rings { width: min(100%, 440px); margin: 0 auto; }
+.zone-rings svg { display: block; width: 100%; height: auto; overflow: visible; }
+.zone-ring { fill: none; stroke: var(--green); stroke-width: 1; }
+.zone-ring--1 { stroke-opacity: 0.55; }
+.zone-ring--2 { stroke-opacity: 0.35; }
+.zone-ring--3 { stroke-opacity: 0.28; stroke-dasharray: 2 5; }
+.zone-rings text { font-family: var(--font-sans); font-size: 9px; font-weight: 600; letter-spacing: 0.16em; fill: var(--green); }
+.zone-rings .zone-ring-label--3 { fill: var(--text-muted); }
+.zone-home-dot { fill: var(--green); }
+.zone-home-halo { fill: var(--green); opacity: 0.12; }
+.zone-rings .zone-home-name { font-family: var(--font-display); font-size: 22px; font-weight: 450; letter-spacing: 0; fill: var(--ink); }
+.zone-rings .zone-home-sub { font-size: 8px; letter-spacing: 0.2em; fill: var(--text-muted); }
+/* entrata: gli anelli si disegnano dal centro verso l'esterno */
+.zone-rings .zone-ring, .zone-rings text { opacity: 0; transition: opacity 0.9s var(--ease); }
+.zone-rings .zone-ring { transform-box: fill-box; transform-origin: center; scale: 0.82; transition: opacity 0.9s var(--ease), scale 1.2s var(--ease-out); }
+.zone-rings.visible .zone-ring, .zone-rings.visible text { opacity: 1; }
+.zone-rings.visible .zone-ring { scale: 1; }
+.zone-rings.visible .zone-ring--2, .zone-rings.visible .zone-ring-label--2 { transition-delay: 0.2s; }
+.zone-rings.visible .zone-ring--3, .zone-rings.visible .zone-ring-label--3 { transition-delay: 0.4s; }
+.zone-rings.reveal { transform: none; opacity: 1; }
+
+.zone-groups { margin-top: 2.4rem; }
+.zone-group + .zone-group { margin-top: 1.8rem; padding-top: 1.8rem; border-top: 1px solid var(--line); }
+.zone-group h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.8rem;
+}
+.zone-group h3 span { font-weight: 500; letter-spacing: 0.04em; text-transform: none; color: var(--text-muted); font-size: 0.78rem; }
+.zone-main { list-style: none; display: flex; flex-wrap: wrap; gap: 0.25rem 1.4rem; }
+.zone-main li {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 1.2rem + 1vw, 1.95rem);
+  font-weight: 450;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.zone-main li small {
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-left: 0.4rem;
+  vertical-align: 0.5em;
+}
+.zone-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.zone-list li {
+  padding: 0.38rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 50px;
+  font-size: 0.88rem;
+  color: var(--text);
+  background: rgba(255,255,255,0.55);
+}
+.zone-group p { font-size: 0.95rem; line-height: 1.65; color: var(--text-muted); max-width: 46ch; }
+.zone-note { margin-top: 0.8rem; font-size: 0.82rem !important; }
+.zone-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 50px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition: background-color 0.3s, transform 0.3s var(--ease-out);
+}
+.zone-cta svg { width: 18px; height: 18px; color: var(--whatsapp); }
+.zone-cta:hover { background: var(--green-deep); }
+
 /* ── FOOTER ── */
 .footer {
   background: var(--charcoal);
@@ -3138,9 +3230,9 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
           <p class="prev-question" id="q3">Dove si trova il giardino?</p>
           <div class="prev-options">
             <button type="button" class="prev-option" aria-pressed="false" data-value="Vignolo">Vignolo</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Borgo San Dalmazzo">Borgo San Dalmazzo</button>
             <button type="button" class="prev-option" aria-pressed="false" data-value="Cuneo">Cuneo</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Boves o altri comuni">Boves / altri comuni</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Borgo San Dalmazzo o Boves">Borgo San Dalmazzo o Boves</button>
+            <button type="button" class="prev-option" aria-pressed="false" data-value="Altro comune della provincia di Cuneo">Altro comune della provincia</button>
           </div>
         </div>
 
@@ -3282,6 +3374,59 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   </div>
 </section>
 
+<!-- ZONE -->
+<section class="zone" id="zone" aria-labelledby="zoneTitle">
+  <div class="container">
+    <div class="zone-grid">
+      <div class="zone-rings reveal" aria-hidden="true">
+        <svg viewBox="0 0 400 400" focusable="false">
+          <circle class="zone-ring zone-ring--3" cx="200" cy="200" r="186"/>
+          <circle class="zone-ring zone-ring--2" cx="200" cy="200" r="132"/>
+          <circle class="zone-ring zone-ring--1" cx="200" cy="200" r="78"/>
+          <path id="zoneArc1" d="M200 200 m-86 0 a86 86 0 1 1 172 0" fill="none"/><text class="zone-ring-label--1"><textPath href="#zoneArc1" startOffset="50%" text-anchor="middle">CUNEO &#183; BORGO SAN DALMAZZO &#183; BOVES</textPath></text>
+          <path id="zoneArc2" d="M200 200 m-140 0 a140 140 0 1 1 280 0" fill="none"/><text class="zone-ring-label--2"><textPath href="#zoneArc2" startOffset="50%" text-anchor="middle">COMUNI VICINI</textPath></text>
+          <path id="zoneArc3" d="M200 200 m-194 0 a194 194 0 1 1 388 0" fill="none"/><text class="zone-ring-label--3"><textPath href="#zoneArc3" startOffset="50%" text-anchor="middle">PROVINCIA DI CUNEO</textPath></text>
+          <circle class="zone-home-halo" cx="200" cy="200" r="34"/>
+          <circle class="zone-home-dot" cx="200" cy="200" r="5"/>
+          <text class="zone-home-name" x="200" y="238" text-anchor="middle">Vignolo</text>
+          <text class="zone-home-sub" x="200" y="252" text-anchor="middle">SEDE</text>
+        </svg>
+      </div>
+      <div class="zone-copy">
+        <div class="reveal">
+          <span class="section-eyebrow">Dove lavoriamo</span>
+          <h2 class="section-title" id="zoneTitle">Cuneo <span class="light">e provincia.</span></h2>
+          <p class="section-sub">La sede è a Vignolo. Lavoriamo soprattutto a Cuneo e nei comuni intorno; per il resto della provincia valutiamo ogni richiesta in base alla distanza e al tipo di lavoro.</p>
+        </div>
+        <div class="zone-groups reveal reveal-delay-1">
+          <div class="zone-group">
+            <h3>Le nostre zone</h3>
+            <ul class="zone-main">
+              <li>Vignolo<small>sede</small></li>
+              <li>Cuneo</li>
+              <li>Borgo San Dalmazzo</li>
+              <li>Boves</li>
+            </ul>
+          </div>
+          <!-- DA CONFERMARE CON IL CLIENTE: elenco dei comuni vicini in cui lavora davvero -->
+          <div class="zone-group">
+            <h3>Comuni vicini <span>su richiesta</span></h3>
+            <ul class="zone-list">
+              <li>Cervasca</li><li>Bernezzo</li><li>Caraglio</li><li>Valgrana</li><li>Roccasparvera</li><li>Gaiola</li><li>Moiola</li><li>Roccavione</li><li>Robilante</li><li>Peveragno</li><li>Beinette</li><li>Centallo</li><li>Busca</li>
+            </ul>
+            <p class="zone-note">La disponibilità dipende dal periodo e dal tipo di intervento: scrivici e ti rispondiamo.</p>
+          </div>
+          <div class="zone-group">
+            <h3>Resto della provincia</h3>
+            <p>Valle Stura, Valle Grana, Valle Gesso e Valle Vermenagna, ma anche Fossano, Saluzzo e Mondovì: raccontaci il lavoro e valutiamo insieme se possiamo seguirlo.</p>
+          </div>
+          <a class="zone-cta" href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20sapere%20se%20lavorate%20nella%20mia%20zona%3A%20"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Chiedi se lavoriamo nella tua zona</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- FINALE -->
 <section class="finale" id="inizia" aria-labelledby="finaleTitle">
   <div class="container finale-inner">
@@ -3312,7 +3457,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         </a>
       </div>
       <p class="finale-call">Preferisci parlarne a voce? Chiama il <a href="tel:+393209517477">320 951 7477</a></p>
-      <p class="finale-zones"><span>Vignolo</span><span>Borgo San Dalmazzo</span><span>Cuneo</span><span>Boves</span></p>
+      <p class="finale-zones"><span>Vignolo</span><span>Cuneo</span><span>Borgo San Dalmazzo</span><span>Boves</span><span>e provincia</span></p>
     </div>
   </div>
 </section>
