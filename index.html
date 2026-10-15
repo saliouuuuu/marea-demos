@@ -333,53 +333,18 @@ img { max-width: 100%; height: auto; display: block; }
 a { text-decoration: none; color: inherit; }
 button { font: inherit; border: none; cursor: pointer; background: none; }
 
-/* ── REVEAL ANIMATION ── */
-.reveal {
+/* ── ENTRATE ALLO SCROLL ──
+   Un solo movimento per tutto il sito: dissolvenza e piccola salita. */
+.reveal, .pop {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease-out);
+  transform: translateY(28px);
+  transition: opacity 0.9s var(--ease), transform 1s var(--ease-out);
 }
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
-
-/* ── POP SCALE ── */
-.pop {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease-out);
-}
-.pop.visible {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* ── MORPHING BLOBS ── */
-.blob {
-  position: absolute;
-  border-radius: 42% 58% 61% 39% / 45% 51% 49% 55%;
-  filter: blur(70px);
-  opacity: 0.2;
-  pointer-events: none;
-  animation: morph 22s ease-in-out infinite alternate;
-  will-change: transform;
-  z-index: 0;
-}
-/* solo transform: la sfocatura viene calcolata una volta e poi solo spostata */
-@keyframes morph {
-  0%   { transform: rotate(0deg) scale(1); }
-  33%  { transform: rotate(20deg) scale(1.08); }
-  66%  { transform: rotate(-15deg) scale(0.96); }
-  100% { transform: rotate(10deg) scale(1.05); }
-}
-
-  100% { transform: translateY(6px) rotate(-6deg); }
-}
+.reveal.visible, .pop.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
 
 /* ── NAV ── */
 .nav {
@@ -452,10 +417,6 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 
 /* ── HERO ── */
 .hero {
-  --lawn-h: clamp(84px, 9vw, 132px);
-  --mw: clamp(150px, 19vw, 280px);      /* larghezza del tosaerba */
-  --mow-dur: 6.8s;
-  --mow-delay: 0.9s;
   position: relative;
   min-height: 100vh;
   min-height: 100svh;
@@ -466,7 +427,6 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   overflow: hidden;
   background: var(--ink);
 }
-@media (max-width: 767px) { .hero { --mow-dur: 4.6s; } }
 .hero-bg {
   position: absolute;
   inset: 0;
@@ -496,10 +456,10 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   z-index: 3;
   width: min(1080px, calc(100% - 3rem));
   margin: 0 auto;
-  padding: 6.5rem 0 calc(var(--lawn-h) + 2.4rem);
+  padding: 7rem 0 4.5rem;
 }
 @media (min-width: 768px) {
-  .hero-content { width: min(1080px, calc(100% - 4rem)); padding-bottom: calc(var(--lawn-h) + 3.4rem); }
+  .hero-content { width: min(1080px, calc(100% - 4rem)); padding-bottom: 6.5rem; }
 }
 .hero-copy { max-width: 41rem; }
 .hero-eyebrow {
@@ -582,161 +542,15 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 .hero-link svg { width: 16px; height: 16px; transition: translate 0.35s var(--ease-out); }
 .hero-link:hover { border-color: #fff; }
 .hero-link:hover svg { translate: 0 3px; }
-.hero-proof {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem 0;
-  margin-top: 2.2rem;
-  font-size: 0.78rem;
-  line-height: 1.4;
-  color: rgba(255,255,255,0.72);
-}
-.hero-proof li { padding-right: 1rem; margin-right: 1rem; border-right: 1px solid rgba(255,255,255,0.22); }
-.hero-proof li:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
-.hero-proof strong { color: #fff; font-weight: 600; }
 @media (max-width: 767px) {
   .hero-eyebrow { gap: 0; letter-spacing: 0.14em; font-size: 0.66rem; }
   .hero-eyebrow::before { display: none; }
-  .hero-proof { flex-direction: column; font-size: 0.74rem; margin-top: 1.6rem; }
-  .hero-proof li { border-right: 0; margin-right: 0; padding-right: 0; }
-  .hero-proof li:nth-child(3) { display: none; }
 }
 @media (max-height: 700px) and (max-width: 767px) {
   .hero-content { padding-top: 5.2rem; }
   .hero h1 { margin-bottom: 1rem; }
   .hero-sub { margin-bottom: 1.4rem; }
-  .hero-proof { display: none; }
 }
-
-/* ── Prato e tosaerba ──
-   Il prato tagliato è sempre lì sotto; l'erba alta sta in una "finestra"
-   che scorre verso destra insieme al tosaerba, mentre il suo contenuto
-   scorre al contrario e resta fermo: si vede solo il bordo che avanza.
-   Tutto con transform, quindi sul compositor. */
-.lawn {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: var(--lawn-h);
-  z-index: 2;
-  pointer-events: none;
-}
-.lawn-cut {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  top: calc(var(--lawn-h) * -0.34);
-  background: url('assets/img/prato-tagliato.svg') repeat-x left bottom / auto 100%;
-  /* in alto il prato disegnato sfuma in quello della foto */
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.55) 16%, #000 34%);
-  mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.55) 16%, #000 34%);
-}
-/* righe di taglio: bande appena più chiare e più scure, più larghe verso chi guarda */
-.lawn-cut::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg,
-    rgba(255,255,230,0) 24%, rgba(255,255,230,0.07) 36%, rgba(0,0,0,0.05) 52%,
-    rgba(255,255,230,0.07) 68%, rgba(0,0,0,0.1) 86%, rgba(0,0,0,0.16) 100%);
-}
-.lawn-uncut {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 165%;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22px);
-  mask-image: linear-gradient(90deg, transparent 0, #000 22px);
-  animation: mowWindow var(--mow-dur) linear var(--mow-delay) both;
-}
-.lawn-uncut-inner {
-  position: absolute;
-  inset: 0;
-  animation: mowWindowInner var(--mow-dur) linear var(--mow-delay) both;
-}
-.lawn-uncut-inner::before {
-  content: "";
-  position: absolute;
-  inset: 0 -40px;
-  background: url('assets/img/prato-alto.svg') repeat-x left bottom / auto 100%;
-  transform-origin: 50% 100%;
-  animation: grassSway 2.4s ease-in-out infinite alternate;
-}
-@keyframes grassSway {
-  from { transform: skewX(-2deg); }
-  to   { transform: skewX(1.5deg); }
-}
-.mower-track {
-  position: absolute;
-  inset: 0;
-  animation: mowTrack var(--mow-dur) linear var(--mow-delay) both;
-}
-/* scia di luce sul prato appena tagliato */
-.mower-track::before {
-  content: "";
-  position: absolute;
-  right: 100%;
-  bottom: 0;
-  width: 42vw;
-  height: 100%;
-  background: linear-gradient(90deg, rgba(255,255,230,0) 0%, rgba(255,255,230,0.12) 100%);
-  animation: mowTrail var(--mow-dur) linear var(--mow-delay) both;
-}
-@keyframes mowTrack {
-  from { transform: translateX(calc(var(--mw) * -0.12 - 2px)); }
-  to   { transform: translateX(calc(100% + var(--mw) * 0.88)); }
-}
-@keyframes mowWindow {
-  from { transform: translateX(calc(var(--mw) * -0.12 - 2px)); }
-  to   { transform: translateX(calc(100% + var(--mw) * 0.88)); }
-}
-@keyframes mowWindowInner {
-  from { transform: translateX(calc(var(--mw) * 0.12 + 2px)); }
-  to   { transform: translateX(calc(-100% - var(--mw) * 0.88)); }
-}
-@keyframes mowTrail {
-  0%, 82% { opacity: 1; }
-  100% { opacity: 0; }
-}
-.mower {
-  position: absolute;
-  left: calc(var(--mw) * -0.9);
-  bottom: calc(var(--lawn-h) * 0.04);
-  width: var(--mw);
-}
-.mower svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 34%);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 34%);
-  animation: mowerVibe 0.09s linear infinite alternate;
-}
-@keyframes mowerVibe { to { transform: translateY(-0.7px); } }
-.mower .mw-wheel {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: mowerWheel 0.42s linear infinite;
-}
-@keyframes mowerWheel { to { transform: rotate(360deg); } }
-/* sfalci che saltano dietro la scocca */
-.mw-clip {
-  position: absolute;
-  left: 28%;
-  bottom: 8%;
-  width: 4px; height: 2px;
-  border-radius: 2px;
-  background: #9cc27a;
-  opacity: 0;
-  animation: mowerClip 0.75s ease-out infinite;
-  animation-delay: var(--d, 0s);
-}
-@keyframes mowerClip {
-  0%   { opacity: 0.95; transform: translate(0, 0) rotate(0deg); }
-  100% { opacity: 0; transform: translate(var(--x, -30px), var(--y, -22px)) rotate(var(--r, 140deg)); }
-}
-.lawn.is-done .lawn-uncut,
-.lawn.is-done .mower-track { display: none; }
 
 /* ── SECTIONS ── */
 section { padding: 5rem 1.5rem; }
@@ -745,12 +559,15 @@ section { padding: 5rem 1.5rem; }
 .container { max-width: 1080px; margin: 0 auto; }
 
 .section-eyebrow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--leaf);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.9rem;
 }
 .section-title {
   font-family: var(--font-display);
@@ -775,268 +592,118 @@ section { padding: 5rem 1.5rem; }
   line-height: 1.65;
   font-weight: 400;
 }
-
-/* ── FORMAZIONE ── */
-.formazione {
-  background: var(--green-deep);
-  position: relative;
-  overflow: hidden;
-  color: #fff;
-}
-.formazione .section-eyebrow { color: #b9d3a9; }
-.formazione .section-title { color: #fff; }
-.formazione .section-title .light { color: #cfe2c2; }
-.formazione .section-sub { color: rgba(255,255,255,0.7); }
-.formazione-head { display: grid; gap: 0; }
-@media (min-width: 1000px) {
-  .formazione-head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 4rem; align-items: end; }
-  .formazione-head .section-sub { margin-bottom: 1rem; }
-}
-.cred-list {
-  list-style: none;
-  display: grid;
-  gap: 1rem;
-  margin-top: clamp(2.25rem, 4vw, 3rem);
-}
-@media (min-width: 900px) { .cred-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; } }
-/* badge: carta avorio, doppia cornice sottile, sigillo vettoriale */
-.cred {
-  position: relative;
-  display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
-  gap: 1.1rem;
-  align-items: start;
-  padding: 1.35rem 1.35rem 1.4rem;
-  background: var(--ivory);
-  color: var(--ink);
-  border-radius: 6px;
-  box-shadow: 0 18px 40px -24px rgba(0,0,0,0.6);
-  transition: translate 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
-}
-.cred::before {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  border: 1px solid rgba(53, 106, 57, 0.35);
-  border-radius: 3px;
-  pointer-events: none;
-}
-@media (min-width: 900px) {
-  .cred { grid-template-columns: 1fr; padding: 1.75rem 1.6rem 1.8rem; }
-}
-.cred-seal {
-  width: 76px; height: 76px;
-  color: var(--green);
-  transition: rotate 1.2s var(--ease-out);
-}
-.cred-seal text { font-family: var(--font-sans); font-size: 7.2px; font-weight: 600; fill: currentColor; }
-.cred-seal .cred-glyph { font-family: var(--font-display); font-style: italic; font-size: 30px; font-weight: 450; letter-spacing: 0; }
-@media (hover: hover) {
-  .cred:hover { translate: 0 -4px; box-shadow: 0 26px 50px -24px rgba(0,0,0,0.65); }
-  .cred:hover .cred-seal { rotate: -14deg; }
-}
-.cred-type {
-  display: block;
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--green);
-  margin-bottom: 0.45rem;
-}
-.cred-title {
+/* Intestazione uguale per tutte le sezioni: numero, titolo, sottotitolo */
+.sec-num {
   font-family: var(--font-display);
-  font-size: 1.22rem;
-  font-weight: 450;
-  line-height: 1.22;
-  letter-spacing: -0.005em;
-  color: var(--ink);
-  text-wrap: balance;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--green);
 }
-.cred-ref {
-  margin-top: 0.75rem;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--line);
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: var(--text-muted);
+.sec-head { display: grid; gap: 1rem; margin-bottom: clamp(2.5rem, 5vw, 3.75rem); }
+.sec-head .section-title { margin-bottom: 0; }
+.sec-head .section-sub { margin: 0; }
+@media (min-width: 1000px) {
+  .sec-head { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); column-gap: 4rem; align-items: end; }
+  .sec-head .section-sub { padding-bottom: 0.45rem; }
 }
-.cred-ref strong { color: var(--ink); font-weight: 600; }
-/* badge predisposti: stessa struttura, cornice tratteggiata finché mancano i dati */
-.cred.is-pending::before { border-style: dashed; }
-.cred.is-pending .cred-seal { color: #8a978c; }
-.cred.is-pending .cred-title { color: var(--text-muted); }
+/* Due soli fondi: avorio per le sezioni chiare, verde scurissimo per quelle scure */
+.is-light { background: var(--ivory); }
+.is-dark { background: var(--ink); color: #fff; }
+.is-dark .section-eyebrow { color: var(--sage); }
+.is-dark .sec-num { color: #cfe2c2; }
+.is-dark .section-title { color: #fff; }
+.is-dark .section-title .light { color: #b9d3a9; }
+.is-dark .section-sub { color: rgba(255,255,255,0.72); }
+/* due sezioni chiare di seguito: le separa un filo sottile */
+.has-divider { padding-top: 0; }
+.has-divider > .container { border-top: 1px solid var(--line); padding-top: clamp(4.5rem, 8vw, 7rem); }
 
 /* ── SERVIZI ── */
-.servizi { background: var(--surface); position: relative; overflow: hidden; }
-.servizi-head { display: grid; gap: 0; }
-@media (min-width: 1000px) {
-  .servizi-head { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); column-gap: 4rem; align-items: end; }
-  .servizi-head .section-sub { margin-bottom: 1rem; }
-}
-.svc-grid {
-  display: grid;
-  gap: 1rem;
-  margin-top: clamp(2.5rem, 5vw, 3.5rem);
-}
+.svc-grid { display: grid; gap: 1rem; }
 @media (min-width: 700px) { .svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1000px) {
   .svc-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.25rem; }
   .svc--1, .svc--4 { grid-column: span 7; }
   .svc--2, .svc--3 { grid-column: span 5; }
 }
-/* Ogni box ha la sua tinta e il suo angolo "a foglia"; stesso sistema per tutti */
+/* stessa struttura per i quattro box; ognuno ha la sua foto e il suo angolo "a foglia" */
 .svc {
-  --tint: 20, 48, 26;
-  --leaf: 150px;
-  --r: 22px;
+  --leaf: 96px;
+  --r: 20px;
   position: relative;
   isolation: isolate;
   display: flex;
   align-items: flex-end;
-  min-height: 430px;
+  min-height: 480px;
   overflow: hidden;
   color: #fff;
+  background: var(--ink);
   border-radius: var(--r) var(--leaf) var(--r) var(--r);
-  transition: border-radius 0.9s var(--ease-out), opacity 0.8s var(--ease), transform 0.8s var(--ease-out);
+  transition: border-radius 0.9s var(--ease-out), opacity 0.9s var(--ease), transform 1s var(--ease-out);
 }
-.svc--2 { --tint: 46, 52, 22; border-radius: var(--leaf) var(--r) var(--r) var(--r); }
-.svc--3 { --tint: 16, 42, 48; border-radius: var(--r) var(--leaf) var(--r) var(--r); }
-.svc--4 { --tint: 54, 38, 22; border-radius: var(--leaf) var(--r) var(--r) var(--r); }
+.svc--2, .svc--4 { border-radius: var(--leaf) var(--r) var(--r) var(--r); }
 @media (min-width: 1000px) { .svc { min-height: 460px; } }
 .svc-media { position: absolute; inset: 0; z-index: -1; }
 .svc-media img {
   width: 100%; height: 100%;
   object-fit: cover;
-  transform: scale(1.1);
-  filter: saturate(0.82);
-  transition: transform 1.4s var(--ease-out), filter 1s var(--ease);
+  transform: scale(1.08);
+  transition: transform 1.4s var(--ease-out);
 }
-/* velo sfocato: copia minuscola della stessa foto, sfocata una volta sola;
-   all'attivazione sparisce in dissolvenza (solo opacity) */
-.svc-veil {
-  position: absolute;
-  inset: -24px;
-  background-size: cover;
-  background-position: center;
-  filter: blur(12px) saturate(1.05);
-  opacity: 0.5;
-  transition: opacity 0.9s var(--ease);
-}
+.svc.visible .svc-media img { transform: scale(1); }
 .svc-media::after {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(0deg, rgba(var(--tint), 0.95) 0%, rgba(var(--tint), 0.7) 38%, rgba(var(--tint), 0.12) 78%, rgba(var(--tint), 0.04) 100%);
-  transition: opacity 0.9s var(--ease);
+  background: linear-gradient(0deg, rgba(14, 26, 17, 0.95) 0%, rgba(14, 26, 17, 0.8) 36%, rgba(14, 26, 17, 0.25) 66%, rgba(14, 26, 17, 0.04) 100%);
 }
 .svc-body { position: relative; width: 100%; padding: clamp(1.5rem, 3vw, 2.25rem); }
-/* su touch la descrizione è sempre visibile: più spazio alla foto e velo più scuro sotto il testo */
-@media (hover: none), (pointer: coarse) {
-  .svc { min-height: 500px; }
-  .svc-media::after {
-    background: linear-gradient(0deg, rgba(var(--tint), 0.96) 0%, rgba(var(--tint), 0.86) 46%, rgba(var(--tint), 0.2) 82%, rgba(var(--tint), 0.05) 100%);
-  }
-}
 .svc-num {
   display: block;
   font-family: var(--font-display);
   font-style: italic;
   font-size: 1rem;
-  color: rgba(223, 236, 207, 0.85);
+  color: #cfe2c2;
   margin-bottom: 0.4rem;
 }
 .svc h3 {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 1.3rem + 1vw, 2.15rem);
+  font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
   font-weight: 450;
   line-height: 1.08;
   letter-spacing: -0.012em;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.45rem;
   text-wrap: balance;
 }
-.svc-tag { font-size: 0.98rem; color: rgba(255,255,255,0.86); max-width: 34ch; }
-.svc-more { display: grid; grid-template-rows: 1fr; }
-.svc-more > div { overflow: hidden; }
-.svc-desc { font-size: 0.92rem; line-height: 1.62; color: rgba(255,255,255,0.8); max-width: 44ch; margin-top: 1rem; }
+.svc-tag { font-size: 1rem; font-weight: 500; color: #fff; max-width: 36ch; }
+.svc-desc { font-size: 0.93rem; line-height: 1.62; color: rgba(255,255,255,0.82); max-width: 46ch; margin-top: 0.6rem; }
 .svc-cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.25rem;
-  padding: 0.7rem 1.25rem;
-  border-radius: 50px;
-  background: #fff;
-  color: var(--ink);
-  font-size: 0.88rem;
+  gap: 0.45rem;
+  margin-top: 1.1rem;
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
   font-weight: 600;
-  transition: background-color 0.3s, transform 0.3s var(--ease-out);
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.45);
+  transition: border-color 0.3s;
 }
 .svc-cta svg { width: 16px; height: 16px; transition: translate 0.35s var(--ease-out); }
+.svc-cta:hover { border-color: #fff; }
 .svc-cta:hover svg { translate: 3px 0; }
 .svc-cta:focus-visible { outline: 3px solid #eef3e9; outline-offset: 3px; }
-
-/* Stato attivo: foto nitida e più vicina, velo che sparisce, angolo che si ammorbidisce.
-   Con il mouse si attiva al passaggio; su touch quando il box è al centro dello schermo. */
-.svc.is-active .svc-media img,
-.svc:focus-within .svc-media img { transform: scale(1); filter: none; }
-.svc.is-active .svc-veil,
-.svc:focus-within .svc-veil { opacity: 0; }
-.svc.is-active, .svc:focus-within { --leaf: 64px; }
 @media (hover: hover) and (pointer: fine) {
-  .svc:hover .svc-media img { transform: scale(1); filter: none; }
-  .svc:hover .svc-veil { opacity: 0; }
-  .svc:hover { --leaf: 64px; }
-  /* la descrizione emerge al passaggio; resta sempre nel codice e per chi usa la tastiera */
-  .svc-more { grid-template-rows: 0fr; transition: grid-template-rows 0.7s var(--ease-out); }
-  .svc-more > div { opacity: 0; translate: 0 12px; transition: opacity 0.5s var(--ease), translate 0.7s var(--ease-out); }
-  .svc:hover .svc-more, .svc:focus-within .svc-more { grid-template-rows: 1fr; }
-  .svc:hover .svc-more > div, .svc:focus-within .svc-more > div { opacity: 1; translate: 0 0; transition-delay: 0.08s; }
+  .svc:hover { --leaf: 40px; }
+  .svc.visible:hover .svc-media img { transform: scale(1.04); }
 }
 
 /* ── PRIMA E DOPO ── */
-.prima-dopo {
-  background: var(--charcoal);
-  position: relative;
-  overflow: hidden;
-}
-.prima-dopo .section-eyebrow { color: var(--sage); }
-.prima-dopo .section-title { color: var(--surface); }
-.prima-dopo .section-sub { color: rgba(255,255,255,0.62); }
+.prima-dopo { position: relative; overflow: hidden; }
 
-.ba-cta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem 1.5rem;
-  margin-top: 2rem;
-  max-width: 720px;
-}
-.ba-cta-text {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: var(--fz-lg);
-  color: var(--surface);
-  line-height: 1.2;
-  flex: 1 1 260px;
-}
-.ba-cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1.75rem;
-  background: var(--surface);
-  color: var(--ink);
-  border-radius: 50px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
-}
-.ba-cta-btn:hover { transform: scale(1.04); box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
-.ba-cta-btn:active { transform: scale(0.98); }
 
 /* Selettore dei lavori, confronto e fasi.
    Mobile: lavori in una riga scorrevole, confronto a tutta larghezza, fasi sotto.
@@ -1247,7 +914,7 @@ section { padding: 5rem 1.5rem; }
 .pd-play.is-playing .pd-play-icon { background: #fff; }
 .pd-hint { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
 
-.pd-info { grid-area: info; display: grid; gap: 0.5rem; max-width: 46ch; }
+.pd-info { grid-area: info; display: grid; gap: 0.5rem; align-content: start; max-width: 46ch; }
 .pd-kind {
   font-size: 0.7rem;
   font-weight: 600;
@@ -1265,13 +932,12 @@ section { padding: 5rem 1.5rem; }
   text-wrap: balance;
 }
 .pd-desc { font-size: var(--fz-base); line-height: 1.6; color: rgba(255,255,255,0.68); }
-.pd .ba-cta { grid-area: cta; margin-top: 0.5rem; }
 
 @media (min-width: 900px) {
   .pd {
     grid-template-columns: minmax(0, 470px) minmax(0, 1fr);
-    grid-template-areas: "stage picker" "stage info" "stage cta";
-    grid-template-rows: auto auto 1fr;
+    grid-template-areas: "stage picker" "stage info";
+    grid-template-rows: auto 1fr;
     column-gap: 4rem;
     row-gap: 2rem;
     margin-top: 3rem;
@@ -1284,11 +950,10 @@ section { padding: 5rem 1.5rem; }
     padding: 0;
   }
   .pd-pick-title { white-space: normal; }
-  .pd .ba-cta { align-self: end; }
 }
 
 /* ── CASO: PRIMA / DURANTE / DOPO ── */
-.case { margin-top: clamp(2.5rem, 5vw, 4rem); }
+.case { margin-top: 0; }
 .case-head {
   display: grid;
   gap: 0.6rem;
@@ -1424,25 +1089,21 @@ section { padding: 5rem 1.5rem; }
 .pd-more-sub { font-size: 0.95rem; color: rgba(255,255,255,0.62); margin-bottom: 2rem; max-width: 46ch; }
 
 /* ── CHI SIAMO ── */
-.about { background: var(--ivory); position: relative; overflow: hidden; }
 .about-grid {
   display: grid;
-  grid-template-areas: "head" "media" "body";
+  grid-template-areas: "media" "body";
   gap: 2.5rem;
 }
-.about-head { grid-area: head; }
-.about-media { grid-area: media; }
 .about-body { grid-area: body; }
+.about-media { grid-area: media; }
 @media (min-width: 900px) {
   .about-grid {
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-    grid-template-rows: auto 1fr;
-    grid-template-areas: "head media" "body media";
+    grid-template-areas: "body media";
     column-gap: clamp(3rem, 6vw, 6rem);
-    row-gap: 1.5rem;
+    align-items: start;
   }
 }
-.about-head .section-title { margin-bottom: 0; }
 .about-lead {
   font-size: clamp(1.08rem, 1rem + 0.35vw, 1.24rem);
   line-height: 1.65;
@@ -1478,46 +1139,11 @@ section { padding: 5rem 1.5rem; }
   color: var(--ink);
   max-width: 28em;
 }
-.about-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.9rem 1.5rem;
-  margin-top: 2.2rem;
-}
-.about-call {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.85rem 1.5rem;
-  border-radius: 50px;
-  background: var(--ink);
-  color: #fff;
-  font-size: 0.92rem;
-  font-weight: 600;
-  transition: background-color 0.3s, transform 0.3s var(--ease-out);
-}
-.about-call svg { width: 16px; height: 16px; }
-.about-call:hover { background: var(--green-deep); }
-.about-link {
-  font-size: 0.92rem;
-  font-weight: 500;
-  color: var(--green);
-  border-bottom: 1px solid rgba(53,106,57,0.35);
-  padding: 0.3rem 0;
-  transition: border-color 0.3s;
-}
-.about-link:hover { border-color: var(--green); }
-
 /* Foto: ritratto grande, dettaglio di cantiere sovrapposto */
 .about-media { position: relative; padding-bottom: 22%; align-self: start; }
-@media (min-width: 900px) { .about-media { padding-bottom: 26%; margin-top: 0.5rem; } }
+@media (min-width: 900px) { .about-media { padding-bottom: 26%; } }
 .about-portrait { margin: 0 0 0 auto; width: 80%; position: relative; }
-.about-frame {
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--cream);
-}
+.about-frame { border-radius: var(--radius); overflow: hidden; background: var(--cream); }
 .about-portrait .about-frame { aspect-ratio: 4 / 5; }
 .about-frame img { width: 100%; height: 100%; object-fit: cover; }
 .about-portrait figcaption {
@@ -1532,12 +1158,7 @@ section { padding: 5rem 1.5rem; }
   color: var(--text-muted);
 }
 .about-portrait figcaption strong { color: var(--ink); font-weight: 600; }
-.about-detail {
-  position: absolute;
-  left: 0; bottom: 0;
-  width: 54%;
-  margin: 0;
-}
+.about-detail { position: absolute; left: 0; bottom: 0; width: 54%; margin: 0; }
 .about-detail .about-frame {
   aspect-ratio: 3 / 2;
   border-radius: var(--radius-sm);
@@ -1547,105 +1168,142 @@ section { padding: 5rem 1.5rem; }
 .about-detail figcaption {
   margin-top: 0.4rem;
   padding-left: 6px;
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   line-height: 1.45;
   color: var(--text-muted);
   max-width: 26ch;
 }
-/* entrata: le foto scorrono dentro la cornice */
 .about-media.reveal { transform: none; }
-.about-media .about-frame img { scale: 1.1; transition: scale 1.6s var(--ease-out); }
-.about-media .about-detail { translate: 0 30px; opacity: 0; transition: translate 1.1s var(--ease-out) 0.35s, opacity 0.9s var(--ease) 0.35s; }
+.about-media .about-frame img { scale: 1.08; transition: scale 1.4s var(--ease-out); }
+.about-media .about-detail { translate: 0 30px; opacity: 0; transition: translate 1s var(--ease-out) 0.3s, opacity 0.9s var(--ease) 0.3s; }
 .about-media.visible .about-frame img { scale: 1; }
 .about-media.visible .about-detail { translate: 0 0; opacity: 1; }
 @media (hover: hover) {
-  .about-media.visible .about-portrait:hover img { scale: 1.03; }
+  .about-media.visible .about-portrait:hover img { scale: 1.04; }
 }
 
-/* Percorso: passione, formazione, impresa
-   su telefono è una linea verticale, da tablet in su orizzontale */
-.about-path {
-  list-style: none;
+/* Formazione e qualifiche: badge vettoriali, stessa struttura per tutti */
+.quals {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  padding-top: clamp(2.5rem, 5vw, 3.5rem);
+  border-top: 1px solid var(--line);
+}
+.quals-head { display: grid; gap: 0.4rem; margin-bottom: 1.75rem; }
+@media (min-width: 1000px) {
+  .quals-head { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); column-gap: 4rem; align-items: end; }
+}
+.quals-title {
+  font-family: var(--font-display);
+  font-size: var(--fz-lg);
+  font-weight: 450;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.quals-sub { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); }
+.cred-list { list-style: none; display: grid; gap: 1rem; }
+@media (min-width: 900px) { .cred-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; } }
+.cred {
   position: relative;
   display: grid;
-  gap: 2rem;
-  margin-top: clamp(3.5rem, 6vw, 5.5rem);
-  padding-left: 1.75rem;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: start;
+  padding: 1.4rem;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  transition: translate 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
 }
-.about-path::before {
+.cred::before {
   content: "";
   position: absolute;
-  left: 4px; top: 6px; bottom: 6px;
-  width: 1px;
-  background: var(--ink);
-  opacity: 0.18;
-  transform: scaleY(0);
-  transform-origin: 50% 0;
-  transition: transform 1.4s var(--ease-out);
+  inset: 6px;
+  border: 1px solid rgba(53, 106, 57, 0.28);
+  border-radius: 4px;
+  pointer-events: none;
 }
-.about-path.visible::before { transform: none; }
-.about-path.reveal { transform: none; opacity: 1; }
-.about-path li { position: relative; opacity: 0; translate: 0 18px; transition: opacity 0.8s var(--ease), translate 0.9s var(--ease-out); }
-.about-path.visible li { opacity: 1; translate: 0 0; }
-.about-path.visible li:nth-child(2) { transition-delay: 0.15s; }
-.about-path.visible li:nth-child(3) { transition-delay: 0.3s; }
-.about-path li::before {
-  content: "";
-  position: absolute;
-  left: calc(-1.75rem - 0.5px);
-  top: 2px;
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  background: var(--ivory);
-  border: 2px solid var(--green);
+@media (min-width: 900px) { .cred { grid-template-columns: 1fr; padding: 1.75rem 1.6rem; } }
+.cred-seal { width: 72px; height: 72px; color: var(--green); transition: rotate 1.2s var(--ease-out); }
+.cred-seal text { font-family: var(--font-sans); font-size: 7.2px; font-weight: 600; fill: currentColor; }
+.cred-seal .cred-glyph { font-family: var(--font-display); font-style: italic; font-size: 30px; font-weight: 450; letter-spacing: 0; }
+@media (hover: hover) {
+  .cred:hover { translate: 0 -3px; box-shadow: var(--shadow-md); }
+  .cred:hover .cred-seal { rotate: -14deg; }
 }
-@media (min-width: 768px) {
-  .about-path { grid-template-columns: repeat(3, 1fr); gap: 2.5rem; padding-left: 0; padding-top: 2.4rem; }
-  .about-path::before { left: 0; right: 0; top: 0; bottom: auto; width: auto; height: 1px; transform: scaleX(0); transform-origin: 0 50%; }
-  .about-path li::before { left: 0; top: calc(-2.4rem - 4px); }
-}
-.about-when {
+.cred-type {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--green);
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.45rem;
 }
-.about-path strong {
-  display: block;
+.cred-title {
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: 1.2rem;
   font-weight: 450;
-  letter-spacing: -0.01em;
+  line-height: 1.22;
   color: var(--ink);
-  margin-bottom: 0.4rem;
+  text-wrap: balance;
 }
-.about-path p { font-size: 0.93rem; line-height: 1.6; color: var(--text-muted); max-width: 30ch; }
+.cred-ref {
+  margin-top: 0.75rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.cred-ref strong { color: var(--ink); font-weight: 600; }
+/* badge predisposti: cornice tratteggiata finché mancano i dati */
+.cred.is-pending::before { border-style: dashed; }
+.cred.is-pending .cred-seal { color: #7d8c80; }
 
-/* ── PREVENTIVO ── */
-.preventivo {
-  background: var(--surface);
-  position: relative;
-  overflow: hidden;
-}
-.preventivo-wrap {
-  max-width: 640px;
-  margin: 0 auto;
-  text-align: center;
-}
-.preventivo .section-sub { margin: 0 auto 3rem; }
+/* ── PREVENTIVO E CONTATTI ── */
+.preventivo { position: relative; }
+.prev-grid { display: grid; gap: 2rem; align-items: start; }
+@media (min-width: 960px) { .prev-grid { grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); gap: 3rem; } }
 .prev-form {
   text-align: left;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: saturate(160%) blur(24px);
-  -webkit-backdrop-filter: saturate(160%) blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.65);
+  background: var(--ivory);
+  color: var(--text);
   border-radius: var(--radius);
   padding: 2rem 1.5rem;
-  box-shadow: 0 8px 32px rgba(28, 44, 20, 0.07);
+  box-shadow: 0 30px 70px -35px rgba(0, 0, 0, 0.7);
 }
+.prev-aside { display: grid; gap: 0.75rem; }
+.prev-aside-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 450;
+  color: #fff;
+}
+.prev-aside-sub { font-size: 0.92rem; line-height: 1.6; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; }
+.prev-contact {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.95rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+a.prev-contact:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.26); }
+.prev-contact-icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  display: grid;
+  place-items: center;
+}
+.prev-contact-icon svg { width: 20px; height: 20px; }
+.prev-contact-icon.is-wa svg { color: var(--whatsapp); }
+.prev-contact strong { display: block; font-size: 0.95rem; font-weight: 600; }
+.prev-contact small { display: block; font-size: 0.85rem; color: rgba(255,255,255,0.66); }
 @media (min-width: 768px) {
   .prev-form { padding: 2.5rem; }
 }
@@ -1782,47 +1440,8 @@ section { padding: 5rem 1.5rem; }
 .prev-textarea::placeholder { color: var(--text-secondary); }
 
 /* ── GALLERIA ── */
-.galleria { background: var(--cream); position: relative; overflow: hidden; }
+.galleria { position: relative; }
 .galleria .container { position: relative; z-index: 1; }
-.deco-bloom {
-  position: absolute;
-  z-index: 0;
-  left: -40px; bottom: -40px;
-  width: clamp(170px, 22vw, 280px);
-  height: auto;
-  pointer-events: none;
-  opacity: 0.9;
-}
-.deco-bloom img { width: 100%; height: auto; display: block; filter: drop-shadow(0 16px 24px rgba(20,30,20,0.14)); }
-@media (max-width: 700px) { .deco-bloom { display: none; } }
-
-/* Edera che ricade dall'angolo in alto a destra di "Prima e Dopo" */
-.prima-dopo .container { position: relative; z-index: 1; }
-.deco-ivy {
-  position: absolute;
-  z-index: 0;
-  top: -24px; right: -16px;
-  width: clamp(150px, 17vw, 230px);
-  height: auto;
-  pointer-events: none;
-  opacity: 0.9;
-}
-.deco-ivy img { width: 100%; height: auto; display: block; filter: drop-shadow(0 14px 22px rgba(0,0,0,0.3)); }
-@media (max-width: 900px) { .deco-ivy { display: none; } }
-
-/* Texture di foglie molto tenue nello sfondo delle sezioni chiare */
-.preventivo::before,
-.galleria::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: url('assets/img/leaf-pattern.svg');
-  background-repeat: repeat;
-  background-size: 300px auto;
-  opacity: 0.5;
-}
 /* Filtri per tipo di lavoro */
 .gal-filters {
   display: flex;
@@ -1890,9 +1509,9 @@ section { padding: 5rem 1.5rem; }
 .gal-item img {
   width: 100%; height: 100%;
   object-fit: cover;
-  transition: transform 0.6s var(--ease-out);
+  transition: transform 0.9s var(--ease-out);
 }
-.gal-item:hover img { transform: scale(1.06); }
+.gal-item:hover img { transform: scale(1.04); }
 .gal-cap {
   position: absolute;
   left: 0; right: 0; bottom: 0;
@@ -1917,34 +1536,32 @@ section { padding: 5rem 1.5rem; }
 }
 
 /* ── ZONE ── */
-.zone { background: var(--ivory); position: relative; overflow: hidden; }
 .zone-grid { display: grid; gap: 2.5rem; align-items: center; }
 @media (min-width: 900px) {
-  .zone-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(3rem, 6vw, 6rem); }
+  .zone-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(3rem, 6vw, 6rem); }
 }
 /* schema ad anelli: livelli di vicinanza, non una mappa */
-.zone-rings { width: min(100%, 440px); margin: 0 auto; }
+.zone-rings { width: min(100%, 420px); margin: 0 auto; }
+@media (max-width: 699px) { .zone-rings { display: none; } }
 .zone-rings svg { display: block; width: 100%; height: auto; overflow: visible; }
-.zone-ring { fill: none; stroke: var(--green); stroke-width: 1; }
-.zone-ring--1 { stroke-opacity: 0.55; }
-.zone-ring--2 { stroke-opacity: 0.35; }
-.zone-ring--3 { stroke-opacity: 0.28; stroke-dasharray: 2 5; }
-.zone-rings text { font-family: var(--font-sans); font-size: 9px; font-weight: 600; letter-spacing: 0.16em; fill: var(--green); }
-.zone-rings .zone-ring-label--3 { fill: var(--text-muted); }
-.zone-home-dot { fill: var(--green); }
-.zone-home-halo { fill: var(--green); opacity: 0.12; }
-.zone-rings .zone-home-name { font-family: var(--font-display); font-size: 22px; font-weight: 450; letter-spacing: 0; fill: var(--ink); }
-.zone-rings .zone-home-sub { font-size: 8px; letter-spacing: 0.2em; fill: var(--text-muted); }
-/* entrata: gli anelli si disegnano dal centro verso l'esterno */
+.zone-disc { fill: var(--green-deep); }
+.zone-ring { fill: none; stroke: #cfe2c2; stroke-width: 1; }
+.zone-ring--1 { stroke-opacity: 0.75; }
+.zone-ring--2 { stroke-opacity: 0.45; }
+.zone-ring--3 { stroke-opacity: 0.35; stroke-dasharray: 2 5; }
+.zone-rings text { font-family: var(--font-sans); font-size: 9px; font-weight: 600; letter-spacing: 0.16em; fill: #e3eedb; }
+.zone-rings .zone-ring-label--3 { fill: #b9d3a9; }
+.zone-home-dot { fill: #fff; }
+.zone-home-halo { fill: #fff; opacity: 0.1; }
+.zone-rings .zone-home-name { font-family: var(--font-display); font-size: 22px; font-weight: 450; letter-spacing: 0; fill: #fff; }
+.zone-rings .zone-home-sub { font-size: 8px; letter-spacing: 0.2em; fill: #b9d3a9; }
 .zone-rings .zone-ring, .zone-rings text { opacity: 0; transition: opacity 0.9s var(--ease); }
-.zone-rings .zone-ring { transform-box: fill-box; transform-origin: center; scale: 0.82; transition: opacity 0.9s var(--ease), scale 1.2s var(--ease-out); }
+.zone-rings .zone-ring { transform-box: fill-box; transform-origin: center; scale: 0.85; transition: opacity 0.9s var(--ease), scale 1.2s var(--ease-out); }
 .zone-rings.visible .zone-ring, .zone-rings.visible text { opacity: 1; }
 .zone-rings.visible .zone-ring { scale: 1; }
 .zone-rings.visible .zone-ring--2, .zone-rings.visible .zone-ring-label--2 { transition-delay: 0.2s; }
 .zone-rings.visible .zone-ring--3, .zone-rings.visible .zone-ring-label--3 { transition-delay: 0.4s; }
-.zone-rings.reveal { transform: none; opacity: 1; }
 
-.zone-groups { margin-top: 2.4rem; }
 .zone-group + .zone-group { margin-top: 1.8rem; padding-top: 1.8rem; border-top: 1px solid var(--line); }
 .zone-group h3 {
   display: flex;
@@ -1957,7 +1574,7 @@ section { padding: 5rem 1.5rem; }
   color: var(--green);
   margin-bottom: 0.8rem;
 }
-.zone-group h3 span { font-weight: 500; letter-spacing: 0.04em; text-transform: none; color: var(--text-muted); font-size: 0.78rem; }
+.zone-group h3 span { font-weight: 500; letter-spacing: 0.04em; text-transform: none; color: var(--text-muted); font-size: 0.8rem; }
 .zone-main { list-style: none; display: flex; flex-wrap: wrap; gap: 0.25rem 1.4rem; }
 .zone-main li {
   font-family: var(--font-display);
@@ -1984,36 +1601,38 @@ section { padding: 5rem 1.5rem; }
   border-radius: 50px;
   font-size: 0.88rem;
   color: var(--text);
-  background: rgba(255,255,255,0.55);
+  background: var(--surface);
 }
 .zone-group p { font-size: 0.95rem; line-height: 1.65; color: var(--text-muted); max-width: 46ch; }
-.zone-note { margin-top: 0.8rem; font-size: 0.82rem !important; }
-.zone-cta {
+.zone-note { margin-top: 0.8rem; font-size: 0.85rem !important; }
+.zone-more {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 2rem;
-  padding: 0.85rem 1.5rem;
-  border-radius: 50px;
-  background: var(--ink);
-  color: #fff;
+  gap: 0.45rem;
+  margin-top: 1.6rem;
+  padding: 0.3rem 0;
   font-size: 0.92rem;
   font-weight: 600;
-  transition: background-color 0.3s, transform 0.3s var(--ease-out);
+  color: var(--green);
+  border-bottom: 1px solid rgba(53, 106, 57, 0.4);
+  transition: border-color 0.3s;
 }
-.zone-cta svg { width: 18px; height: 18px; color: var(--whatsapp); }
-.zone-cta:hover { background: var(--green-deep); }
+.zone-more svg { width: 16px; height: 16px; transition: translate 0.35s var(--ease-out); }
+.zone-more:hover { border-color: var(--green); }
+.zone-more:hover svg { translate: 3px 0; }
 
 /* ── FOOTER ── */
 .footer {
   background: var(--charcoal);
   color: rgba(255,255,255,0.7);
-  padding: 4rem 1.5rem 6rem;
+  padding: 0 1.5rem 6rem;
 }
-@media (min-width: 768px) { .footer { padding: 5rem 2rem 3rem; } }
+@media (min-width: 768px) { .footer { padding: 0 2rem 3rem; } }
 .footer-inner {
   max-width: 1080px;
   margin: 0 auto;
+  padding-top: 3.5rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
   display: grid;
   grid-template-columns: 1fr;
   gap: 2.5rem;
@@ -2164,8 +1783,8 @@ section { padding: 5rem 1.5rem; }
 .hero-cta:active,
 .hero-link:active,
 .svc-cta:active,
-.zone-cta:active,
-.about-call:active,
+.zone-more:active,
+.prev-contact:active,
 .prev-next:active,
 .nav-cta-link:active { transform: scale(0.97); }
 .prev-option:active { transform: scale(0.99); }
@@ -2173,18 +1792,6 @@ section { padding: 5rem 1.5rem; }
 .gal-item:hover { box-shadow: var(--shadow-md); }
 
 
-.deco-fern {
-  position: absolute;
-  z-index: 1;
-  right: -24px;
-  bottom: -26px;
-  width: clamp(150px, 20vw, 250px);
-  height: auto;
-  pointer-events: none;
-  opacity: 0.9;
-}
-.deco-fern img { width: 100%; height: auto; display: block; filter: drop-shadow(0 16px 22px rgba(20,30,20,0.12)); }
-@media (max-width: 700px) { .deco-fern { display: none; } }
 
 /* ── Accessibilità (FASE 4) ── */
 .visually-hidden {
@@ -2223,7 +1830,8 @@ textarea:focus-visible,
 .prima-dopo button:focus-visible,
 .ba-slider:focus-visible,
 .footer a:focus-visible,
-.finale a:focus-visible,
+.is-dark a:focus-visible,
+.is-dark button:focus-visible,
 .hero a:focus-visible,
 .nav:not(.scrolled) .nav-links a:focus-visible {
   outline-color: #eef3e9;
@@ -2237,7 +1845,7 @@ textarea:focus-visible,
   cursor: zoom-in;
   display: block;
   width: 100%;
-  transition: transform 0.4s var(--ease-out), box-shadow 0.4s;
+  transition: opacity 0.9s var(--ease), transform 1s var(--ease-out), box-shadow 0.4s;
 }
 
 /* Slider prima/dopo: focus da tastiera */
@@ -2391,8 +1999,7 @@ textarea:focus-visible,
   animation: heroItemIn 0.9s var(--ease-out) forwards;
 }
 .hero-copy > .hero-eyebrow,
-.hero-copy > .hero-actions,
-.hero-copy > .hero-proof { opacity: 0; }
+.hero-copy > .hero-actions { opacity: 0; }
 .hero-copy > :nth-child(1) { animation-delay: 0.2s; }
 .hero-copy > :nth-child(2) { animation-delay: 0.3s; }
 .hero-copy > :nth-child(3) { animation-delay: 0.45s; }
@@ -2402,159 +2009,7 @@ textarea:focus-visible,
   to { opacity: 1; translate: 0 0; }
 }
 
-/* 2. Piante che ondeggiano lentamente, come mosse dal vento */
-.deco-fern,
-.deco-bloom {
-  transform-origin: 50% 100%;
-  animation: sway 7s ease-in-out infinite;
-}
-.deco-fern { animation-duration: 8s; animation-delay: -1.5s; }
-.deco-bloom { animation-duration: 9s; animation-delay: -4s; }
-.deco-ivy {
-  transform-origin: 50% 0;
-  animation: sway 10s ease-in-out infinite;
-}
-@keyframes sway {
-  0%, 100% { rotate: -1.2deg; }
-  50%      { rotate: 1.2deg; }
-}
-
-
-/* 5. Impulso discreto attorno al bottone WhatsApp */
-.wa-float::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 2px solid var(--whatsapp);
-  opacity: 0;
-  pointer-events: none;
-  animation: waPulse 3.6s ease-out 2.5s infinite;
-}
-@keyframes waPulse {
-  0%        { scale: 1;   opacity: 0.55; }
-  70%, 100% { scale: 1.6; opacity: 0; }
-}
-
-/* ── FINALE: isola fiorita + invito al preventivo ── */
-.finale {
-  position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(to bottom, transparent 65%, var(--ink)),
-    radial-gradient(110% 75% at 72% 38%, #2b3b2f 0%, var(--ink-soft) 42%, var(--ink) 100%);
-}
-@media (max-width: 767px) { .finale { padding-bottom: 3rem; } }
-.finale-inner { display: grid; gap: 2.5rem; align-items: center; }
-@media (min-width: 860px) {
-  .finale-inner { grid-template-columns: 1.05fr 0.95fr; gap: 4rem; }
-  .finale-scene { order: 2; }
-}
-.finale .section-eyebrow { color: var(--sage); }
-.finale .section-title { color: #fff; }
-.finale .section-title .light { color: var(--sage); }
-.finale .section-sub { color: rgba(255,255,255,0.74); }
-.finale-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
-.finale-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1.75rem;
-  border-radius: 50px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s, background-color 0.3s;
-}
-.finale-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
-@media (max-width: 520px) { .finale-btn { flex: 1 1 100%; justify-content: center; } }
-.finale-btn--primary { background: var(--surface); color: var(--ink); }
-.finale-btn--ghost { color: #fff; border: 1px solid rgba(255,255,255,0.3); }
-.finale-btn--ghost svg { color: var(--whatsapp); }
-.finale-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
-.finale-btn--ghost:hover { background: rgba(255,255,255,0.08); }
-.finale-btn:active { transform: scale(0.98); }
-.finale-call { display: inline-block; margin-top: 1.25rem; font-size: var(--fz-sm); color: rgba(255,255,255,0.72); }
-.finale-call a { white-space: nowrap; color: #fff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,0.35); }
-.finale-call a:hover { text-decoration-color: currentColor; }
-.finale-zones {
-  margin-top: 2rem;
-  font-size: var(--fz-xs);
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.6rem;
-}
-.finale-zones span { white-space: nowrap; }
-.finale-zones span:not(:last-child)::after { content: "\00b7"; margin-left: 0.6rem; }
-
-.finale-scene {
-  position: relative;
-  width: min(68vw, 290px);
-  margin: 0 auto;
-}
-@media (min-width: 860px) { .finale-scene { width: min(100%, 390px); } }
-.finale-glow {
-  position: absolute;
-  inset: -12% -30% 0;
-  background: radial-gradient(closest-side, rgba(236, 196, 196, 0.26), rgba(143, 174, 132, 0.14) 55%, transparent 78%);
-  animation: finaleGlow 7s ease-in-out infinite;
-  pointer-events: none;
-}
-.finale-shadow {
-  position: absolute;
-  left: 16%; right: 22%;
-  bottom: -7%;
-  height: 8%;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(0,0,0,0.5), transparent);
-  animation: finaleShadow 7s ease-in-out infinite;
-}
-.finale-island {
-  position: relative;
-  display: block;
-  animation: islandFloat 7s ease-in-out infinite;
-}
-.finale-island img { display: block; width: 100%; height: auto; }
-.finale-mote {
-  position: absolute;
-  top: 34%;
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: rgba(255, 244, 214, 0.95);
-  box-shadow: 0 0 8px 2px rgba(255, 232, 190, 0.45);
-  opacity: 0;
-  animation: moteRise 9s linear infinite;
-  pointer-events: none;
-}
-.finale-mote:nth-of-type(1) { left: 24%; animation-delay: 0s; }
-.finale-mote:nth-of-type(2) { left: 41%; top: 26%; animation-delay: -2.2s; animation-duration: 11s; }
-.finale-mote:nth-of-type(3) { left: 58%; animation-delay: -4.6s; width: 3px; height: 3px; }
-.finale-mote:nth-of-type(4) { left: 72%; top: 30%; animation-delay: -6.8s; animation-duration: 10s; }
-.finale-mote:nth-of-type(5) { left: 33%; top: 38%; animation-delay: -8.1s; width: 3px; height: 3px; animation-duration: 12s; }
-.finale-mote:nth-of-type(6) { left: 64%; top: 22%; animation-delay: -3.4s; }
-@keyframes islandFloat {
-  0%, 100% { translate: 0 0;     rotate: -1deg; }
-  50%      { translate: 0 -14px; rotate: 0.8deg; }
-}
-@keyframes finaleShadow {
-  0%, 100% { scale: 1;    opacity: 0.9; }
-  50%      { scale: 0.84; opacity: 0.55; }
-}
-@keyframes finaleGlow {
-  0%, 100% { opacity: 0.75; scale: 0.96; }
-  50%      { opacity: 1;    scale: 1.04; }
-}
-@keyframes moteRise {
-  0%   { opacity: 0;   translate: 0 0; }
-  15%  { opacity: 0.9; }
-  70%  { opacity: 0.5; }
-  100% { opacity: 0;   translate: 14px -150px; }
-}
-/* fuori schermo le animazioni ambientali si fermano: niente lavoro inutile */
+/* animazioni ferme quando la sezione è fuori dallo schermo */
 section.is-offscreen *, section.is-offscreen *::after { animation-play-state: paused !important; }
 
 /* ── RIFINITURE ── */
@@ -2603,9 +2058,36 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   stroke-linecap: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: drawLine 1.1s var(--ease-out) 1.25s forwards;
+  animation: drawLine 1s cubic-bezier(.45, 0, .2, 1) 1.15s forwards;
 }
 @keyframes drawLine { to { stroke-dashoffset: 0; } }
+/* fili d'erba che saltano via dalla punta della linea mentre "taglia":
+   ognuno parte quando la punta passa sopra il suo punto */
+.hero-clips {
+  position: absolute;
+  left: -2%; bottom: -0.16em;
+  width: 104%; height: 0.32em;
+  pointer-events: none;
+}
+.hero-clips i {
+  position: absolute;
+  left: var(--x); top: var(--y);
+  width: var(--w); height: var(--h);
+  margin: calc(var(--h) * -1) 0 0 calc(var(--w) * -0.5);
+  border-radius: 50% 50% 40% 40% / 75% 75% 25% 25%;
+  background: linear-gradient(0deg, #4f8340, #a9c79a 70%, #dcebd2);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  animation: clipJump var(--t) var(--d) both;
+}
+.hero-clips i:nth-child(3n) { background: linear-gradient(0deg, #3f7232, #8fae84 70%, #cfe2c2); }
+.hero-clips i:nth-child(3n+1) { background: linear-gradient(0deg, #5d9149, #b9d3a9); }
+@keyframes clipJump {
+  0%   { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .4, 1); }
+  12%  { opacity: 1; }
+  48%  { transform: translate(calc(var(--tx) * 0.6), var(--ty)) rotate(calc(var(--r) * 0.55)) scale(1); animation-timing-function: cubic-bezier(.5, 0, .8, .6); }
+  100% { opacity: 0; transform: translate(var(--tx), calc(var(--ty) * 0.15)) rotate(var(--r)) scale(0.85); }
+}
 
 
 /* Galleria: icona "ingrandisci" al passaggio */
@@ -2708,15 +2190,10 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   /* i contenuti rivelati allo scroll restano sempre visibili */
   .reveal, .pop { opacity: 1 !important; transform: none !important; }
   /* nessun movimento ambientale o parallax */
-  .blob,
-  .deco-fern, .deco-bloom, .deco-ivy,
-  .wa-float::after,
-  .finale-glow, .finale-shadow, .finale-island { animation: none !important; }
-  .finale-mote, .leaf-burst { display: none; }
+  .leaf-burst { display: none; }
   .hero-underline { animation: none; stroke-dashoffset: 0; }
+  .hero-clips { display: none; }
   .hero-copy > * { opacity: 1 !important; translate: none !important; animation: none !important; }
-  /* niente passata del tosaerba: si vede direttamente il prato tagliato */
-  .lawn-uncut, .mower-track { display: none; }
   .hero-bg img { transform: scale(1.04) !important; }
 }
 </style>
@@ -2732,9 +2209,9 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     <ul class="nav-links" id="navLinks">
       <li><a href="#chi-siamo">Chi siamo</a></li>
       <li><a href="#servizi">Servizi</a></li>
-      <li><a href="#prima-dopo">Prima e Dopo</a></li>
-      <li><a href="#galleria">Lavori</a></li>
-      <li><a href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo." class="nav-cta-link">Preventivo</a></li>
+      <li><a href="#prima-dopo">Lavori</a></li>
+      <li><a href="#zone">Zone</a></li>
+      <li><a href="#preventivo" class="nav-cta-link">Preventivo</a></li>
     </ul>
     <button class="nav-toggle" id="navToggle" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="navLinks">
       <span></span><span></span><span></span>
@@ -2757,66 +2234,32 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   <div class="hero-content">
     <div class="hero-copy">
       <p class="hero-eyebrow">Giardiniere a Vignolo &middot; Cuneo e provincia</p>
-      <h1>Il tuo giardino,<span class="thin"><span class="hero-underline-wrap">curato davvero.<svg class="hero-underline" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M3 11 C 70 3, 160 2, 297 8"/></svg></span></span></h1>
+      <h1>Il tuo giardino,<span class="thin"><span class="hero-underline-wrap">curato davvero.<svg class="hero-underline" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M3 11 C 70 3, 160 2, 297 8"/></svg><span class="hero-clips" aria-hidden="true"><i style="--x:5.9%;--y:58.7%;--d:1.28s;--tx:-0.61em;--ty:-0.46em;--r:221deg;--t:1.01s;--w:0.053em;--h:0.226em"></i><i style="--x:5.9%;--y:58.7%;--d:1.32s;--tx:-0.64em;--ty:-0.27em;--r:195deg;--t:0.82s;--w:0.065em;--h:0.219em"></i><i style="--x:12.3%;--y:48.2%;--d:1.34s;--tx:0.2em;--ty:-0.47em;--r:-252deg;--t:1.01s;--w:0.051em;--h:0.172em"></i><i style="--x:18.8%;--y:40.1%;--d:1.38s;--tx:-0.63em;--ty:-0.42em;--r:219deg;--t:1.01s;--w:0.059em;--h:0.215em"></i><i style="--x:18.8%;--y:40.1%;--d:1.42s;--tx:-0.66em;--ty:-0.34em;--r:213deg;--t:0.94s;--w:0.067em;--h:0.176em"></i><i style="--x:25.2%;--y:34.1%;--d:1.41s;--tx:-0.72em;--ty:-0.35em;--r:-153deg;--t:0.99s;--w:0.057em;--h:0.229em"></i><i style="--x:31.6%;--y:29.9%;--d:1.43s;--tx:-0.83em;--ty:-0.44em;--r:-178deg;--t:1.03s;--w:0.051em;--h:0.196em"></i><i style="--x:31.6%;--y:29.9%;--d:1.47s;--tx:-0.53em;--ty:-0.37em;--r:-280deg;--t:0.87s;--w:0.052em;--h:0.193em"></i><i style="--x:38.1%;--y:27.3%;--d:1.46s;--tx:-0.72em;--ty:-0.25em;--r:-267deg;--t:0.8s;--w:0.058em;--h:0.204em"></i><i style="--x:44.5%;--y:26.1%;--d:1.48s;--tx:-0.4em;--ty:-0.35em;--r:-215deg;--t:0.9s;--w:0.057em;--h:0.239em"></i><i style="--x:44.5%;--y:26.1%;--d:1.52s;--tx:0.18em;--ty:-0.47em;--r:320deg;--t:0.8s;--w:0.053em;--h:0.24em"></i><i style="--x:51.0%;--y:26.0%;--d:1.5s;--tx:-0.62em;--ty:-0.23em;--r:-178deg;--t:0.86s;--w:0.064em;--h:0.193em"></i><i style="--x:57.4%;--y:26.9%;--d:1.53s;--tx:-0.34em;--ty:-0.24em;--r:-143deg;--t:0.89s;--w:0.061em;--h:0.179em"></i><i style="--x:57.4%;--y:26.9%;--d:1.57s;--tx:-0.76em;--ty:-0.26em;--r:173deg;--t:0.84s;--w:0.066em;--h:0.227em"></i><i style="--x:63.9%;--y:28.7%;--d:1.56s;--tx:-0.4em;--ty:-0.41em;--r:-264deg;--t:0.9s;--w:0.059em;--h:0.175em"></i><i style="--x:70.3%;--y:31.3%;--d:1.59s;--tx:0.08em;--ty:-0.35em;--r:183deg;--t:0.98s;--w:0.055em;--h:0.228em"></i><i style="--x:70.3%;--y:31.3%;--d:1.63s;--tx:-0.46em;--ty:-0.27em;--r:-163deg;--t:0.92s;--w:0.062em;--h:0.213em"></i><i style="--x:76.8%;--y:34.5%;--d:1.64s;--tx:0.09em;--ty:-0.46em;--r:-152deg;--t:0.9s;--w:0.054em;--h:0.173em"></i><i style="--x:83.2%;--y:38.4%;--d:1.69s;--tx:-0.59em;--ty:-0.47em;--r:-205deg;--t:1.02s;--w:0.068em;--h:0.216em"></i><i style="--x:83.2%;--y:38.4%;--d:1.73s;--tx:-0.62em;--ty:-0.26em;--r:-306deg;--t:0.92s;--w:0.056em;--h:0.192em"></i><i style="--x:89.6%;--y:42.8%;--d:1.77s;--tx:0.14em;--ty:-0.24em;--r:-271deg;--t:0.88s;--w:0.068em;--h:0.175em"></i><i style="--x:96.1%;--y:47.6%;--d:1.91s;--tx:-0.71em;--ty:-0.45em;--r:-283deg;--t:1.03s;--w:0.056em;--h:0.218em"></i><i style="--x:96.1%;--y:47.6%;--d:1.95s;--tx:-0.78em;--ty:-0.33em;--r:-295deg;--t:0.94s;--w:0.061em;--h:0.197em"></i></span></span></span></h1>
       <p class="hero-sub">Lisa Garden è la ditta di Andrea Lisa: manutenzione del verde, potature, impianti di irrigazione e nuove aree verdi a Cuneo e in provincia. Un solo referente, dalla prima visita alla consegna del lavoro.</p>
       <div class="hero-actions">
         <a href="#preventivo" class="hero-cta">Richiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a href="#servizi" class="hero-link">Scopri i servizi<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
-      </div>
-      <ul class="hero-proof">
-        <li><strong>Il titolare</strong> segue ogni lavoro</li>
-        <li><strong>Responsabile tecnico</strong> del verde</li>
-        <li>Sede a <strong>Vignolo (CN)</strong></li>
-      </ul>
-    </div>
-  </div>
-  <div class="lawn" aria-hidden="true">
-    <div class="lawn-cut"></div>
-    <div class="lawn-uncut"><div class="lawn-uncut-inner"></div></div>
-    <div class="mower-track">
-      <div class="mower">
-        <svg viewBox="0 0 300 220" aria-hidden="true" focusable="false">
-            <defs>
-              <radialGradient id="mwShadow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0a120b" stop-opacity="0.6"/><stop offset="1" stop-color="#0a120b" stop-opacity="0"/></radialGradient>
-              <linearGradient id="mwDeck" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3a2f"/><stop offset="1" stop-color="#121a14"/></linearGradient>
-              <linearGradient id="mwHood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34453a"/><stop offset="1" stop-color="#16201a"/></linearGradient>
-            </defs>
-            <ellipse cx="170" cy="212" rx="128" ry="9" fill="url(#mwShadow)"/>
-            <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M92 150 L18 22" stroke="#111913" stroke-width="7"/>
-              <path d="M92 150 L18 22" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5" transform="translate(-2 -1)"/>
-              <path d="M14 18 L34 30" stroke="#111913" stroke-width="8"/>
-              <path d="M24 40 C38 34 46 44 40 56" stroke="#111913" stroke-width="3.5"/>
-              <path d="M40 58 C60 96 78 126 96 150" stroke="#111913" stroke-width="1.6"/>
-            </g>
-            <path d="M28 140 C23 140 21 144 22 149 L28 198 C29 203 33 205 38 205 L86 202 L90 152 Z" fill="#1a231d"/>
-            <path d="M30 154 L86 158 M31 168 L85 171 M33 182 L84 184 M45 143 L41 203 M61 145 L58 203 M76 148 L73 202" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1.6"/>
-            <path d="M28 140 L90 152" stroke="#0c120e" stroke-width="4" stroke-linecap="round"/>
-            <path d="M84 200 L84 180 C84 162 100 152 124 150 L246 150 C268 150 282 162 284 180 L284 194 C284 199 280 202 275 202 L92 202 C88 202 84 201 84 200 Z" fill="url(#mwDeck)"/>
-            <path d="M104 162 L268 162" stroke="#4f9a3a" stroke-width="2.4" stroke-linecap="round"/>
-            <path d="M120 151 L250 151" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.4" stroke-linecap="round"/>
-            <path d="M146 150 L146 122 C146 108 156 100 170 100 L214 100 C228 100 238 110 238 124 L238 150 Z" fill="url(#mwHood)"/>
-            <path d="M154 104 C160 100 166 99 172 99 L212 99" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-            <rect x="156" y="88" width="56" height="14" rx="7" fill="#1b251f"/>
-            <rect x="196" y="80" width="12" height="10" rx="3" fill="#2d3a31"/>
-            <rect x="232" y="114" width="18" height="26" rx="5" fill="#26322a"/>
-            <path d="M156 126 L230 126 M156 134 L230 134 M156 142 L230 142" stroke="#000000" stroke-opacity="0.28" stroke-width="1.4"/>
-            <g class="mw-wheel" fill="#3a463d"><circle cx="104" cy="190" r="26" fill="#0c120e"/><circle cx="104" cy="190" r="16" fill="#202a23"/><circle cx="104" cy="190" r="6.5" fill="#8d998f"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(0 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(30 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(60 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(90 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(120 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(150 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(180 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(210 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(240 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(270 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(300 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(330 104 190)"/></g>
-            <g class="mw-wheel" fill="#3a463d"><circle cx="258" cy="194" r="22" fill="#0c120e"/><circle cx="258" cy="194" r="13" fill="#202a23"/><circle cx="258" cy="194" r="5.5" fill="#8d998f"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(0 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(36 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(72 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(108 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(144 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(180 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(216 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(252 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(288 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(324 258 194)"/></g>
-          </svg>
-        <span class="mw-clip" style="--d:0s;--x:-34px;--y:-20px;--r:150deg"></span><span class="mw-clip" style="--d:0.12s;--x:-24px;--y:-30px;--r:-120deg"></span><span class="mw-clip" style="--d:0.25s;--x:-40px;--y:-14px;--r:200deg"></span><span class="mw-clip" style="--d:0.38s;--x:-18px;--y:-26px;--r:90deg"></span><span class="mw-clip" style="--d:0.5s;--x:-30px;--y:-34px;--r:-160deg"></span><span class="mw-clip" style="--d:0.62s;--x:-44px;--y:-24px;--r:120deg"></span>
       </div>
     </div>
   </div>
 </section>
 
 <!-- CHI SIAMO -->
-<section class="about" id="chi-siamo" aria-labelledby="aboutTitle">
+<section class="about is-light" id="chi-siamo" aria-labelledby="aboutTitle">
   <div class="container">
-    <div class="about-grid">
-      <div class="about-head reveal">
-        <span class="section-eyebrow">Chi siamo</span>
+    <div class="sec-head reveal">
+      <div>
+        <span class="section-eyebrow"><span class="sec-num">01</span>Chi siamo</span>
         <h2 class="section-title" id="aboutTitle">Una passione <span class="light">diventata mestiere.</span></h2>
+      </div>
+      <p class="section-sub">Lisa Garden è la ditta individuale di Andrea Lisa, con sede a Vignolo (CN).</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-body reveal">
+        <p class="about-lead">Lisa Garden nasce ufficialmente nel gennaio 2026, ma le sue radici sono più lontane: anni di giardinaggio fatto per piacere, quando il verde era una passione e non ancora un lavoro.</p>
+        <p>Con il tempo quella passione è cresciuta ed è diventata competenza, esperienza e voglia di costruire un progetto professionale. Oggi Lisa Garden è la realizzazione di un desiderio coltivato fin da ragazzo: trasformare l'amore per il verde in un'attività concreta, fondata su cura, dedizione e formazione.</p>
+        <p>Un percorso che tiene insieme esperienza sul campo, attenzione ai dettagli e voglia di continuare a imparare, per offrire interventi curati e soluzioni adatte alle esigenze di ogni spazio verde.</p>
+        <p class="about-note">Ogni lavoro lo segue di persona il titolare, dalla prima visita alla consegna.</p>
       </div>
       <div class="about-media reveal">
         <figure class="about-portrait">
@@ -2840,85 +2283,53 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
           <figcaption>Terreno ripulito e livellato, pronto per la ghiaia.</figcaption>
         </figure>
       </div>
-      <div class="about-body reveal">
-        <p class="about-lead">Lisa Garden nasce ufficialmente nel gennaio 2026, ma le sue radici sono più lontane: anni di giardinaggio fatto per piacere, quando il verde era una passione e non ancora un lavoro.</p>
-        <p>Con il tempo quella passione è cresciuta ed è diventata competenza, esperienza e voglia di costruire un progetto professionale. Oggi Lisa Garden è la realizzazione di un desiderio coltivato fin da ragazzo: trasformare l'amore per il verde in un'attività concreta, fondata su cura, dedizione e formazione.</p>
-        <p>Un percorso che tiene insieme esperienza sul campo, attenzione ai dettagli e voglia di continuare a imparare, per offrire interventi curati e soluzioni adatte alle esigenze di ogni spazio verde.</p>
-        <p class="about-note">Ogni lavoro lo segue di persona il titolare, dalla prima visita alla consegna.</p>
-        <div class="about-actions">
-          <a href="tel:+393209517477" class="about-call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>Chiama il 320 951 7477</a>
-          <a href="#preventivo" class="about-link">Oppure chiedi un preventivo</a>
-        </div>
-      </div>
     </div>
-    <ol class="about-path reveal">
-      <li>
-        <span class="about-when">Prima</span>
-        <strong>La passione</strong>
-        <p>Anni di giardinaggio per piacere, prima che diventasse un lavoro.</p>
-      </li>
-      <li>
-        <span class="about-when">Poi</span>
-        <strong>La formazione</strong>
-        <p>Esperienza sul campo e qualifica di responsabile tecnico per la manutenzione delle aree verdi.</p>
-      </li>
-      <li>
-        <span class="about-when">Gennaio 2026</span>
-        <strong>L'impresa</strong>
-        <p>Nasce Lisa Garden, ditta individuale con sede a Vignolo (CN).</p>
-      </li>
-    </ol>
+    <div class="quals reveal">
+      <div class="quals-head">
+        <h3 class="quals-title">Formazione e qualifiche</h3>
+        <p class="quals-sub">Le qualifiche professionali di Andrea Lisa, con il loro riferimento.</p>
+      </div>
+      <ul class="cred-list">
+        <li class="cred">
+          <svg class="cred-seal" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><defs><path id="credRing1" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="29" fill="none" stroke="currentColor" stroke-width="0.7"/><text><textPath href="#credRing1" startOffset="0" textLength="230" lengthAdjust="spacing">QUALIFICA &#183; LISA GARDEN &#183; VIGNOLO &#183; </textPath></text><text class="cred-glyph" x="50" y="58" text-anchor="middle">Q</text><g fill="currentColor" opacity="0.9"><path d="M50 74 C44 72 39 68 36 62 C40 62 44 65 46 69 Z"/><path d="M50 74 C56 72 61 68 64 62 C60 62 56 65 54 69 Z"/><ellipse cx="38.5" cy="66" rx="2.6" ry="1.3" transform="rotate(-40 38.5 66)"/><ellipse cx="61.5" cy="66" rx="2.6" ry="1.3" transform="rotate(40 61.5 66)"/></g></svg>
+          <div>
+            <span class="cred-type">Qualifica professionale</span>
+            <h4 class="cred-title">Responsabile tecnico per la manutenzione delle aree verdi</h4>
+            <p class="cred-ref"><strong>DGR 39-8764/2019</strong> &middot; risulta dalla visura camerale della ditta</p>
+          </div>
+        </li>
+        <!-- DA COMPLETARE: nome esatto del patentino, ente che lo rilascia e anno (solo dati verificati) -->
+        <li class="cred is-pending">
+          <svg class="cred-seal" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><defs><path id="credRing2" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="29" fill="none" stroke="currentColor" stroke-width="0.7"/><text><textPath href="#credRing2" startOffset="0" textLength="230" lengthAdjust="spacing">PATENTINO &#183; LISA GARDEN &#183; VIGNOLO &#183; </textPath></text><text class="cred-glyph" x="50" y="58" text-anchor="middle">P</text><g fill="currentColor" opacity="0.9"><path d="M50 74 C44 72 39 68 36 62 C40 62 44 65 46 69 Z"/><path d="M50 74 C56 72 61 68 64 62 C60 62 56 65 54 69 Z"/><ellipse cx="38.5" cy="66" rx="2.6" ry="1.3" transform="rotate(-40 38.5 66)"/><ellipse cx="61.5" cy="66" rx="2.6" ry="1.3" transform="rotate(40 61.5 66)"/></g></svg>
+          <div>
+            <span class="cred-type">Formazione</span>
+            <h4 class="cred-title">Patentino</h4>
+            <p class="cred-ref">Denominazione, ente e anno da completare</p>
+          </div>
+        </li>
+        <!-- DA COMPLETARE: nome esatto del certificato, ente che lo rilascia e anno (solo dati verificati) -->
+        <li class="cred is-pending">
+          <svg class="cred-seal" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><defs><path id="credRing3" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="29" fill="none" stroke="currentColor" stroke-width="0.7"/><text><textPath href="#credRing3" startOffset="0" textLength="230" lengthAdjust="spacing">CERTIFICATO &#183; LISA GARDEN &#183; VIGNOLO &#183; </textPath></text><text class="cred-glyph" x="50" y="58" text-anchor="middle">C</text><g fill="currentColor" opacity="0.9"><path d="M50 74 C44 72 39 68 36 62 C40 62 44 65 46 69 Z"/><path d="M50 74 C56 72 61 68 64 62 C60 62 56 65 54 69 Z"/><ellipse cx="38.5" cy="66" rx="2.6" ry="1.3" transform="rotate(-40 38.5 66)"/><ellipse cx="61.5" cy="66" rx="2.6" ry="1.3" transform="rotate(40 61.5 66)"/></g></svg>
+          <div>
+            <span class="cred-type">Formazione</span>
+            <h4 class="cred-title">Certificato</h4>
+            <p class="cred-ref">Denominazione, ente e anno da completare</p>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </section>
 
-<!-- FORMAZIONE -->
-<section class="formazione" id="formazione" aria-labelledby="formazioneTitle">
-  <div class="container">
-    <div class="formazione-head reveal">
-      <div>
-        <span class="section-eyebrow">Formazione</span>
-        <h2 class="section-title" id="formazioneTitle">Qualifiche <span class="light">e attestati.</span></h2>
-      </div>
-      <p class="section-sub">La formazione fa parte del lavoro. Qui le qualifiche professionali di Andrea Lisa, con il loro riferimento.</p>
-    </div>
-    <ul class="cred-list">
-      <li class="cred reveal">
-        <svg class="cred-seal" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><defs><path id="credRing1" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="29" fill="none" stroke="currentColor" stroke-width="0.7"/><text><textPath href="#credRing1" startOffset="0" textLength="230" lengthAdjust="spacing">QUALIFICA &#183; LISA GARDEN &#183; VIGNOLO &#183; </textPath></text><text class="cred-glyph" x="50" y="58" text-anchor="middle">Q</text><g fill="currentColor" opacity="0.9"><path d="M50 74 C44 72 39 68 36 62 C40 62 44 65 46 69 Z"/><path d="M50 74 C56 72 61 68 64 62 C60 62 56 65 54 69 Z"/><ellipse cx="38.5" cy="66" rx="2.6" ry="1.3" transform="rotate(-40 38.5 66)"/><ellipse cx="61.5" cy="66" rx="2.6" ry="1.3" transform="rotate(40 61.5 66)"/></g></svg>
-        <div>
-          <span class="cred-type">Qualifica professionale</span>
-          <h3 class="cred-title">Responsabile tecnico per la manutenzione delle aree verdi</h3>
-          <p class="cred-ref"><strong>DGR 39-8764/2019</strong> &middot; risulta dalla visura camerale della ditta</p>
-        </div>
-      </li>
-      <!-- DA COMPLETARE: nome esatto del patentino, ente che lo rilascia e anno (solo dati verificati) -->
-      <li class="cred is-pending reveal reveal-delay-1">
-        <svg class="cred-seal" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><defs><path id="credRing2" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="29" fill="none" stroke="currentColor" stroke-width="0.7"/><text><textPath href="#credRing2" startOffset="0" textLength="230" lengthAdjust="spacing">PATENTINO &#183; LISA GARDEN &#183; VIGNOLO &#183; </textPath></text><text class="cred-glyph" x="50" y="58" text-anchor="middle">P</text><g fill="currentColor" opacity="0.9"><path d="M50 74 C44 72 39 68 36 62 C40 62 44 65 46 69 Z"/><path d="M50 74 C56 72 61 68 64 62 C60 62 56 65 54 69 Z"/><ellipse cx="38.5" cy="66" rx="2.6" ry="1.3" transform="rotate(-40 38.5 66)"/><ellipse cx="61.5" cy="66" rx="2.6" ry="1.3" transform="rotate(40 61.5 66)"/></g></svg>
-        <div>
-          <span class="cred-type">Patentino</span>
-          <h3 class="cred-title">Denominazione da completare</h3>
-          <p class="cred-ref">Ente e anno da indicare</p>
-        </div>
-      </li>
-      <!-- DA COMPLETARE: nome esatto del certificato, ente che lo rilascia e anno (solo dati verificati) -->
-      <li class="cred is-pending reveal reveal-delay-2">
-        <svg class="cred-seal" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><defs><path id="credRing3" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="29" fill="none" stroke="currentColor" stroke-width="0.7"/><text><textPath href="#credRing3" startOffset="0" textLength="230" lengthAdjust="spacing">CERTIFICATO &#183; LISA GARDEN &#183; VIGNOLO &#183; </textPath></text><text class="cred-glyph" x="50" y="58" text-anchor="middle">C</text><g fill="currentColor" opacity="0.9"><path d="M50 74 C44 72 39 68 36 62 C40 62 44 65 46 69 Z"/><path d="M50 74 C56 72 61 68 64 62 C60 62 56 65 54 69 Z"/><ellipse cx="38.5" cy="66" rx="2.6" ry="1.3" transform="rotate(-40 38.5 66)"/><ellipse cx="61.5" cy="66" rx="2.6" ry="1.3" transform="rotate(40 61.5 66)"/></g></svg>
-        <div>
-          <span class="cred-type">Certificato</span>
-          <h3 class="cred-title">Denominazione da completare</h3>
-          <p class="cred-ref">Ente e anno da indicare</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-</section>
+
 
 <!-- SERVIZI -->
-<section class="servizi" id="servizi">
+<section class="servizi is-light has-divider" id="servizi" aria-labelledby="serviziTitle">
   <div class="container">
-    <div class="servizi-head reveal">
+    <div class="sec-head reveal">
       <div>
-        <span class="section-eyebrow">Cosa facciamo</span>
-        <h2 class="section-title">Quattro servizi, <span class="light">un solo referente.</span></h2>
+        <span class="section-eyebrow"><span class="sec-num">02</span>Servizi</span>
+        <h2 class="section-title" id="serviziTitle">Quattro servizi, <span class="light">un solo referente.</span></h2>
       </div>
       <p class="section-sub">Dalla manutenzione di tutti i giorni alla realizzazione di un giardino nuovo. Ogni lavoro parte da una visita sul posto e da un preventivo su misura.</p>
     </div>
@@ -2930,16 +2341,13 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
             <source type="image/webp" srcset="assets/img/gal-10-480.webp 480w, assets/img/gal-10-800.webp 800w, assets/img/gal-10-1200.webp 1200w" sizes="(min-width: 1000px) 620px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
             <img src="assets/img/gal-10-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato rasato a strisce davanti a una villa con la facciata rossa">
           </picture>
-          <span class="svc-veil" style="background-image:url(data:image/webp;base64,UklGRsoAAABXRUJQVlA4IL4AAACQBACdASoUABsAPt1ipk6opaMiKA1REBuJZAC/OA/MtEWudu+RSqMHkSYLLzAA/tPbecoIgVsbEidulhBtgOSvqBXkc5OvYWnetJc0sySED7mzZR9r/t4R7DVQcitk/skbAmujDjF6V8d73ARQTnOJCCIcI3gxYlT05rMpOU9um5Dt82LsRIhsFfjlcTiyqdTknLhZffKqPEvns9edtsXIVmugGmDUJoI+DlrzNsJvZGnj2/fpx/48I3I1UAAA)" aria-hidden="true"></span>
         </div>
         <div class="svc-body">
           <span class="svc-num" aria-hidden="true">01</span>
           <h3>Manutenzione del verde</h3>
           <p class="svc-tag">Prato, aiuole e bordi in ordine, tutto l'anno.</p>
-          <div class="svc-more"><div>
-            <p class="svc-desc">Taglio del prato, pulizia di aiuole e vialetti, rimozione delle erbe infestanti e raccolta del verde tagliato. Interventi periodici o singoli, per chi non ha tempo di seguire il giardino o vuole tenerlo curato con continuità.</p>
-            <a href="#preventivo" class="svc-cta" data-servizio="Manutenzione ordinaria">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          </div></div>
+                    <p class="svc-desc">Taglio del prato, pulizia di aiuole e vialetti, rimozione delle erbe infestanti e raccolta del verde tagliato. Interventi periodici o singoli, per chi non ha tempo di seguire il giardino o vuole tenerlo curato con continuità.</p>
+          <a href="#preventivo" class="svc-cta" data-servizio="Manutenzione ordinaria">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
       </article>
       <article class="svc svc--2 reveal reveal-delay-1">
@@ -2949,16 +2357,13 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
             <source type="image/webp" srcset="assets/img/arbusti-sagomati-lavanda-rose-440.webp 440w" sizes="(min-width: 1000px) 440px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
             <img src="assets/img/arbusti-sagomati-lavanda-rose-440.jpg" width="440" height="420" loading="lazy" decoding="async" alt="Arbusti sagomati, lavanda e rose in un'aiuola con corteccia lungo un vialetto in pietra">
           </picture>
-          <span class="svc-veil" style="background-image:url(data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAAAQBQCdASoUABMAPt1mq1EopSOiqAgBEBuJQBOkJA8L4dFPz0GZvZVlUNkfRpuGdVm8AP6qA7vUT4bHmiwuWMMtD2Zy8V5yo1Kka0L6jmsxk5cphMp9lBkkjcDdQOxgV7DBq9lmAoHAn1kf0hs6CiXl2VHugMZKd0BLRbyYvP6jLTIhUIcG5m6O0Dawjaad5VEfriN6NAlpy2A/9fbFk05A/dq0hQz8+0SLSMdnLUQp7WtAAAA=)" aria-hidden="true"></span>
         </div>
         <div class="svc-body">
           <span class="svc-num" aria-hidden="true">02</span>
           <h3>Cura piante e siepi</h3>
           <p class="svc-tag">Siepi, arbusti e piante ornamentali in forma.</p>
-          <div class="svc-more"><div>
-            <p class="svc-desc">Potatura e rifinitura di siepi, arbusti e piante ornamentali per contenerne la crescita, mantenerne la forma e tenerle in salute. Si interviene nel periodo adatto a ciascuna specie.</p>
-            <a href="#preventivo" class="svc-cta" data-servizio="Potatura e sfalcio">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          </div></div>
+                    <p class="svc-desc">Potatura e rifinitura di siepi, arbusti e piante ornamentali per contenerne la crescita, mantenerne la forma e tenerle in salute. Si interviene nel periodo adatto a ciascuna specie.</p>
+          <a href="#preventivo" class="svc-cta" data-servizio="Potatura e sfalcio">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
       </article>
       <article class="svc svc--3 reveal">
@@ -2968,16 +2373,13 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
             <source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="(min-width: 1000px) 440px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
             <img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Linea di irrigazione a goccia posata sul telo antierba in un'aiuola con ghiaia chiara">
           </picture>
-          <span class="svc-veil" style="background-image:url(data:image/webp;base64,UklGRt4AAABXRUJQVlA4INIAAACQBQCdASoUABkAPt1iqk+opSOiKAqpEBuJZQCzkf/jejDzHJYhH7AvjQrvub8wNYrlWINgAAD+6ZzxPMxeL+NkfRl11fvSlZ0LEErdJeaef0fVJ6tgQCQzd9JXHl7Cpl0hwgxEx/MN6wuOT7suajyjWMsyFQwTMwQ0aMP5aYsW2JUKrx/3VQmd/D/ngO+xRwbgMrXgtnPrFxANJYHAtaJink6Fsr+abAiTaMwqWosXiFHLxAEMBy7JKYqZZ5iFwuOf4GZN8HJCbTRBRPAa2n/MeAA=)" aria-hidden="true"></span>
         </div>
         <div class="svc-body">
           <span class="svc-num" aria-hidden="true">03</span>
           <h3>Sistemi di irrigazione</h3>
           <p class="svc-tag">L'acqua giusta per ogni zona del giardino.</p>
-          <div class="svc-more"><div>
-            <p class="svc-desc">Progettazione, posa e manutenzione di impianti su misura, anche a goccia per aiuole e vasche. Utile a chi vuole ridurre le annaffiature a mano e dare a prato e piante l'acqua di cui hanno bisogno.</p>
-            <a href="#preventivo" class="svc-cta" data-servizio="Impianto irrigazione">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          </div></div>
+                    <p class="svc-desc">Progettazione, posa e manutenzione di impianti su misura, anche a goccia per aiuole e vasche. Utile a chi vuole ridurre le annaffiature a mano e dare a prato e piante l'acqua di cui hanno bisogno.</p>
+          <a href="#preventivo" class="svc-cta" data-servizio="Impianto irrigazione">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
       </article>
       <article class="svc svc--4 reveal reveal-delay-1">
@@ -2987,16 +2389,13 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
             <source type="image/webp" srcset="assets/img/gal-11-480.webp 480w, assets/img/gal-11-800.webp 800w, assets/img/gal-11-1200.webp 1200w" sizes="(min-width: 1000px) 620px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
             <img src="assets/img/gal-11-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure in ghiaia rossa e piante, con le colline sullo sfondo">
           </picture>
-          <span class="svc-veil" style="background-image:url(data:image/webp;base64,UklGRuwAAABXRUJQVlA4IOAAAADQBQCdASoUABsAPt1eqE4opKOiMBgIARAbiWQAnQAQOiZT9F+QA14M608Wq1EZQc+KFhNedsgAAP2ZpBVpdqXr1xBWHd9Ei6vvV3wnMwNULETUwGvoD4BuTtSuDyp7tazRvrHLTLkj/75PT7TUQFZqYCZCvLSJb1gNe3Ag0qB2i2zPlrJ5DmUoT/O/yZqEcW9Y+XllriSnakmKqcu55FFJzvNfDhK7dqd9L4oi5tggpq4riIDxjJlT1LvWzJlAbKQWlQ46srk9p2EA89lHenSW/jabCCDeOnh4YDlXuAAAAA==)" aria-hidden="true"></span>
         </div>
         <div class="svc-body">
           <span class="svc-num" aria-hidden="true">04</span>
           <h3>Realizzazione aree verdi</h3>
           <p class="svc-tag">Dal terreno nudo al giardino finito.</p>
-          <div class="svc-more"><div>
-            <p class="svc-desc">Nuovi prati a semina o in rotoli, aiuole, bordure e pacciamature con corteccia o ghiaia decorativa. Si parte dallo spazio com'è oggi per arrivare a un giardino pensato su misura per chi lo vive.</p>
-            <a href="#preventivo" class="svc-cta" data-servizio="Nuovo giardino">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          </div></div>
+                    <p class="svc-desc">Nuovi prati a semina o in rotoli, aiuole, bordure e pacciamature con corteccia o ghiaia decorativa. Si parte dallo spazio com'è oggi per arrivare a un giardino pensato su misura per chi lo vive.</p>
+          <a href="#preventivo" class="svc-cta" data-servizio="Nuovo giardino">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
       </article>
     </div>
@@ -3004,16 +2403,13 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 </section>
 
 <!-- PRIMA E DOPO -->
-<section class="prima-dopo" id="prima-dopo">
-  <picture class="deco-ivy" aria-hidden="true">
-    <source type="image/avif" srcset="assets/img/deco-ivy-320.avif 320w, assets/img/deco-ivy-520.avif 520w" sizes="(min-width:900px) 240px, 180px">
-    <source type="image/webp" srcset="assets/img/deco-ivy-320.webp 320w, assets/img/deco-ivy-520.webp 520w" sizes="(min-width:900px) 240px, 180px">
-    <img src="assets/img/deco-ivy-520.png" width="520" height="863" loading="lazy" decoding="async" alt="">
-  </picture>
+<section class="prima-dopo is-dark" id="prima-dopo" aria-labelledby="pdTitleMain">
   <div class="container">
-    <div class="reveal">
-      <span class="section-eyebrow">Risultati concreti</span>
-      <h2 class="section-title">Prima e <span class="light">dopo.</span></h2>
+    <div class="sec-head reveal">
+      <div>
+        <span class="section-eyebrow"><span class="sec-num">03</span>Prima e dopo</span>
+        <h2 class="section-title" id="pdTitleMain">Prima e <span class="light">dopo.</span></h2>
+      </div>
       <p class="section-sub">Come cambia uno spazio verde quando ci lavoriamo: le foto sono quelle dei cantieri, scattate prima, durante e dopo.</p>
     </div>
     <div class="case">
@@ -3146,111 +2542,20 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         <h3 class="pd-title" id="pdTitle">Ghiaia e vasche in corten</h3>
         <p class="pd-desc" id="pdDesc">Da terreno scavato a giardino in ghiaia lungo muro e recinzione: scavo con mini escavatore, telo antierba, irrigazione a goccia, ghiaia chiara e vasche in acciaio corten piantate.</p>
       </div>
-      <div class="ba-cta">
-        <p class="ba-cta-text">Immagina il tuo spazio trasformato così.</p>
-        <a href="#preventivo" class="ba-cta-btn">Richiedi un preventivo gratuito</a>
-      </div>
     </div>
     </div>
   </div>
 </section>
 
-<!-- PREVENTIVO -->
-<section class="preventivo" id="preventivo">
-  <div class="blob" style="width: 480px; height: 480px; top: -80px; left: -180px; background: linear-gradient(135deg, rgba(138,171,127,0.3), rgba(61,122,40,0.12)); animation-delay: -5s;"></div>
-  <div class="blob" style="width: 380px; height: 380px; bottom: -120px; right: -140px; background: linear-gradient(135deg, rgba(232,226,216,0.9), rgba(138,171,127,0.2)); animation-delay: -11s;"></div>
-  <picture class="deco-fern" aria-hidden="true">
-    <source type="image/avif" srcset="assets/img/deco-fern-320.avif 320w, assets/img/deco-fern-520.avif 520w" sizes="(min-width:600px) 240px, 160px">
-    <source type="image/webp" srcset="assets/img/deco-fern-320.webp 320w, assets/img/deco-fern-520.webp 520w" sizes="(min-width:600px) 240px, 160px">
-    <img src="assets/img/deco-fern-520.png" width="520" height="506" loading="lazy" decoding="async" alt="">
-  </picture>
-  <div class="container" style="position: relative; z-index: 2;">
-    <div class="preventivo-wrap">
-      <div class="reveal">
-        <span class="section-eyebrow">Preventivo rapido</span>
-        <h2 class="section-title">Raccontaci <span class="light">il tuo progetto.</span></h2>
-        <p class="section-sub">Rispondi a qualche domanda e ti contatteremo con un preventivo su misura.</p>
-      </div>
-
-      <div class="prev-form reveal" id="prevForm">
-        <div class="prev-progress" id="prevProgress" aria-hidden="true">
-          <div class="prev-dot active"></div>
-          <div class="prev-dot"></div>
-          <div class="prev-dot"></div>
-          <div class="prev-dot"></div>
-        </div>
-        <p class="visually-hidden" id="prevStatus" role="status" aria-live="polite">Passo 1 di 4</p>
-
-        <!-- Step 1 -->
-        <div class="prev-step active" data-step="1" role="group" aria-labelledby="q1">
-          <p class="prev-question" id="q1">Di cosa hai bisogno?</p>
-          <div class="prev-options">
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Manutenzione ordinaria"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M8 21c0-3-1-5-3-7"/><path d="M8 21c0-4 1-6 3-8"/><path d="M16 21c0-3 1-5 3-7"/><path d="M16 21c0-4-1-6-3-8"/></svg></span>Manutenzione ordinaria</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Potatura e sfalcio"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg></span>Potatura e sfalcio</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Impianto irrigazione"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 5.6 6 10a6 6 0 0 1-12 0c0-4.4 6-10 6-10z"/></svg></span>Impianto di irrigazione</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Nuovo giardino"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3-2-5-5-5 0 3 2 5 5 5z"/><path d="M12 12c0-3 2-5 5-5 0 3-2 5-5 5z"/></svg></span>Nuovo giardino o aiuola</button>
-          </div>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="prev-step" data-step="2" role="group" aria-labelledby="q2">
-          <p class="prev-question" id="q2">Quanto è grande lo spazio?</p>
-          <div class="prev-options">
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Piccolo (fino a 100mq)">Piccolo &mdash; fino a 100 m&sup2;</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Medio (100-300mq)">Medio &mdash; 100&ndash;300 m&sup2;</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Grande (300-1000mq)">Grande &mdash; 300&ndash;1000 m&sup2;</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Molto grande (oltre 1000mq)">Molto grande &mdash; oltre 1000 m&sup2;</button>
-          </div>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="prev-step" data-step="3" role="group" aria-labelledby="q3">
-          <p class="prev-question" id="q3">Dove si trova il giardino?</p>
-          <div class="prev-options">
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Vignolo">Vignolo</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Cuneo">Cuneo</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Borgo San Dalmazzo o Boves">Borgo San Dalmazzo o Boves</button>
-            <button type="button" class="prev-option" aria-pressed="false" data-value="Altro comune della provincia di Cuneo">Altro comune della provincia</button>
-          </div>
-        </div>
-
-        <!-- Step 4 -->
-        <div class="prev-step" data-step="4" role="group" aria-labelledby="q4">
-          <label class="prev-question" id="q4" for="prevNotes">Vuoi aggiungere qualche dettaglio? <span class="prev-optional">(facoltativo)</span></label>
-          <textarea class="prev-textarea" id="prevNotes" rows="4" maxlength="600" placeholder="Descrivi brevemente il lavoro, oppure lascia vuoto..."></textarea>
-          <p class="prev-privacy">Inviando la richiesta, i dati inseriti vengono usati solo per risponderti. Leggi l'<a href="privacy.html" target="_blank" rel="noopener">informativa privacy</a>.</p>
-        </div>
-
-        <p class="hp-field" aria-hidden="true"><label>Lascia vuoto questo campo <input type="text" id="prevBotField" name="bot-field" tabindex="-1" autocomplete="off"></label></p>
-        <p class="prev-error" id="prevError" role="alert" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg><span id="prevErrorText">Seleziona un'opzione per continuare.</span></p>
-        <div class="prev-nav">
-          <button type="button" class="prev-back hidden" id="prevBack">&#8592; Indietro</button>
-          <button type="button" class="prev-next" id="prevNext">Avanti &#8594;</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Form nascosto per il rilevamento di Netlify Forms (l'invio reale avviene via fetch dal wizard) -->
-  <form name="preventivo" data-netlify="true" netlify-honeypot="bot-field" hidden>
-    <input type="text" name="servizio">
-    <input type="text" name="dimensione">
-    <input type="text" name="zona">
-    <textarea name="note"></textarea>
-    <input type="text" name="bot-field">
-  </form>
-</section>
 
 <!-- GALLERIA -->
-<section class="galleria" id="galleria">
-  <picture class="deco-bloom" aria-hidden="true">
-    <source type="image/avif" srcset="assets/img/deco-bloom-320.avif 320w, assets/img/deco-bloom-520.avif 520w" sizes="(min-width:600px) 280px, 180px">
-    <source type="image/webp" srcset="assets/img/deco-bloom-320.webp 320w, assets/img/deco-bloom-520.webp 520w" sizes="(min-width:600px) 280px, 180px">
-    <img src="assets/img/deco-bloom-520.png" width="520" height="466" loading="lazy" decoding="async" alt="">
-  </picture>
+<section class="galleria is-light" id="galleria" aria-labelledby="galTitle">
   <div class="container">
-    <div class="reveal">
-      <span class="section-eyebrow">I nostri lavori</span>
-      <h2 class="section-title">Galleria <span class="light">progetti.</span></h2>
+    <div class="sec-head reveal">
+      <div>
+        <span class="section-eyebrow"><span class="sec-num">04</span>Lavori</span>
+        <h2 class="section-title" id="galTitle">Galleria <span class="light">progetti.</span></h2>
+      </div>
       <p class="section-sub">Una selezione dei giardini che abbiamo curato e trasformato. Tocca una foto per ingrandirla.</p>
     </div>
     <div class="gal-filters" role="group" aria-label="Filtra i lavori">
@@ -3353,92 +2658,146 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 </section>
 
 <!-- ZONE -->
-<section class="zone" id="zone" aria-labelledby="zoneTitle">
+<section class="zone is-light has-divider" id="zone" aria-labelledby="zoneTitle">
   <div class="container">
+    <div class="sec-head reveal">
+      <div>
+        <span class="section-eyebrow"><span class="sec-num">05</span>Dove lavoriamo</span>
+        <h2 class="section-title" id="zoneTitle">Cuneo <span class="light">e provincia.</span></h2>
+      </div>
+      <p class="section-sub">La sede è a Vignolo. Lavoriamo soprattutto a Cuneo e nei comuni intorno; per il resto della provincia valutiamo ogni richiesta in base alla distanza e al tipo di lavoro.</p>
+    </div>
     <div class="zone-grid">
-      <div class="zone-rings reveal" aria-hidden="true">
+      <div class="zone-groups reveal">
+        <div class="zone-group">
+          <h3>Le nostre zone</h3>
+          <ul class="zone-main">
+            <li>Vignolo<small>sede</small></li>
+            <li>Cuneo</li>
+            <li>Borgo San Dalmazzo</li>
+            <li>Boves</li>
+          </ul>
+        </div>
+        <!-- DA CONFERMARE CON IL CLIENTE: elenco dei comuni vicini in cui lavora davvero -->
+        <div class="zone-group">
+          <h3>Comuni vicini <span>su richiesta</span></h3>
+          <ul class="zone-list">
+            <li>Cervasca</li><li>Bernezzo</li><li>Caraglio</li><li>Valgrana</li><li>Roccasparvera</li><li>Gaiola</li><li>Moiola</li><li>Roccavione</li><li>Robilante</li><li>Peveragno</li><li>Beinette</li><li>Centallo</li><li>Busca</li>
+          </ul>
+          <p class="zone-note">La disponibilità dipende dal periodo e dal tipo di intervento: scrivici e ti rispondiamo.</p>
+        </div>
+        <div class="zone-group">
+          <h3>Resto della provincia</h3>
+          <p>Valle Stura, Valle Grana, Valle Gesso e Valle Vermenagna, ma anche Fossano, Saluzzo e Mondovì: raccontaci il lavoro e valutiamo insieme se possiamo seguirlo.</p>
+        </div>
+        <a class="zone-more" href="#preventivo">Non trovi il tuo comune? Scrivici<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="zone-rings reveal reveal-delay-1" aria-hidden="true">
         <svg viewBox="0 0 400 400" focusable="false">
-          <circle class="zone-ring zone-ring--3" cx="200" cy="200" r="186"/>
-          <circle class="zone-ring zone-ring--2" cx="200" cy="200" r="132"/>
-          <circle class="zone-ring zone-ring--1" cx="200" cy="200" r="78"/>
-          <path id="zoneArc1" d="M200 200 m-86 0 a86 86 0 1 1 172 0" fill="none"/><text class="zone-ring-label--1"><textPath href="#zoneArc1" startOffset="50%" text-anchor="middle">CUNEO &#183; BORGO SAN DALMAZZO &#183; BOVES</textPath></text>
-          <path id="zoneArc2" d="M200 200 m-140 0 a140 140 0 1 1 280 0" fill="none"/><text class="zone-ring-label--2"><textPath href="#zoneArc2" startOffset="50%" text-anchor="middle">COMUNI VICINI</textPath></text>
-          <path id="zoneArc3" d="M200 200 m-194 0 a194 194 0 1 1 388 0" fill="none"/><text class="zone-ring-label--3"><textPath href="#zoneArc3" startOffset="50%" text-anchor="middle">PROVINCIA DI CUNEO</textPath></text>
+          <circle class="zone-disc" cx="200" cy="200" r="200"/>
+          <circle class="zone-ring zone-ring--3" cx="200" cy="200" r="168"/>
+          <circle class="zone-ring zone-ring--2" cx="200" cy="200" r="122"/>
+          <circle class="zone-ring zone-ring--1" cx="200" cy="200" r="74"/>
+          <path id="zoneArc1" d="M200 200 m-82 0 a82 82 0 1 1 164 0" fill="none"/><text class="zone-ring-label--1"><textPath href="#zoneArc1" startOffset="50%" text-anchor="middle">CUNEO &#183; BORGO SAN DALMAZZO &#183; BOVES</textPath></text>
+          <path id="zoneArc2" d="M200 200 m-130 0 a130 130 0 1 1 260 0" fill="none"/><text class="zone-ring-label--2"><textPath href="#zoneArc2" startOffset="50%" text-anchor="middle">COMUNI VICINI</textPath></text>
+          <path id="zoneArc3" d="M200 200 m-176 0 a176 176 0 1 1 352 0" fill="none"/><text class="zone-ring-label--3"><textPath href="#zoneArc3" startOffset="50%" text-anchor="middle">PROVINCIA DI CUNEO</textPath></text>
           <circle class="zone-home-halo" cx="200" cy="200" r="34"/>
           <circle class="zone-home-dot" cx="200" cy="200" r="5"/>
           <text class="zone-home-name" x="200" y="238" text-anchor="middle">Vignolo</text>
           <text class="zone-home-sub" x="200" y="252" text-anchor="middle">SEDE</text>
         </svg>
       </div>
-      <div class="zone-copy">
-        <div class="reveal">
-          <span class="section-eyebrow">Dove lavoriamo</span>
-          <h2 class="section-title" id="zoneTitle">Cuneo <span class="light">e provincia.</span></h2>
-          <p class="section-sub">La sede è a Vignolo. Lavoriamo soprattutto a Cuneo e nei comuni intorno; per il resto della provincia valutiamo ogni richiesta in base alla distanza e al tipo di lavoro.</p>
-        </div>
-        <div class="zone-groups reveal reveal-delay-1">
-          <div class="zone-group">
-            <h3>Le nostre zone</h3>
-            <ul class="zone-main">
-              <li>Vignolo<small>sede</small></li>
-              <li>Cuneo</li>
-              <li>Borgo San Dalmazzo</li>
-              <li>Boves</li>
-            </ul>
-          </div>
-          <!-- DA CONFERMARE CON IL CLIENTE: elenco dei comuni vicini in cui lavora davvero -->
-          <div class="zone-group">
-            <h3>Comuni vicini <span>su richiesta</span></h3>
-            <ul class="zone-list">
-              <li>Cervasca</li><li>Bernezzo</li><li>Caraglio</li><li>Valgrana</li><li>Roccasparvera</li><li>Gaiola</li><li>Moiola</li><li>Roccavione</li><li>Robilante</li><li>Peveragno</li><li>Beinette</li><li>Centallo</li><li>Busca</li>
-            </ul>
-            <p class="zone-note">La disponibilità dipende dal periodo e dal tipo di intervento: scrivici e ti rispondiamo.</p>
-          </div>
-          <div class="zone-group">
-            <h3>Resto della provincia</h3>
-            <p>Valle Stura, Valle Grana, Valle Gesso e Valle Vermenagna, ma anche Fossano, Saluzzo e Mondovì: raccontaci il lavoro e valutiamo insieme se possiamo seguirlo.</p>
-          </div>
-          <a class="zone-cta" href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20sapere%20se%20lavorate%20nella%20mia%20zona%3A%20"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Chiedi se lavoriamo nella tua zona</a>
-        </div>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- FINALE -->
-<section class="finale" id="inizia" aria-labelledby="finaleTitle">
-  <div class="container finale-inner">
-    <div class="finale-scene reveal" aria-hidden="true">
-      <div class="finale-glow"></div>
-      <div class="finale-shadow"></div>
-      <picture class="finale-island">
-        <source type="image/avif" srcset="assets/img/island-400.avif 400w, assets/img/island-600.avif 600w, assets/img/island-800.avif 800w" sizes="(min-width:860px) 390px, 68vw">
-        <source type="image/webp" srcset="assets/img/island-400.webp 400w, assets/img/island-600.webp 600w, assets/img/island-800.webp 800w" sizes="(min-width:860px) 390px, 68vw">
-        <img src="assets/img/island-600.png" width="600" height="858" loading="lazy" decoding="async" alt="">
-      </picture>
-      <span class="finale-mote"></span>
-      <span class="finale-mote"></span>
-      <span class="finale-mote"></span>
-      <span class="finale-mote"></span>
-      <span class="finale-mote"></span>
-      <span class="finale-mote"></span>
-    </div>
-    <div class="finale-copy reveal reveal-delay-1">
-      <span class="section-eyebrow">Il prossimo giardino</span>
-      <h2 class="section-title" id="finaleTitle">Ogni spazio può fiorire. <span class="light">Anche il tuo.</span></h2>
-      <p class="section-sub">Che sia un angolo da sistemare o un giardino da ripensare da zero, raccontaci com'è oggi: ti rispondiamo con una proposta su misura.</p>
-      <div class="finale-actions">
-        <a href="#preventivo" class="finale-btn finale-btn--primary">Richiedi un preventivo gratuito</a>
-        <a href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo." class="finale-btn finale-btn--ghost">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Scrivi su WhatsApp
-        </a>
+
+<!-- PREVENTIVO E CONTATTI -->
+<section class="preventivo is-dark" id="preventivo" aria-labelledby="prevTitle">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div>
+        <span class="section-eyebrow"><span class="sec-num">06</span>Preventivo</span>
+        <h2 class="section-title" id="prevTitle">Raccontaci <span class="light">il tuo progetto.</span></h2>
       </div>
-      <p class="finale-call">Preferisci parlarne a voce? Chiama il <a href="tel:+393209517477">320 951 7477</a></p>
-      <p class="finale-zones"><span>Vignolo</span><span>Cuneo</span><span>Borgo San Dalmazzo</span><span>Boves</span><span>e provincia</span></p>
+      <p class="section-sub">Rispondi a qualche domanda e ti contatteremo con un preventivo su misura.</p>
+    </div>
+    <div class="prev-grid">
+    <div class="prev-form reveal" id="prevForm">
+      <div class="prev-progress" id="prevProgress" aria-hidden="true">
+        <div class="prev-dot active"></div>
+        <div class="prev-dot"></div>
+        <div class="prev-dot"></div>
+        <div class="prev-dot"></div>
+      </div>
+      <p class="visually-hidden" id="prevStatus" role="status" aria-live="polite">Passo 1 di 4</p>
+
+      <!-- Step 1 -->
+      <div class="prev-step active" data-step="1" role="group" aria-labelledby="q1">
+        <p class="prev-question" id="q1">Di cosa hai bisogno?</p>
+        <div class="prev-options">
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Manutenzione ordinaria"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M8 21c0-3-1-5-3-7"/><path d="M8 21c0-4 1-6 3-8"/><path d="M16 21c0-3 1-5 3-7"/><path d="M16 21c0-4-1-6-3-8"/></svg></span>Manutenzione ordinaria</button>
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Potatura e sfalcio"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg></span>Potatura e sfalcio</button>
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Impianto irrigazione"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 5.6 6 10a6 6 0 0 1-12 0c0-4.4 6-10 6-10z"/></svg></span>Impianto di irrigazione</button>
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Nuovo giardino"><span class="option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3-2-5-5-5 0 3 2 5 5 5z"/><path d="M12 12c0-3 2-5 5-5 0 3-2 5-5 5z"/></svg></span>Nuovo giardino o aiuola</button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="prev-step" data-step="2" role="group" aria-labelledby="q2">
+        <p class="prev-question" id="q2">Quanto è grande lo spazio?</p>
+        <div class="prev-options">
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Piccolo (fino a 100mq)">Piccolo &mdash; fino a 100 m&sup2;</button>
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Medio (100-300mq)">Medio &mdash; 100&ndash;300 m&sup2;</button>
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Grande (300-1000mq)">Grande &mdash; 300&ndash;1000 m&sup2;</button>
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Molto grande (oltre 1000mq)">Molto grande &mdash; oltre 1000 m&sup2;</button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="prev-step" data-step="3" role="group" aria-labelledby="q3">
+        <p class="prev-question" id="q3">Dove si trova il giardino?</p>
+        <div class="prev-options">
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Vignolo">Vignolo</button>
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Cuneo">Cuneo</button>
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Borgo San Dalmazzo o Boves">Borgo San Dalmazzo o Boves</button>
+          <button type="button" class="prev-option" aria-pressed="false" data-value="Altro comune della provincia di Cuneo">Altro comune della provincia</button>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="prev-step" data-step="4" role="group" aria-labelledby="q4">
+        <label class="prev-question" id="q4" for="prevNotes">Vuoi aggiungere qualche dettaglio? <span class="prev-optional">(facoltativo)</span></label>
+        <textarea class="prev-textarea" id="prevNotes" rows="4" maxlength="600" placeholder="Descrivi brevemente il lavoro, oppure lascia vuoto..."></textarea>
+        <p class="prev-privacy">Inviando la richiesta, i dati inseriti vengono usati solo per risponderti. Leggi l'<a href="privacy.html" target="_blank" rel="noopener">informativa privacy</a>.</p>
+      </div>
+
+      <p class="hp-field" aria-hidden="true"><label>Lascia vuoto questo campo <input type="text" id="prevBotField" name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <p class="prev-error" id="prevError" role="alert" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg><span id="prevErrorText">Seleziona un'opzione per continuare.</span></p>
+      <div class="prev-nav">
+        <button type="button" class="prev-back hidden" id="prevBack">&#8592; Indietro</button>
+        <button type="button" class="prev-next" id="prevNext">Avanti &#8594;</button>
+      </div>
+    </div>
+      <aside class="prev-aside reveal reveal-delay-1" aria-label="Altri modi per contattarci">
+        <p class="prev-aside-title">Preferisci parlarne a voce?</p>
+        <p class="prev-aside-sub">Scrivici o chiamaci: risponde direttamente Andrea.</p>
+        <a class="prev-contact" href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo."><span class="prev-contact-icon is-wa"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span><span><strong>Scrivi su WhatsApp</strong><small>320 951 7477</small></span></a>
+        <a class="prev-contact" href="tel:+393209517477"><span class="prev-contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></span><span><strong>Chiama</strong><small>320 951 7477</small></span></a>
+        <div class="prev-contact"><span class="prev-contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span><strong>Sede</strong><small>Via Caraglio 11, Vignolo (CN)</small></span></div>
+      </aside>
     </div>
   </div>
+  <!-- Form nascosto per il rilevamento di Netlify Forms (l'invio reale avviene via fetch dal wizard) -->
+  <form name="preventivo" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="text" name="servizio">
+    <input type="text" name="dimensione">
+    <input type="text" name="zona">
+    <textarea name="note"></textarea>
+    <input type="text" name="bot-field">
+  </form>
 </section>
+
 
 </main>
 
@@ -3454,9 +2813,10 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       <ul class="footer-links">
         <li><a href="#chi-siamo">Chi siamo</a></li>
         <li><a href="#servizi">Servizi</a></li>
-        <li><a href="#prima-dopo">Prima e Dopo</a></li>
-        <li><a href="#preventivo">Preventivo</a></li>
+        <li><a href="#prima-dopo">Prima e dopo</a></li>
         <li><a href="#galleria">Lavori</a></li>
+        <li><a href="#zone">Zone</a></li>
+        <li><a href="#preventivo">Preventivo</a></li>
       </ul>
     </div>
     <div>
@@ -3569,24 +2929,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       });
     }, { threshold: 0.12 });
     waObserver.observe(prevSection);
-  }
-
-  // ── Hero: a fine passata tolgo tosaerba ed erba alta, così non restano
-  // animazioni accese fuori dallo schermo ──
-  var lawn = document.querySelector('.lawn');
-  var mowerTrack = lawn && lawn.querySelector('.mower-track');
-  if (mowerTrack) {
-    mowerTrack.addEventListener('animationend', function(e) {
-      if (e.target === mowerTrack) lawn.classList.add('is-done');
-    });
-  }
-
-  // ── Servizi: su touch il box al centro dello schermo si "accende" ──
-  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches && 'IntersectionObserver' in window) {
-    var svcObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) { e.target.classList.toggle('is-active', e.isIntersecting); });
-    }, { rootMargin: '-38% 0px -38% 0px' });
-    document.querySelectorAll('.svc').forEach(function(el) { svcObserver.observe(el); });
   }
 
   // ── Parallax leggero sulla foto hero (solo transform, 60fps) ──
