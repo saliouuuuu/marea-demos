@@ -1723,6 +1723,80 @@ section { padding: 5rem 1.5rem; }
 }
 .wa-float svg { width: 28px; height: 28px; color: var(--surface); }
 
+/* ── ABILITAZIONI E CERTIFICATI ── */
+.abilitazioni { background: var(--surface); position: relative; }
+.abil-grid {
+  list-style: none;
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 2.25rem;
+}
+.abil-doc {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem;
+  text-align: left;
+  background: var(--ivory);
+  border: 1px solid var(--line, rgba(31,42,34,0.12));
+  border-radius: var(--radius-sm);
+  cursor: zoom-in;
+}
+.abil-doc:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+.abil-doc img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 6px 16px -8px rgba(23, 34, 27, 0.45);
+  background: var(--cream);
+}
+.abil-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  font-weight: 450;
+  line-height: 1.2;
+  color: var(--charcoal);
+}
+.abil-meta {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+.abil-meta.is-ph { color: #6b4400; font-weight: 600; }
+.abil-zoom {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+@media (min-width: 720px) {
+  .abil-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+  .abil-doc {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+    padding: 1rem 1rem 1.25rem;
+    background: var(--surface);
+    box-shadow: 0 18px 40px -24px rgba(23, 34, 27, 0.4);
+  }
+  .abil-doc img { aspect-ratio: 3 / 4; border-radius: 4px; }
+  .abil-grid li:nth-child(1) .abil-doc { rotate: -1.2deg; }
+  .abil-grid li:nth-child(2) .abil-doc { rotate: 0.8deg; }
+  .abil-grid li:nth-child(2) { margin-top: 1.25rem; }
+  .abil-grid li:nth-child(3) .abil-doc { rotate: -0.6deg; }
+}
+@media (min-width: 720px) and (prefers-reduced-motion: no-preference) {
+  .abil-doc { transition: rotate 0.4s var(--ease-out), translate 0.4s var(--ease-out); }
+  .abil-doc:hover { rotate: 0deg; translate: 0 -4px; }
+}
+
 /* ── LIGHTBOX ── */
 .lightbox {
   display: none;
@@ -2943,6 +3017,51 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   </div>
 </section>
 
+<!-- ABILITAZIONI E CERTIFICATI -->
+<section class="abilitazioni" id="abilitazioni" aria-labelledby="abilTitle">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-eyebrow">Abilitazioni</span>
+      <h2 class="section-title" id="abilTitle">Titoli e <span class="light">certificati.</span></h2>
+      <p class="section-sub">Le abilitazioni per lavorare sul verde, da consultare. Tocca un documento per ingrandirlo.</p>
+    </div>
+    <!-- PLACEHOLDER: sostituire assets/img/placeholder-certificato.svg con la scansione/foto di ogni documento
+         (src, alt e aria-label), poi aggiornare titolo e riga di dettaglio. -->
+    <ul class="abil-grid">
+      <li class="reveal reveal-delay-1">
+        <button type="button" class="abil-doc" data-lb="cert" aria-label="Ingrandisci: Segnaposto: documento di responsabile tecnico per la manutenzione delle aree verdi (DGR 39-8764/2019), immagine da inserire">
+          <img src="assets/img/placeholder-certificato.svg" width="600" height="800" loading="lazy" decoding="async" alt="Segnaposto: documento di responsabile tecnico per la manutenzione delle aree verdi (DGR 39-8764/2019), immagine da inserire">
+          <span>
+            <span class="abil-title">Manutenzione delle aree verdi</span>
+            <span class="abil-meta">Responsabile tecnico &middot; DGR 39-8764/2019</span>
+            <span class="abil-zoom" aria-hidden="true">Ingrandisci</span>
+          </span>
+        </button>
+      </li>
+      <li class="reveal reveal-delay-2">
+        <button type="button" class="abil-doc" data-lb="cert" aria-label="Ingrandisci: Segnaposto: immagine del patentino da inserire">
+          <img src="assets/img/placeholder-certificato.svg" width="600" height="800" loading="lazy" decoding="async" alt="Segnaposto: immagine del patentino da inserire">
+          <span>
+            <span class="abil-title">Patentino</span>
+            <span class="abil-meta is-ph">Dettagli da inserire</span>
+            <span class="abil-zoom" aria-hidden="true">Ingrandisci</span>
+          </span>
+        </button>
+      </li>
+      <li class="reveal reveal-delay-3">
+        <button type="button" class="abil-doc" data-lb="cert" aria-label="Ingrandisci: Segnaposto: immagine del certificato da inserire">
+          <img src="assets/img/placeholder-certificato.svg" width="600" height="800" loading="lazy" decoding="async" alt="Segnaposto: immagine del certificato da inserire">
+          <span>
+            <span class="abil-title">Certificato</span>
+            <span class="abil-meta is-ph">Dettagli da inserire</span>
+            <span class="abil-zoom" aria-hidden="true">Ingrandisci</span>
+          </span>
+        </button>
+      </li>
+    </ul>
+  </div>
+</section>
+
 <!-- FINALE -->
 <section class="finale" id="inizia" aria-labelledby="finaleTitle">
   <div class="container finale-inner">
@@ -3751,8 +3870,9 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     setTimeout(function() { lbShow(lbIndex + dir, dir); }, 160);
   }
   function openLb(trigger) {
-    // sfoglia solo le foto del filtro attivo
-    lbItems = lbAll.filter(function(el) { return !el.hidden; });
+    // sfoglia solo le foto dello stesso gruppo (galleria o certificati) e del filtro attivo
+    lbItems = lbAll.filter(function(el) { return !el.hidden && el.dataset.lb === trigger.dataset.lb; });
+    lb.setAttribute('aria-label', trigger.dataset.lb === 'cert' ? 'Abilitazioni e certificati' : 'Galleria dei lavori');
     lbShow(lbItems.indexOf(trigger));
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';

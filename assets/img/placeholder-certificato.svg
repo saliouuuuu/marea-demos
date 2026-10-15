@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="Segnaposto: immagine del documento da inserire">
+  <rect width="600" height="800" fill="#fbf3d6"/>
+  <rect x="24" y="24" width="552" height="752" rx="14" fill="none" stroke="#b4781f" stroke-width="3" stroke-dasharray="14 10"/>
+  <g fill="none" stroke="#b4781f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">
+    <rect x="190" y="210" width="220" height="290" rx="10"/>
+    <path d="M226 270h148M226 312h148M226 354h96"/>
+    <circle cx="352" cy="436" r="22"/>
+    <path d="M342 456l-6 34 16-9 16 9-6-34"/>
+  </g>
+  <text x="300" y="580" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="4" fill="#6b4400">IMMAGINE</text>
+  <text x="300" y="622" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="4" fill="#6b4400">DA INSERIRE</text>
+</svg>
