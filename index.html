@@ -459,15 +459,21 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 
 /* ── HERO ── */
 .hero {
+  --lawn-h: clamp(84px, 9vw, 132px);
+  --mw: clamp(150px, 19vw, 280px);      /* larghezza del tosaerba */
+  --mow-dur: 6.8s;
+  --mow-delay: 0.9s;
   position: relative;
-  height: 100vh;
-  height: 100svh;
-  min-height: 600px;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-end;
   overflow: hidden;
+  background: var(--ink);
 }
+@media (max-width: 767px) { .hero { --mow-dur: 4.6s; } }
 .hero-bg {
   position: absolute;
   inset: 0;
@@ -482,55 +488,43 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 .hero-overlay {
   position: absolute; inset: 0;
   background:
-    linear-gradient(180deg, rgba(10,22,10,0.42) 0%, rgba(10,22,10,0.28) 38%, rgba(10,22,10,0.62) 100%),
-    radial-gradient(120% 90% at 50% 60%, rgba(0,0,0,0) 40%, rgba(10,22,10,0.35) 100%);
+    linear-gradient(180deg, rgba(12,22,14,0.5) 0%, rgba(12,22,14,0) 22%),
+    linear-gradient(90deg, rgba(12,22,14,0.78) 0%, rgba(12,22,14,0.52) 42%, rgba(12,22,14,0.08) 78%),
+    linear-gradient(0deg, rgba(12,22,14,0.55) 0%, rgba(12,22,14,0) 42%);
+}
+@media (max-width: 767px) {
+  .hero-overlay {
+    background:
+      linear-gradient(180deg, rgba(12,22,14,0.55) 0%, rgba(12,22,14,0.35) 30%, rgba(12,22,14,0.6) 62%, rgba(12,22,14,0.82) 100%);
+  }
 }
 .hero-content {
   position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 1.5rem;
-  max-width: 800px;
+  z-index: 3;
+  width: min(1080px, calc(100% - 3rem));
+  margin: 0 auto;
+  padding: 6.5rem 0 calc(var(--lawn-h) + 2.4rem);
 }
-/* Piante in primo piano agli angoli dell'hero (dietro la card) */
-.hero-deco {
-  position: absolute;
-  bottom: -14px;
-  z-index: 1;
-  pointer-events: none;
+@media (min-width: 768px) {
+  .hero-content { width: min(1080px, calc(100% - 4rem)); padding-bottom: calc(var(--lawn-h) + 3.4rem); }
 }
-.hero-deco img { width: 100%; height: auto; display: block; filter: drop-shadow(0 12px 22px rgba(0,0,0,0.4)); }
-/* caricate dopo l'evento load (fuori dal percorso critico), poi in dissolvenza */
-.hero-deco { opacity: 0; transition: opacity 0.9s var(--ease); }
-.hero-deco.is-loaded { opacity: 1; }
-.hero-deco--left { left: -26px; width: clamp(140px, 21vw, 300px); }
-.hero-deco--right { right: -24px; width: clamp(120px, 17vw, 250px); }
-@media (max-width: 600px) {
-  .hero-deco--left { width: 140px; left: -34px; }
-  .hero-deco--right { width: 120px; right: -30px; }
-}
-.hero-glass {
-  background: rgba(18, 28, 18, 0.26);
-  backdrop-filter: saturate(140%) blur(22px);
-  -webkit-backdrop-filter: saturate(140%) blur(22px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 32px;
-  padding: 3rem 2rem;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.22);
-  animation: heroFadeIn 1.2s var(--ease-out) forwards;
-  opacity: 0;
-  transform: translateY(30px) scale(0.97);
-}
-@keyframes heroFadeIn {
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
+.hero-copy { max-width: 41rem; }
 .hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
   font-size: var(--fz-xs);
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.88);
-  margin-bottom: 1.25rem;
+  color: rgba(255,255,255,0.86);
+  margin-bottom: 1.4rem;
+}
+.hero-eyebrow::before {
+  content: "";
+  width: 2.2rem; height: 1px;
+  background: var(--sage);
+  flex-shrink: 0;
 }
 .hero h1 {
   font-family: var(--font-display);
@@ -540,7 +534,7 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   color: var(--surface);
   line-height: 1.0;
   letter-spacing: -0.02em;
-  margin-bottom: 0.4rem;
+  margin-bottom: 1.4rem;
   text-wrap: balance;
 }
 .hero h1 .thin {
@@ -552,49 +546,204 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 }
 .hero-sub {
   font-size: var(--fz-md);
-  color: rgba(255,255,255,0.9);
+  color: rgba(255,255,255,0.88);
   font-weight: 400;
+  line-height: 1.6;
+  max-width: 34rem;
   margin-bottom: 2rem;
-  line-height: 1.55;
-  letter-spacing: 0.005em;
+  text-wrap: pretty;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 1.6rem;
 }
 .hero-cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.9rem 2rem;
+  gap: 0.6rem;
+  padding: 0.95rem 1.7rem;
   background: var(--surface);
-  color: var(--charcoal);
+  color: var(--ink);
   border-radius: 50px;
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
-  box-shadow: 0 0 0 0 rgba(255,255,255,0.3);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s, background-color 0.35s;
 }
-.hero-cta:hover {
-  transform: scale(1.04);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+.hero-cta svg { width: 18px; height: 18px; transition: translate 0.35s var(--ease-out); }
+.hero-cta:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.25); background: #f3f1ea; }
+.hero-cta:hover svg { translate: 4px 0; }
+.hero-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  transition: border-color 0.3s;
 }
-.hero-cta svg { width: 20px; height: 20px; color: var(--whatsapp); }
-.hero-scroll {
+.hero-link svg { width: 16px; height: 16px; transition: translate 0.35s var(--ease-out); }
+.hero-link:hover { border-color: #fff; }
+.hero-link:hover svg { translate: 0 3px; }
+.hero-proof {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0;
+  margin-top: 2.2rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: rgba(255,255,255,0.72);
+}
+.hero-proof li { padding-right: 1rem; margin-right: 1rem; border-right: 1px solid rgba(255,255,255,0.22); }
+.hero-proof li:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
+.hero-proof strong { color: #fff; font-weight: 600; }
+@media (max-width: 767px) {
+  .hero-eyebrow { gap: 0; letter-spacing: 0.14em; font-size: 0.66rem; }
+  .hero-eyebrow::before { display: none; }
+  .hero-proof { flex-direction: column; font-size: 0.74rem; margin-top: 1.6rem; }
+  .hero-proof li { border-right: 0; margin-right: 0; padding-right: 0; }
+  .hero-proof li:nth-child(3) { display: none; }
+}
+@media (max-height: 700px) and (max-width: 767px) {
+  .hero-content { padding-top: 5.2rem; }
+  .hero h1 { margin-bottom: 1rem; }
+  .hero-sub { margin-bottom: 1.4rem; }
+  .hero-proof { display: none; }
+}
+
+/* ── Prato e tosaerba ──
+   Il prato tagliato è sempre lì sotto; l'erba alta sta in una "finestra"
+   che scorre verso destra insieme al tosaerba, mentre il suo contenuto
+   scorre al contrario e resta fermo: si vede solo il bordo che avanza.
+   Tutto con transform, quindi sul compositor. */
+.lawn {
   position: absolute;
-  bottom: 2rem; left: 50%;
-  transform: translateX(-50%);
+  left: 0; right: 0; bottom: 0;
+  height: var(--lawn-h);
   z-index: 2;
-  animation: scrollBounce 2s ease-in-out infinite;
+  pointer-events: none;
 }
-.hero-scroll svg {
-  width: 28px; height: 28px;
-  color: rgba(255,255,255,0.5);
+.lawn-cut {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  top: calc(var(--lawn-h) * -0.34);
+  background: url('assets/img/prato-tagliato.svg') repeat-x left bottom / auto 100%;
+  /* in alto il prato disegnato sfuma in quello della foto */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.55) 16%, #000 34%);
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.55) 16%, #000 34%);
 }
-@keyframes scrollBounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(8px); }
+/* righe di taglio: bande appena più chiare e più scure, più larghe verso chi guarda */
+.lawn-cut::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(255,255,230,0) 24%, rgba(255,255,230,0.07) 36%, rgba(0,0,0,0.05) 52%,
+    rgba(255,255,230,0.07) 68%, rgba(0,0,0,0.1) 86%, rgba(0,0,0,0.16) 100%);
 }
-@media (min-width: 768px) {
-  .hero-glass { padding: 4rem 3.5rem; border-radius: 40px; }
+.lawn-uncut {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 165%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22px);
+  mask-image: linear-gradient(90deg, transparent 0, #000 22px);
+  animation: mowWindow var(--mow-dur) linear var(--mow-delay) both;
 }
+.lawn-uncut-inner {
+  position: absolute;
+  inset: 0;
+  animation: mowWindowInner var(--mow-dur) linear var(--mow-delay) both;
+}
+.lawn-uncut-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0 -40px;
+  background: url('assets/img/prato-alto.svg') repeat-x left bottom / auto 100%;
+  transform-origin: 50% 100%;
+  animation: grassSway 2.4s ease-in-out infinite alternate;
+}
+@keyframes grassSway {
+  from { transform: skewX(-2deg); }
+  to   { transform: skewX(1.5deg); }
+}
+.mower-track {
+  position: absolute;
+  inset: 0;
+  animation: mowTrack var(--mow-dur) linear var(--mow-delay) both;
+}
+/* scia di luce sul prato appena tagliato */
+.mower-track::before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  bottom: 0;
+  width: 42vw;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,230,0) 0%, rgba(255,255,230,0.12) 100%);
+  animation: mowTrail var(--mow-dur) linear var(--mow-delay) both;
+}
+@keyframes mowTrack {
+  from { transform: translateX(calc(var(--mw) * -0.12 - 2px)); }
+  to   { transform: translateX(calc(100% + var(--mw) * 0.88)); }
+}
+@keyframes mowWindow {
+  from { transform: translateX(calc(var(--mw) * -0.12 - 2px)); }
+  to   { transform: translateX(calc(100% + var(--mw) * 0.88)); }
+}
+@keyframes mowWindowInner {
+  from { transform: translateX(calc(var(--mw) * 0.12 + 2px)); }
+  to   { transform: translateX(calc(-100% - var(--mw) * 0.88)); }
+}
+@keyframes mowTrail {
+  0%, 82% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.mower {
+  position: absolute;
+  left: calc(var(--mw) * -0.9);
+  bottom: calc(var(--lawn-h) * 0.04);
+  width: var(--mw);
+}
+.mower svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 34%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 34%);
+  animation: mowerVibe 0.09s linear infinite alternate;
+}
+@keyframes mowerVibe { to { transform: translateY(-0.7px); } }
+.mower .mw-wheel {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mowerWheel 0.42s linear infinite;
+}
+@keyframes mowerWheel { to { transform: rotate(360deg); } }
+/* sfalci che saltano dietro la scocca */
+.mw-clip {
+  position: absolute;
+  left: 28%;
+  bottom: 8%;
+  width: 4px; height: 2px;
+  border-radius: 2px;
+  background: #9cc27a;
+  opacity: 0;
+  animation: mowerClip 0.75s ease-out infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes mowerClip {
+  0%   { opacity: 0.95; transform: translate(0, 0) rotate(0deg); }
+  100% { opacity: 0; transform: translate(var(--x, -30px), var(--y, -22px)) rotate(var(--r, 140deg)); }
+}
+.lawn.is-done .lawn-uncut,
+.lawn.is-done .mower-track { display: none; }
 
 /* ── SECTIONS ── */
 section { padding: 5rem 1.5rem; }
@@ -1557,6 +1706,7 @@ section { padding: 5rem 1.5rem; }
 
 /* ── Micro-interazioni: feedback alla pressione ── */
 .hero-cta:active,
+.hero-link:active,
 .chi-cta:active,
 .prev-next:active,
 .nav-cta-link:active { transform: scale(0.97); }
@@ -1829,31 +1979,31 @@ textarea:focus-visible,
 
 /* 1. Entrata a cascata degli elementi dell'hero.
    Titolo e sottotitolo restano visibili dal primo frame (solo scivolano),
-   così non ritardano il Largest Contentful Paint; occhiello e bottone
-   fanno anche la dissolvenza. */
-.hero-glass > * {
+   così non ritardano il Largest Contentful Paint; occhiello, bottoni e
+   dati in fondo fanno anche la dissolvenza. */
+.hero-copy > * {
   translate: 0 14px;
   animation: heroItemIn 0.9s var(--ease-out) forwards;
 }
-.hero-glass > .hero-eyebrow,
-.hero-glass > .hero-cta { opacity: 0; }
-.hero-glass > :nth-child(1) { animation-delay: 0.25s; }
-.hero-glass > :nth-child(2) { animation-delay: 0.35s; }
-.hero-glass > :nth-child(3) { animation-delay: 0.5s; }
-.hero-glass > :nth-child(4) { animation-delay: 0.7s; }
+.hero-copy > .hero-eyebrow,
+.hero-copy > .hero-actions,
+.hero-copy > .hero-proof { opacity: 0; }
+.hero-copy > :nth-child(1) { animation-delay: 0.2s; }
+.hero-copy > :nth-child(2) { animation-delay: 0.3s; }
+.hero-copy > :nth-child(3) { animation-delay: 0.45s; }
+.hero-copy > :nth-child(4) { animation-delay: 0.6s; }
+.hero-copy > :nth-child(5) { animation-delay: 0.75s; }
 @keyframes heroItemIn {
   to { opacity: 1; translate: 0 0; }
 }
 
 /* 2. Piante che ondeggiano lentamente, come mosse dal vento */
-.hero-deco,
 .deco-plant,
 .deco-fern,
 .deco-bloom {
   transform-origin: 50% 100%;
   animation: sway 7s ease-in-out infinite;
 }
-.hero-deco--right { animation-duration: 8.5s; animation-delay: -2.5s; }
 .deco-fern { animation-duration: 8s; animation-delay: -1.5s; }
 .deco-bloom { animation-duration: 9s; animation-delay: -4s; }
 .deco-ivy {
@@ -2172,12 +2322,14 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   .reveal, .pop { opacity: 1 !important; transform: none !important; }
   /* nessun movimento ambientale o parallax */
   .blob, .leaf-float,
-  .hero-deco, .deco-plant, .deco-fern, .deco-bloom, .deco-ivy,
+  .deco-plant, .deco-fern, .deco-bloom, .deco-ivy,
   .wa-float::after,
   .finale-glow, .finale-shadow, .finale-island { animation: none !important; }
   .finale-mote, .leaf-burst { display: none; }
   .hero-underline { animation: none; stroke-dashoffset: 0; }
-  .hero-glass > * { opacity: 1 !important; translate: none !important; animation: none !important; }
+  .hero-copy > * { opacity: 1 !important; translate: none !important; animation: none !important; }
+  /* niente passata del tosaerba: si vede direttamente il prato tagliato */
+  .lawn-uncut, .mower-track { display: none; }
   .hero-bg img { transform: scale(1.04) !important; }
 }
 </style>
@@ -2215,29 +2367,59 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     </picture>
   </div>
   <div class="hero-overlay"></div>
-  <picture class="hero-deco hero-deco--left" aria-hidden="true">
-    <source type="image/avif" data-srcset="assets/img/deco-plant-320.avif 320w, assets/img/deco-plant-520.avif 520w" sizes="(min-width:600px) 280px, 150px">
-    <source type="image/webp" data-srcset="assets/img/deco-plant-320.webp 320w, assets/img/deco-plant-520.webp 520w" sizes="(min-width:600px) 280px, 150px">
-    <img data-src="assets/img/deco-plant-520.png" width="520" height="477" decoding="async" alt="">
-  </picture>
-  <picture class="hero-deco hero-deco--right" aria-hidden="true">
-    <source type="image/avif" data-srcset="assets/img/deco-fern-320.avif 320w, assets/img/deco-fern-520.avif 520w" sizes="(min-width:600px) 250px, 140px">
-    <source type="image/webp" data-srcset="assets/img/deco-fern-320.webp 320w, assets/img/deco-fern-520.webp 520w" sizes="(min-width:600px) 250px, 140px">
-    <img data-src="assets/img/deco-fern-520.png" width="520" height="506" decoding="async" alt="">
-  </picture>
   <div class="hero-content">
-    <div class="hero-glass">
-      <div class="hero-eyebrow">Vignolo &middot; Borgo San Dalmazzo &middot; Cuneo &middot; Boves</div>
+    <div class="hero-copy">
+      <p class="hero-eyebrow">Giardiniere a Vignolo &middot; Cuneo e provincia</p>
       <h1>Il tuo giardino,<span class="thin"><span class="hero-underline-wrap">curato davvero.<svg class="hero-underline" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M3 11 C 70 3, 160 2, 297 8"/></svg></span></span></h1>
-      <p class="hero-sub">Manutenzione, potatura, irrigazione e realizzazione giardini.<br>Lavoro artigianale, diretto e su misura.</p>
-      <a href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo." class="hero-cta">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Richiedi preventivo
-      </a>
+      <p class="hero-sub">Lisa Garden è la ditta di Andrea Lisa: manutenzione del verde, potature, impianti di irrigazione e nuove aree verdi a Cuneo e in provincia. Un solo referente, dalla prima visita alla consegna del lavoro.</p>
+      <div class="hero-actions">
+        <a href="#preventivo" class="hero-cta">Richiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="#servizi" class="hero-link">Scopri i servizi<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+      </div>
+      <ul class="hero-proof">
+        <li><strong>Il titolare</strong> segue ogni lavoro</li>
+        <li><strong>Responsabile tecnico</strong> del verde</li>
+        <li>Sede a <strong>Vignolo (CN)</strong></li>
+      </ul>
     </div>
   </div>
-  <div class="hero-scroll" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14m0 0l-5-5m5 5l5-5"/></svg>
+  <div class="lawn" aria-hidden="true">
+    <div class="lawn-cut"></div>
+    <div class="lawn-uncut"><div class="lawn-uncut-inner"></div></div>
+    <div class="mower-track">
+      <div class="mower">
+        <svg viewBox="0 0 300 220" aria-hidden="true" focusable="false">
+            <defs>
+              <radialGradient id="mwShadow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0a120b" stop-opacity="0.6"/><stop offset="1" stop-color="#0a120b" stop-opacity="0"/></radialGradient>
+              <linearGradient id="mwDeck" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3a2f"/><stop offset="1" stop-color="#121a14"/></linearGradient>
+              <linearGradient id="mwHood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34453a"/><stop offset="1" stop-color="#16201a"/></linearGradient>
+            </defs>
+            <ellipse cx="170" cy="212" rx="128" ry="9" fill="url(#mwShadow)"/>
+            <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M92 150 L18 22" stroke="#111913" stroke-width="7"/>
+              <path d="M92 150 L18 22" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5" transform="translate(-2 -1)"/>
+              <path d="M14 18 L34 30" stroke="#111913" stroke-width="8"/>
+              <path d="M24 40 C38 34 46 44 40 56" stroke="#111913" stroke-width="3.5"/>
+              <path d="M40 58 C60 96 78 126 96 150" stroke="#111913" stroke-width="1.6"/>
+            </g>
+            <path d="M28 140 C23 140 21 144 22 149 L28 198 C29 203 33 205 38 205 L86 202 L90 152 Z" fill="#1a231d"/>
+            <path d="M30 154 L86 158 M31 168 L85 171 M33 182 L84 184 M45 143 L41 203 M61 145 L58 203 M76 148 L73 202" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1.6"/>
+            <path d="M28 140 L90 152" stroke="#0c120e" stroke-width="4" stroke-linecap="round"/>
+            <path d="M84 200 L84 180 C84 162 100 152 124 150 L246 150 C268 150 282 162 284 180 L284 194 C284 199 280 202 275 202 L92 202 C88 202 84 201 84 200 Z" fill="url(#mwDeck)"/>
+            <path d="M104 162 L268 162" stroke="#4f9a3a" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M120 151 L250 151" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M146 150 L146 122 C146 108 156 100 170 100 L214 100 C228 100 238 110 238 124 L238 150 Z" fill="url(#mwHood)"/>
+            <path d="M154 104 C160 100 166 99 172 99 L212 99" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <rect x="156" y="88" width="56" height="14" rx="7" fill="#1b251f"/>
+            <rect x="196" y="80" width="12" height="10" rx="3" fill="#2d3a31"/>
+            <rect x="232" y="114" width="18" height="26" rx="5" fill="#26322a"/>
+            <path d="M156 126 L230 126 M156 134 L230 134 M156 142 L230 142" stroke="#000000" stroke-opacity="0.28" stroke-width="1.4"/>
+            <g class="mw-wheel" fill="#3a463d"><circle cx="104" cy="190" r="26" fill="#0c120e"/><circle cx="104" cy="190" r="16" fill="#202a23"/><circle cx="104" cy="190" r="6.5" fill="#8d998f"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(0 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(30 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(60 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(90 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(120 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(150 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(180 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(210 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(240 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(270 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(300 104 190)"/><rect x="102.4" y="163.5" width="3.2" height="5" rx="1" transform="rotate(330 104 190)"/></g>
+            <g class="mw-wheel" fill="#3a463d"><circle cx="258" cy="194" r="22" fill="#0c120e"/><circle cx="258" cy="194" r="13" fill="#202a23"/><circle cx="258" cy="194" r="5.5" fill="#8d998f"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(0 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(36 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(72 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(108 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(144 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(180 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(216 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(252 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(288 258 194)"/><rect x="256.4" y="171.5" width="3.2" height="5" rx="1" transform="rotate(324 258 194)"/></g>
+          </svg>
+        <span class="mw-clip" style="--d:0s;--x:-34px;--y:-20px;--r:150deg"></span><span class="mw-clip" style="--d:0.12s;--x:-24px;--y:-30px;--r:-120deg"></span><span class="mw-clip" style="--d:0.25s;--x:-40px;--y:-14px;--r:200deg"></span><span class="mw-clip" style="--d:0.38s;--x:-18px;--y:-26px;--r:90deg"></span><span class="mw-clip" style="--d:0.5s;--x:-30px;--y:-34px;--r:-160deg"></span><span class="mw-clip" style="--d:0.62s;--x:-44px;--y:-24px;--r:120deg"></span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2822,20 +3004,15 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     waObserver.observe(prevSection);
   }
 
-  // ── Piante decorative dell'hero: caricate dopo il load della pagina,
-  // così non rubano banda all'immagine e al testo principali ──
-  // Le piante sono decorative: entrano dopo la card dell'hero, senza
-  // contendere banda alla foto principale.
-  function loadHeroDeco() {
-    document.querySelectorAll('.hero-deco').forEach(function(pic) {
-      pic.querySelectorAll('source[data-srcset]').forEach(function(s) { s.srcset = s.dataset.srcset; });
-      var img = pic.querySelector('img[data-src]');
-      if (!img) return;
-      img.addEventListener('load', function() { pic.classList.add('is-loaded'); }, { once: true });
-      img.src = img.dataset.src;
+  // ── Hero: a fine passata tolgo tosaerba ed erba alta, così non restano
+  // animazioni accese fuori dallo schermo ──
+  var lawn = document.querySelector('.lawn');
+  var mowerTrack = lawn && lawn.querySelector('.mower-track');
+  if (mowerTrack) {
+    mowerTrack.addEventListener('animationend', function(e) {
+      if (e.target === mowerTrack) lawn.classList.add('is-done');
     });
   }
-  window.addEventListener('load', function() { setTimeout(loadHeroDeco, 1200); });
 
   // ── Parallax leggero sulla foto hero (solo transform, 60fps) ──
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
