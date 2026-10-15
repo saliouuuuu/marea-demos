@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Giardiniere a Vignolo e Cuneo | Lisa Garden – Cura del verde</title>
-<meta name="description" content="Lisa Garden di Andrea Lisa: manutenzione giardini, potatura, sfalcio, impianti di irrigazione e nuovi prati a Vignolo, Cuneo, Borgo San Dalmazzo e Boves.">
+<title>Giardiniere a Vignolo, Cuneo e provincia | Lisa Garden</title>
+<meta name="description" content="Lisa Garden di Andrea Lisa, giardiniere con sede a Vignolo: manutenzione del verde, potature, irrigazione e nuovi giardini a Cuneo, Borgo San Dalmazzo, Boves e provincia.">
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/fraunces-latin-wght-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" type="image/avif" href="assets/img/hero-960.avif" imagesrcset="assets/img/hero-640.avif 640w, assets/img/hero-960.avif 960w, assets/img/hero-1200.avif 1200w" imagesizes="100vw">
 
 <!-- Canonical / lingua -->
@@ -27,8 +28,8 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="it_IT">
 <meta property="og:site_name" content="Lisa Garden">
-<meta property="og:title" content="Lisa Garden — Giardiniere a Vignolo e Cuneo">
-<meta property="og:description" content="Manutenzione, potatura, irrigazione e realizzazione giardini. Lavoro artigianale e diretto a Vignolo, Borgo San Dalmazzo, Cuneo e Boves.">
+<meta property="og:title" content="Lisa Garden — Giardiniere a Vignolo, Cuneo e provincia">
+<meta property="og:description" content="Manutenzione del verde, potature, irrigazione e nuovi giardini. Un solo referente, dalla prima visita alla consegna, a Cuneo e in provincia.">
 <meta property="og:url" content="https://andrealisagarden.it/">
 <meta property="og:image" content="https://andrealisagarden.it/assets/img/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -37,8 +38,8 @@
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Lisa Garden — Giardiniere a Vignolo e Cuneo">
-<meta name="twitter:description" content="Manutenzione, potatura, irrigazione e realizzazione giardini a Vignolo e dintorni.">
+<meta name="twitter:title" content="Lisa Garden — Giardiniere a Vignolo, Cuneo e provincia">
+<meta name="twitter:description" content="Manutenzione del verde, potature, irrigazione e nuovi giardini a Cuneo e in provincia.">
 <meta name="twitter:image" content="https://andrealisagarden.it/assets/img/og-image.jpg">
 
 <!-- Dati strutturati: attività locale -->
@@ -61,7 +62,7 @@
       "@id": "https://andrealisagarden.it/#business",
       "name": "Lisa Garden",
       "alternateName": "Lisa Garden di Andrea Lisa",
-      "description": "Ditta individuale di cura del verde: manutenzione, potatura, irrigazione e realizzazione giardini a Vignolo (CN) e comuni limitrofi.",
+      "description": "Ditta individuale di cura del verde con sede a Vignolo (CN): manutenzione, potatura, irrigazione e realizzazione giardini a Cuneo e in provincia.",
       "url": "https://andrealisagarden.it/",
       "image": [
         "https://andrealisagarden.it/assets/img/og-image.jpg",
@@ -377,18 +378,6 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   100% { transform: rotate(10deg) scale(1.05); }
 }
 
-/* ── FLOATING LEAVES ── */
-.leaf-float {
-  position: absolute;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.26;
-  animation: leafDrift 14s ease-in-out infinite alternate;
-}
-.leaf-float svg { width: 100%; height: 100%; }
-@keyframes leafDrift {
-  0%   { transform: translateY(0) rotate(0deg); }
-  50%  { transform: translateY(-18px) rotate(8deg); }
   100% { transform: translateY(6px) rotate(-6deg); }
 }
 
@@ -2174,6 +2163,8 @@ section { padding: 5rem 1.5rem; }
 /* ── Micro-interazioni: feedback alla pressione ── */
 .hero-cta:active,
 .hero-link:active,
+.svc-cta:active,
+.zone-cta:active,
 .about-call:active,
 .prev-next:active,
 .nav-cta-link:active { transform: scale(0.97); }
@@ -2181,18 +2172,6 @@ section { padding: 5rem 1.5rem; }
 .pd-pick:active, .pd-step:active, .pd-play:active { transform: scale(0.97); }
 .gal-item:hover { box-shadow: var(--shadow-md); }
 
-.deco-plant {
-  position: absolute;
-  z-index: 1;
-  left: -26px;
-  bottom: -28px;
-  width: clamp(150px, 20vw, 260px);
-  height: auto;
-  pointer-events: none;
-  opacity: 0.95;
-}
-.deco-plant img { width: 100%; height: auto; display: block; filter: drop-shadow(0 16px 24px rgba(20,30,20,0.16)); }
-@media (max-width: 600px) { .deco-plant { display: none; } }
 
 .deco-fern {
   position: absolute;
@@ -2424,7 +2403,6 @@ textarea:focus-visible,
 }
 
 /* 2. Piante che ondeggiano lentamente, come mosse dal vento */
-.deco-plant,
 .deco-fern,
 .deco-bloom {
   transform-origin: 50% 100%;
@@ -2730,8 +2708,8 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   /* i contenuti rivelati allo scroll restano sempre visibili */
   .reveal, .pop { opacity: 1 !important; transform: none !important; }
   /* nessun movimento ambientale o parallax */
-  .blob, .leaf-float,
-  .deco-plant, .deco-fern, .deco-bloom, .deco-ivy,
+  .blob,
+  .deco-fern, .deco-bloom, .deco-ivy,
   .wa-float::after,
   .finale-glow, .finale-shadow, .finale-island { animation: none !important; }
   .finale-mote, .leaf-burst { display: none; }
