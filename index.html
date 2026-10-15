@@ -457,17 +457,21 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   .nav { padding: 0 2rem; }
 }
 
-/* ── HERO ── */
+/* ── HERO ──
+   Titolo ancorato in basso a sinistra, senza scheda di vetro; il bordo inferiore
+   è una linea d'erba (tre strati SVG, solo transform) che sfuma nel colore della
+   sezione successiva. */
 .hero {
+  --grass-h: 78px;
   position: relative;
   height: 100vh;
   height: 100svh;
-  min-height: 600px;
+  min-height: 620px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
   overflow: hidden;
 }
+@media (min-width: 900px) { .hero { --grass-h: 112px; } }
 .hero-bg {
   position: absolute;
   inset: 0;
@@ -482,20 +486,24 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 .hero-overlay {
   position: absolute; inset: 0;
   background:
-    linear-gradient(180deg, rgba(10,22,10,0.42) 0%, rgba(10,22,10,0.28) 38%, rgba(10,22,10,0.62) 100%),
-    radial-gradient(120% 90% at 50% 60%, rgba(0,0,0,0) 40%, rgba(10,22,10,0.35) 100%);
+    linear-gradient(0deg, rgba(10,22,10,0.84) 0%, rgba(10,22,10,0.5) 36%, rgba(10,22,10,0.1) 68%, rgba(10,22,10,0.34) 100%),
+    linear-gradient(90deg, rgba(10,22,10,0.42) 0%, rgba(10,22,10,0) 72%);
 }
 .hero-content {
   position: relative;
   z-index: 2;
-  text-align: center;
-  padding: 1.5rem;
-  max-width: 800px;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem calc(var(--grass-h) + 2.4rem);
 }
-/* Piante in primo piano agli angoli dell'hero (dietro la card) */
+@media (min-width: 900px) {
+  .hero-content { padding: 6rem 2rem calc(var(--grass-h) + 3.5rem); }
+}
+/* Piante in primo piano: spuntano dall'erba, dietro il testo */
 .hero-deco {
   position: absolute;
-  bottom: -14px;
+  bottom: calc(var(--grass-h) * 0.3 - 12px);
   z-index: 1;
   pointer-events: none;
 }
@@ -503,43 +511,34 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 /* caricate dopo l'evento load (fuori dal percorso critico), poi in dissolvenza */
 .hero-deco { opacity: 0; transition: opacity 0.9s var(--ease); }
 .hero-deco.is-loaded { opacity: 1; }
-.hero-deco--left { left: -26px; width: clamp(140px, 21vw, 300px); }
-.hero-deco--right { right: -24px; width: clamp(120px, 17vw, 250px); }
-@media (max-width: 600px) {
-  .hero-deco--left { width: 140px; left: -34px; }
-  .hero-deco--right { width: 120px; right: -30px; }
-}
-.hero-glass {
-  background: rgba(18, 28, 18, 0.26);
-  backdrop-filter: saturate(140%) blur(22px);
-  -webkit-backdrop-filter: saturate(140%) blur(22px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 32px;
-  padding: 3rem 2rem;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.22);
-  animation: heroFadeIn 1.2s var(--ease-out) forwards;
-  opacity: 0;
-  transform: translateY(30px) scale(0.97);
-}
-@keyframes heroFadeIn {
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.hero-eyebrow {
-  font-size: var(--fz-xs);
+.hero-deco--left { left: -30px; width: clamp(120px, 13vw, 200px); }
+.hero-deco--right { right: -26px; width: clamp(110px, 12vw, 180px); }
+
+.hero-glass { max-width: 40rem; }
+.hero-eyebrow { margin-bottom: 1.4rem; }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.95rem 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.38);
+  color: #fff;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.88);
-  margin-bottom: 1.25rem;
 }
+.hero-badge svg { width: 15px; height: 15px; color: #cfe3c6; flex-shrink: 0; }
 .hero h1 {
   font-family: var(--font-display);
-  font-size: var(--fz-3xl);
+  font-size: clamp(2.7rem, 1.5rem + 6.6vw, 5.8rem);
   font-weight: 460;
   font-variation-settings: "opsz" 144;
   color: var(--surface);
-  line-height: 1.0;
-  letter-spacing: -0.02em;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
   margin-bottom: 0.4rem;
   text-wrap: balance;
 }
@@ -551,18 +550,26 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   color: #eef3e9;
 }
 .hero-sub {
-  font-size: var(--fz-md);
-  color: rgba(255,255,255,0.9);
+  max-width: 36ch;
+  margin-top: 1.25rem;
+  font-size: 1rem;
+  color: rgba(255,255,255,0.92);
   font-weight: 400;
-  margin-bottom: 2rem;
   line-height: 1.55;
   letter-spacing: 0.005em;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 1.9rem;
 }
 .hero-cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.9rem 2rem;
+  padding: 0.9rem 1.9rem;
   background: var(--surface);
   color: var(--charcoal);
   border-radius: 50px;
@@ -570,30 +577,90 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   font-weight: 600;
   letter-spacing: -0.01em;
   transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
-  box-shadow: 0 0 0 0 rgba(255,255,255,0.3);
 }
-.hero-cta:hover {
-  transform: scale(1.04);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-}
+.hero-cta:hover { transform: scale(1.04); box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
 .hero-cta svg { width: 20px; height: 20px; color: var(--whatsapp); }
-.hero-scroll {
+.hero-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgba(255,255,255,0.45);
+  text-underline-offset: 6px;
+  transition: text-decoration-color 0.3s;
+}
+.hero-link svg { width: 16px; height: 16px; transition: translate 0.3s var(--ease-out); }
+.hero-link:hover { text-decoration-color: #fff; }
+.hero-link:hover svg { translate: 4px 0; }
+.hero-towns {
+  margin-top: 1.8rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.72);
+}
+
+/* Timbro «Provincia di Cuneo»: solo da tablet in su, gira molto lentamente */
+.hero-stamp {
+  display: none;
   position: absolute;
-  bottom: 2rem; left: 50%;
-  transform: translateX(-50%);
   z-index: 2;
-  animation: scrollBounce 2s ease-in-out infinite;
+  right: clamp(1.5rem, 8vw, 8rem);
+  bottom: calc(var(--grass-h) + 4.5rem);
+  width: 132px; height: 132px;
+  color: #fff;
+  pointer-events: none;
+  animation: stampSpin 56s linear infinite;
 }
-.hero-scroll svg {
-  width: 28px; height: 28px;
-  color: rgba(255,255,255,0.5);
+@media (min-width: 900px) { .hero-stamp { display: block; } }
+.hero-stamp text {
+  font-family: var(--font-sans);
+  font-size: 8.6px;
+  font-weight: 600;
+  letter-spacing: 0.9px;
+  fill: currentColor;
+  text-transform: uppercase;
 }
-@keyframes scrollBounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(8px); }
+@keyframes stampSpin { to { rotate: 360deg; } }
+/* schermi bassi: il testo ha la precedenza sulla riga dei comuni */
+@media (max-height: 740px) { .hero-towns { display: none; } }
+@media (max-height: 700px) {
+  .hero-content { padding-top: 4.6rem; }
+  .hero-eyebrow { margin-bottom: 1rem; }
+  .hero h1 { font-size: clamp(2.1rem, 9.6vw, 3.4rem); }
+  .hero-sub { margin-top: 0.9rem; font-size: 0.95rem; }
+  .hero-actions { margin-top: 1.3rem; }
 }
-@media (min-width: 768px) {
-  .hero-glass { padding: 4rem 3.5rem; border-radius: 40px; }
+
+/* Linea d'erba */
+.hero-grass {
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: var(--grass-h);
+  z-index: 3;
+  pointer-events: none;
+}
+.grass-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+  transform-origin: 50% 100%;
+  animation: grassSway var(--t) ease-in-out infinite alternate;
+  animation-delay: var(--dl, 0s);
+  will-change: transform;
+}
+.grass-back  { fill: #1f4a28; --t: 7.6s; --sk: 1.6deg; }
+.grass-mid   { fill: #7ea275; --t: 5.9s; --sk: 2.2deg; --dl: -2.4s; }
+.grass-front { fill: var(--cream); --t: 4.7s; --sk: 1.5deg; --dl: -1.1s; }
+@keyframes grassSway {
+  from { transform: skewX(calc(var(--sk) * -1)); }
+  to   { transform: skewX(var(--sk)); }
 }
 
 /* ── SECTIONS ── */
@@ -1557,6 +1624,7 @@ section { padding: 5rem 1.5rem; }
 
 /* ── Micro-interazioni: feedback alla pressione ── */
 .hero-cta:active,
+.hero-link:active,
 .chi-cta:active,
 .prev-next:active,
 .nav-cta-link:active { transform: scale(0.97); }
@@ -1831,16 +1899,13 @@ textarea:focus-visible,
    Titolo e sottotitolo restano visibili dal primo frame (solo scivolano),
    così non ritardano il Largest Contentful Paint; occhiello e bottone
    fanno anche la dissolvenza. */
-.hero-glass > * {
-  translate: 0 14px;
-  animation: heroItemIn 0.9s var(--ease-out) forwards;
-}
-.hero-glass > .hero-eyebrow,
-.hero-glass > .hero-cta { opacity: 0; }
-.hero-glass > :nth-child(1) { animation-delay: 0.25s; }
-.hero-glass > :nth-child(2) { animation-delay: 0.35s; }
-.hero-glass > :nth-child(3) { animation-delay: 0.5s; }
-.hero-glass > :nth-child(4) { animation-delay: 0.7s; }
+.hero-glass > * { translate: 0 14px; animation: heroItemIn 0.9s var(--ease-out) forwards; }
+.hero-glass > .hero-eyebrow, .hero-glass > .hero-actions { opacity: 0; }
+.hero-glass > :nth-child(1) { animation-delay: 0.2s; }
+.hero-glass > :nth-child(2) { animation-delay: 0.3s; }
+.hero-glass > :nth-child(3) { animation-delay: 0.45s; }
+.hero-glass > :nth-child(4) { animation-delay: 0.6s; }
+.hero-glass > :nth-child(5) { animation-delay: 0.75s; }
 @keyframes heroItemIn {
   to { opacity: 1; translate: 0 0; }
 }
@@ -2177,6 +2242,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   .finale-glow, .finale-shadow, .finale-island { animation: none !important; }
   .finale-mote, .leaf-burst { display: none; }
   .hero-underline { animation: none; stroke-dashoffset: 0; }
+  .grass-layer, .hero-stamp { animation: none !important; }
   .hero-glass > * { opacity: 1 !important; translate: none !important; animation: none !important; }
   .hero-bg img { transform: scale(1.04) !important; }
 }
@@ -2227,17 +2293,28 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   </picture>
   <div class="hero-content">
     <div class="hero-glass">
-      <div class="hero-eyebrow">Vignolo &middot; Borgo San Dalmazzo &middot; Cuneo &middot; Boves</div>
+      <div class="hero-eyebrow"><span class="hero-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>Provincia di Cuneo</span></div>
       <h1>Il tuo giardino,<span class="thin"><span class="hero-underline-wrap">curato davvero.<svg class="hero-underline" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M3 11 C 70 3, 160 2, 297 8"/></svg></span></span></h1>
-      <p class="hero-sub">Manutenzione, potatura, irrigazione e realizzazione giardini.<br>Lavoro artigianale, diretto e su misura.</p>
-      <a href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo." class="hero-cta">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Richiedi preventivo
-      </a>
+      <p class="hero-sub">Manutenzione, potatura, irrigazione e realizzazione giardini in provincia di Cuneo. Lavoro artigianale, diretto e su misura.</p>
+      <div class="hero-actions">
+        <a href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo." class="hero-cta">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Richiedi preventivo
+        </a>
+        <a href="#prima-dopo" class="hero-link">Guarda i lavori <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <p class="hero-towns">Vignolo &middot; Borgo San Dalmazzo &middot; Cuneo &middot; Boves</p>
     </div>
   </div>
-  <div class="hero-scroll" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14m0 0l-5-5m5 5l5-5"/></svg>
+  <svg class="hero-stamp" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+    <defs><path id="stampPath" d="M60 60m-45 0a45 45 0 1 1 90 0a45 45 0 1 1-90 0"/></defs>
+    <text><textPath href="#stampPath" textLength="280" lengthAdjust="spacing">Provincia di Cuneo · Giardiniere · Cura del verde · </textPath></text>
+    <path d="M60 78c-9-4-14-12-12-24 9 0 16 5 17 13 3-5 3-10 1-15 9 3 12 12 8 20-3 6-8 9-14 6z" fill="currentColor" opacity=".9"/>
+  </svg>
+  <div class="hero-grass" aria-hidden="true">
+    <svg class="grass-layer grass-back" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMax slice" focusable="false"><path d="M-36 141Q-28 86 -6 31Q-9 73 -18 141ZM-5 141Q3 105 19 69Q18 97 14 141ZM22 141Q27 103 39 65Q38 94 34 141ZM39 141Q45 106 68 70Q62 97 50 141ZM68 141Q73 102 87 62Q85 92 79 141ZM77 141Q80 106 82 71Q85 98 88 141ZM118 141Q125 82 140 24Q140 68 136 141ZM136 141Q144 100 170 60Q165 91 152 141ZM168 141Q172 98 170 55Q174 88 179 141ZM173 141Q177 98 194 55Q190 88 182 141ZM201 141Q207 98 212 54Q214 87 215 141ZM227 141Q233 71 226 1Q235 54 245 141ZM258 141Q265 66 274 -9Q276 48 275 141ZM281 141Q287 95 314 49Q307 84 292 141ZM293 141Q300 86 307 30Q310 72 311 141ZM325 141Q330 92 350 43Q345 80 335 141ZM356 141Q362 65 358 -10Q366 47 374 141ZM372 141Q378 90 406 38Q399 77 384 141ZM402 141Q405 98 402 54Q407 87 413 141ZM417 141Q420 87 414 34Q420 75 427 141ZM461 141Q466 92 481 42Q478 80 472 141ZM482 141Q487 94 513 46Q506 82 492 141ZM487 141Q492 93 511 44Q507 81 497 141ZM533 141Q537 89 546 37Q546 76 543 141ZM536 141Q544 83 576 25Q567 69 550 141ZM577 141Q584 80 606 18Q602 65 591 141ZM594 141Q598 98 605 55Q606 88 605 141ZM629 141Q634 80 641 19Q643 65 643 141ZM630 141Q636 99 643 56Q646 88 647 141ZM672 141Q679 85 702 29Q698 72 687 141ZM687 141Q693 87 716 33Q711 74 701 141ZM718 141Q724 98 739 55Q738 88 733 141ZM726 141Q732 91 743 41Q744 79 741 141ZM771 141Q777 89 794 36Q791 76 784 141ZM791 141Q799 84 827 26Q821 70 808 141ZM816 141Q822 80 836 18Q835 65 830 141ZM827 141Q834 83 854 26Q850 70 841 141ZM864 141Q871 86 886 32Q885 73 880 141ZM886 141Q894 95 910 48Q909 84 903 141ZM914 141Q919 105 935 70Q933 97 927 141ZM928 141Q932 87 942 34Q941 75 937 141ZM951 141Q955 94 955 46Q959 82 963 141ZM974 141Q979 105 993 69Q992 96 987 141ZM1010 141Q1013 100 1020 58Q1021 90 1019 141ZM1022 141Q1029 81 1037 21Q1039 67 1039 141ZM1042 141Q1047 74 1054 7Q1056 58 1056 141ZM1080 141Q1087 80 1112 19Q1106 66 1093 141ZM1105 141Q1111 83 1127 24Q1125 69 1120 141ZM1138 141Q1145 80 1173 19Q1166 65 1150 141ZM1138 141Q1143 103 1142 65Q1147 94 1153 141ZM1178 141Q1183 82 1184 23Q1188 68 1191 141ZM1192 141Q1200 80 1231 18Q1224 65 1210 141Z"/></svg>
+    <svg class="grass-layer grass-mid" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMax slice" focusable="false"><path d="M-33 141Q-28 101 -22 61Q-20 91 -21 141ZM-8 141Q-5 104 -2 66Q0 95 2 141ZM-2 141Q1 104 5 68Q7 96 8 141ZM20 141Q25 106 34 72Q34 98 30 141ZM34 141Q38 102 36 63Q41 93 46 141ZM57 141Q62 102 66 62Q69 92 71 141ZM77 141Q83 100 86 59Q90 90 93 141ZM91 141Q95 102 94 63Q98 93 102 141ZM112 141Q116 117 122 92Q122 111 120 141ZM126 141Q130 116 135 91Q137 110 138 141ZM152 141Q155 99 150 57Q156 89 162 141ZM161 141Q164 116 163 92Q167 110 171 141ZM176 141Q180 110 184 78Q187 102 188 141ZM200 141Q206 118 220 95Q219 112 214 141ZM208 141Q212 117 209 94Q215 112 222 141ZM234 141Q238 104 241 67Q242 95 244 141ZM250 141Q256 116 269 92Q269 111 265 141ZM264 141Q267 104 273 67Q273 95 272 141ZM290 141Q296 97 309 53Q308 87 303 141ZM316 141Q320 114 335 87Q331 108 325 141ZM327 141Q332 114 346 87Q345 108 339 141ZM336 141Q341 112 359 82Q355 104 347 141ZM363 141Q368 97 372 53Q375 86 377 141ZM380 141Q384 109 402 77Q397 101 388 141ZM390 141Q395 108 414 76Q410 101 402 141ZM410 141Q414 108 420 76Q421 100 421 141ZM433 141Q437 100 451 58Q448 90 441 141ZM451 141Q455 100 459 59Q461 90 462 141ZM466 141Q470 105 473 70Q475 97 477 141ZM496 141Q500 110 513 79Q511 103 505 141ZM503 141Q510 103 522 64Q522 93 519 141ZM515 141Q520 103 535 66Q532 94 525 141ZM547 141Q551 104 563 67Q562 95 557 141ZM557 141Q562 117 572 94Q572 112 569 141ZM574 141Q578 101 583 61Q584 91 584 141ZM602 141Q607 114 617 87Q616 107 613 141ZM619 141Q622 116 621 91Q624 110 628 141ZM630 141Q635 108 645 75Q645 100 642 141ZM640 141Q645 114 660 87Q657 107 650 141ZM666 141Q669 116 669 91Q672 110 675 141ZM686 141Q690 117 688 93Q693 111 698 141ZM704 141Q711 97 735 53Q730 86 719 141ZM716 141Q722 108 743 75Q738 100 728 141ZM737 141Q740 112 737 82Q742 105 748 141ZM756 141Q762 96 765 51Q769 85 772 141ZM770 141Q773 117 770 94Q774 112 778 141ZM797 141Q799 97 794 53Q799 87 805 141ZM814 141Q819 103 823 65Q827 94 830 141ZM822 141Q826 86 826 31Q830 73 833 141ZM848 141Q852 108 851 75Q856 100 861 141ZM872 141Q877 101 880 61Q883 91 885 141ZM883 141Q887 112 885 82Q890 105 895 141ZM908 141Q913 101 913 61Q917 91 921 141ZM914 141Q918 110 938 79Q933 103 922 141ZM930 141Q936 115 942 89Q945 109 945 141ZM955 141Q959 96 959 52Q963 86 966 141ZM974 141Q976 104 972 68Q977 96 983 141ZM997 141Q1003 103 1010 65Q1012 94 1012 141ZM1004 141Q1008 97 1022 53Q1019 86 1013 141ZM1025 141Q1030 118 1037 96Q1039 113 1039 141ZM1040 141Q1045 99 1064 56Q1060 88 1051 141ZM1071 141Q1074 110 1073 79Q1076 103 1080 141ZM1088 141Q1092 97 1108 53Q1105 86 1097 141ZM1098 141Q1100 114 1098 87Q1102 108 1106 141ZM1113 141Q1118 116 1127 90Q1127 110 1126 141ZM1141 141Q1145 98 1141 55Q1147 88 1154 141ZM1155 141Q1161 115 1179 90Q1175 109 1167 141ZM1163 141Q1168 113 1173 84Q1175 106 1175 141ZM1196 141Q1202 98 1221 54Q1218 87 1209 141ZM1208 141Q1213 114 1227 88Q1224 108 1218 141Z"/></svg>
+    <svg class="grass-layer grass-front" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMax slice" focusable="false"><path d="M-39 141Q-33 126 -26 111Q-24 122 -25 141ZM-20 141Q-15 120 -6 99Q-6 115 -7 141ZM-3 141Q0 118 0 95Q4 113 7 141ZM1 141Q6 117 15 93Q15 111 13 141ZM13 141Q19 108 35 76Q33 101 27 141ZM32 141Q36 117 45 93Q44 111 40 141ZM42 141Q46 114 45 86Q50 107 56 141ZM61 141Q65 119 79 97Q76 114 70 141ZM81 141Q85 120 90 98Q92 115 93 141ZM95 141Q97 121 96 101Q99 116 102 141ZM103 141Q108 117 116 93Q117 111 116 141ZM125 141Q128 118 126 95Q129 113 133 141ZM125 141Q129 114 129 88Q133 108 138 141ZM148 141Q153 128 163 114Q163 125 160 141ZM160 141Q165 122 168 104Q172 118 175 141ZM174 141Q178 117 184 93Q185 111 184 141ZM195 141Q199 125 201 109Q204 121 207 141ZM209 141Q213 124 225 107Q224 120 218 141ZM221 141Q224 117 221 93Q225 111 230 141ZM227 141Q231 111 240 81Q239 104 236 141ZM239 141Q243 124 243 107Q247 120 251 141ZM265 141Q270 119 276 97Q277 114 276 141ZM281 141Q284 114 293 87Q292 107 288 141ZM292 141Q296 119 297 96Q301 113 304 141ZM304 141Q308 108 318 76Q318 101 315 141ZM311 141Q316 118 320 94Q323 112 325 141ZM323 141Q328 115 343 88Q342 108 336 141ZM338 141Q344 119 354 98Q354 114 351 141ZM354 141Q357 121 357 101Q360 116 363 141ZM369 141Q374 129 385 116Q385 126 383 141ZM378 141Q382 115 379 89Q384 109 390 141ZM403 141Q406 126 410 112Q412 123 412 141ZM407 141Q412 114 420 88Q421 108 420 141ZM424 141Q427 118 439 95Q437 113 431 141ZM437 141Q441 130 445 118Q448 127 449 141ZM450 141Q454 121 461 100Q462 116 462 141ZM471 141Q474 117 480 93Q481 111 479 141ZM486 141Q491 116 502 90Q501 109 497 141ZM490 141Q496 118 513 94Q510 112 503 141ZM512 141Q516 116 515 92Q520 111 525 141ZM524 141Q527 124 527 106Q530 120 532 141ZM531 141Q536 115 540 89Q543 109 545 141ZM556 141Q561 126 574 112Q573 123 570 141ZM568 141Q573 114 576 87Q579 107 582 141ZM587 141Q591 116 605 91Q602 110 595 141ZM594 141Q598 120 600 100Q603 116 605 141ZM611 141Q616 120 630 100Q628 115 623 141ZM619 141Q623 115 624 90Q627 109 630 141ZM638 141Q642 125 645 109Q648 121 651 141ZM646 141Q649 115 654 89Q655 108 655 141ZM665 141Q669 109 671 77Q674 101 676 141ZM685 141Q689 123 698 104Q698 118 695 141ZM687 141Q690 126 691 112Q694 123 696 141ZM704 141Q710 128 721 116Q721 125 718 141ZM722 141Q726 112 733 84Q734 105 734 141ZM728 141Q733 114 744 87Q744 107 741 141ZM752 141Q756 113 753 84Q759 106 765 141ZM769 141Q773 120 775 99Q778 115 779 141ZM772 141Q775 119 790 97Q786 114 779 141ZM797 141Q801 114 807 88Q808 108 807 141ZM801 141Q807 113 815 85Q816 106 815 141ZM820 141Q824 118 840 94Q836 112 828 141ZM831 141Q834 125 840 109Q840 121 839 141ZM841 141Q845 107 848 74Q851 99 854 141ZM866 141Q870 116 886 90Q882 109 874 141ZM870 141Q873 118 872 96Q876 113 880 141ZM889 141Q893 113 892 85Q896 107 901 141ZM911 141Q914 123 916 106Q918 119 919 141ZM923 141Q927 117 935 92Q935 111 933 141ZM927 141Q931 122 936 102Q938 117 938 141ZM943 141Q947 121 958 102Q957 117 953 141ZM955 141Q958 128 963 116Q964 125 964 141ZM976 141Q981 113 983 85Q987 106 990 141ZM985 141Q989 128 990 115Q992 125 994 141ZM997 141Q1002 113 1010 85Q1012 106 1010 141ZM1017 141Q1022 118 1031 95Q1032 112 1030 141ZM1029 141Q1033 121 1037 102Q1039 117 1039 141ZM1038 141Q1041 106 1043 70Q1046 97 1048 141ZM1056 141Q1060 115 1071 89Q1070 109 1066 141ZM1076 141Q1081 125 1092 109Q1091 121 1087 141ZM1081 141Q1086 114 1096 87Q1096 107 1093 141ZM1093 141Q1096 124 1094 107Q1098 120 1102 141ZM1113 141Q1117 120 1132 100Q1129 115 1123 141ZM1128 141Q1133 122 1135 103Q1138 117 1141 141ZM1142 141Q1144 109 1141 77Q1145 101 1150 141ZM1157 141Q1160 116 1158 90Q1163 110 1168 141ZM1168 141Q1171 122 1175 102Q1176 117 1176 141ZM1181 141Q1183 129 1187 116Q1188 126 1188 141ZM1195 141Q1199 115 1196 90Q1200 109 1206 141ZM1212 141Q1217 117 1224 93Q1226 111 1226 141ZM-10 133H1210V141H-10Z"/></svg>
   </div>
 </section>
 
