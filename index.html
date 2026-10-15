@@ -467,6 +467,7 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   height: 100vh;
   height: 100svh;
   min-height: 620px;
+  padding: 0;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -492,13 +493,15 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 .hero-content {
   position: relative;
   z-index: 2;
-  width: 100%;
-  max-width: 1180px;
+  width: min(1080px, calc(100% - 3rem));
   margin: 0 auto;
-  padding: 5rem 1.5rem calc(var(--grass-h) + 2.4rem);
+  padding: 5.5rem 0 calc(var(--grass-h) + 2.4rem);
+}
+@media (min-width: 768px) {
+  .hero-content { width: min(1080px, calc(100% - 4rem)); }
 }
 @media (min-width: 900px) {
-  .hero-content { padding: 6rem 2rem calc(var(--grass-h) + 3.5rem); }
+  .hero-content { padding: 6.5rem 0 calc(var(--grass-h) + 3.5rem); }
 }
 /* Piante in primo piano: spuntano dall'erba, dietro il testo */
 .hero-deco {
@@ -597,6 +600,7 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 .hero-link:hover { text-decoration-color: #fff; }
 .hero-link:hover svg { translate: 4px 0; }
 .hero-towns {
+  text-wrap: balance;
   margin-top: 1.8rem;
   font-size: 0.7rem;
   font-weight: 600;
