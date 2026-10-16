@@ -590,71 +590,120 @@ section { padding: 5rem 1.5rem; }
 .has-divider > .container { border-top: 1px solid var(--line); padding-top: clamp(4.5rem, 8vw, 7rem); }
 
 /* ── SERVIZI ── */
-.svc-grid { display: grid; gap: 1rem; }
-@media (min-width: 700px) { .svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Elenco a sinistra, foto grande a destra che cambia col servizio scelto.
+   Su telefono: fisarmonica, ogni servizio con la sua foto. */
+.svc-wrap { display: grid; gap: 2.5rem; }
 @media (min-width: 1000px) {
-  .svc-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.25rem; }
-  .svc--1, .svc--4 { grid-column: span 7; }
-  .svc--2, .svc--3 { grid-column: span 5; }
+  .svc-wrap { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); column-gap: clamp(3rem, 6vw, 5.5rem); align-items: start; }
 }
-/* stessa struttura per i quattro box, ognuno con la sua foto */
-.svc {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  align-items: flex-end;
-  min-height: 480px;
-  overflow: hidden;
-  color: #fff;
-  background: var(--ink);
-  border-radius: var(--radius);
-  transition: opacity 0.9s var(--ease), transform 1s var(--ease-out);
-}
-@media (min-width: 1000px) { .svc { min-height: 460px; } }
-.svc-media { position: absolute; inset: 0; z-index: -1; }
-.svc-media img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transform: scale(1.08);
-  transition: transform 1.4s var(--ease-out);
-}
-.svc.visible .svc-media img { transform: scale(1); }
-.svc-media::after {
+.svc-list { list-style: none; border-top: 1px solid var(--line); }
+.svc-item { border-bottom: 1px solid var(--line); position: relative; }
+.svc-item::before {
   content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(0deg, rgba(14, 26, 17, 0.95) 0%, rgba(14, 26, 17, 0.8) 36%, rgba(14, 26, 17, 0.25) 66%, rgba(14, 26, 17, 0.04) 100%);
+  position: absolute; left: 0; top: -1px;
+  width: 100%; height: 2px;
+  background: var(--green);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.8s var(--ease-out);
 }
-.svc-body { position: relative; width: 100%; padding: clamp(1.5rem, 3vw, 2.25rem); }
-.svc h3 {
+.svc-item.is-open::before { transform: scaleX(1); }
+.svc-head { margin: 0; font: inherit; }
+.svc-toggle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1.25rem;
+  width: 100%;
+  padding: 1.5rem 0 1.4rem;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+}
+.svc-name {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
+  font-size: clamp(1.55rem, 1.2rem + 1.3vw, 2.3rem);
   font-weight: 450;
-  line-height: 1.08;
-  letter-spacing: -0.012em;
-  margin-bottom: 0.45rem;
-  text-wrap: balance;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  transition: color 0.4s var(--ease), translate 0.6s var(--ease-out);
 }
-.svc-tag { font-size: 1rem; font-weight: 500; color: #fff; max-width: 36ch; }
-.svc-desc { font-size: 0.93rem; line-height: 1.62; color: rgba(255,255,255,0.82); max-width: 46ch; margin-top: 0.6rem; }
+.svc-tag { grid-column: 1; margin-top: 0.4rem; font-size: 0.95rem; color: var(--text-muted); }
+.svc-icon {
+  grid-column: 2; grid-row: 1 / span 2; align-self: center;
+  position: relative; width: 2.6rem; height: 2.6rem;
+  border: 1px solid var(--line); border-radius: 50%;
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease), rotate 0.6s var(--ease-out);
+}
+.svc-icon::before, .svc-icon::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 12px; height: 1.5px; margin: -0.75px 0 0 -6px;
+  background: currentColor; border-radius: 1px;
+  transition: rotate 0.5s var(--ease-out), opacity 0.3s;
+}
+.svc-icon::after { rotate: 90deg; }
+.svc-item.is-open .svc-name { color: var(--green); }
+.svc-item.is-open .svc-icon { background: var(--green); border-color: var(--green); color: #fff; rotate: 180deg; }
+.svc-item.is-open .svc-icon::after { rotate: 0deg; }
+@media (hover: hover) and (pointer: fine) {
+  .svc-toggle:hover .svc-name { translate: 6px 0; }
+  .svc-toggle:hover .svc-icon { border-color: var(--green); }
+}
+.svc-toggle:focus-visible { outline: 3px solid var(--green); outline-offset: 4px; border-radius: 6px; }
+/* apertura morbida: righe della griglia da 0 a 1fr */
+.svc-panel { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.7s var(--ease-out); }
+.svc-item:not(.is-open) .svc-panel { grid-template-rows: 0fr; }
+.svc-panel-in { overflow: hidden; min-height: 0; }
+.svc-item:not(.is-open) .svc-panel-in { visibility: hidden; transition: visibility 0s 0.7s; }
+.svc-panel-in > :last-child { margin-bottom: 1.75rem; }
+.svc-thumb { display: block; aspect-ratio: 4 / 3; border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 1.25rem; background: var(--cream); }
+.svc-thumb img { width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 1000px) { .svc-thumb { display: none; } }
+.svc-points { list-style: none; display: grid; gap: 0.5rem 1.5rem; margin-bottom: 1rem; }
+@media (min-width: 560px) { .svc-points { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.svc-points li { position: relative; padding-left: 1.4rem; font-size: 0.95rem; line-height: 1.45; color: var(--ink); }
+.svc-points li::before {
+  content: ""; position: absolute; left: 0; top: 0.32em;
+  width: 0.75rem; height: 0.75rem;
+  border-radius: 0 70% 0 70%;
+  background: var(--sage);
+}
+.svc-item.is-open .svc-points li { animation: svcIn 0.7s var(--ease-out) both; }
+.svc-item.is-open .svc-points li:nth-child(2) { animation-delay: 0.06s; }
+.svc-item.is-open .svc-points li:nth-child(3) { animation-delay: 0.12s; }
+.svc-item.is-open .svc-points li:nth-child(4) { animation-delay: 0.18s; }
+@keyframes svcIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.svc-desc { font-size: 0.95rem; line-height: 1.65; color: var(--text-muted); max-width: 48ch; margin-bottom: 1.1rem; }
 .svc-cta {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  margin-top: 1.1rem;
   padding: 0.3rem 0;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 600;
-  color: #fff;
-  border-bottom: 1px solid rgba(255,255,255,0.45);
+  color: var(--green);
+  border-bottom: 1px solid rgba(53, 106, 57, 0.4);
   transition: border-color 0.3s;
 }
 .svc-cta svg { width: 16px; height: 16px; transition: translate 0.35s var(--ease-out); }
-.svc-cta:hover { border-color: #fff; }
+.svc-cta:hover { border-color: var(--green); }
 .svc-cta:hover svg { translate: 3px 0; }
-.svc-cta:focus-visible { outline: 3px solid #eef3e9; outline-offset: 3px; }
-@media (hover: hover) and (pointer: fine) {
-  .svc.visible:hover .svc-media img { transform: scale(1.04); }
+.svc-cta:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+/* foto grande, solo da desktop */
+.svc-stage { display: none; }
+@media (min-width: 1000px) {
+  .svc-stage { display: block; position: sticky; top: 6.5rem; }
+}
+.svc-frame { position: relative; aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden; background: var(--cream); }
+.svc-shot { position: absolute; inset: 0; display: block; clip-path: inset(100% 0 0 0); transition: clip-path 0.9s var(--ease-out); }
+.svc-shot img { width: 100%; height: 100%; object-fit: cover; scale: 1.08; transition: scale 1.4s var(--ease-out); }
+.svc-shot.is-on { clip-path: inset(0 0 0 0); z-index: 2; }
+.svc-shot.is-on img { scale: 1; }
+.svc-shot.was-on { clip-path: inset(0 0 0 0); z-index: 1; }
+.svc-caps { position: relative; margin-top: 0.8rem; min-height: 1.5em; font-size: 0.85rem; color: var(--text-muted); }
+.svc-cap { position: absolute; left: 0; top: 0; opacity: 0; translate: 0 6px; transition: opacity 0.4s var(--ease), translate 0.5s var(--ease-out); }
+.svc-cap.is-on { opacity: 1; translate: 0 0; transition-delay: 0.25s; }
+@media (prefers-reduced-motion: reduce) {
+  .svc-panel, .svc-shot, .svc-shot img, .svc-cap, .svc-item::before, .svc-name, .svc-icon { transition: none; }
+  .svc-item.is-open .svc-points li { animation: none; }
 }
 
 /* ── PRIMA E DOPO ── */
@@ -1993,67 +2042,62 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       <h2 class="section-title" id="serviziTitle">Cosa facciamo</h2>
       <p class="section-sub">Dalla manutenzione di tutti i giorni alla realizzazione di un giardino nuovo. Ogni lavoro parte da una visita sul posto e da un preventivo su misura.</p>
     </div>
-    <div class="svc-grid">
-      <article class="svc svc--1 reveal">
-        <div class="svc-media">
-          <picture>
-            <source type="image/avif" srcset="assets/img/gal-10-480.avif 480w, assets/img/gal-10-800.avif 800w, assets/img/gal-10-1200.avif 1200w" sizes="(min-width: 1000px) 620px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
-            <source type="image/webp" srcset="assets/img/gal-10-480.webp 480w, assets/img/gal-10-800.webp 800w, assets/img/gal-10-1200.webp 1200w" sizes="(min-width: 1000px) 620px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
-            <img src="assets/img/gal-10-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato rasato a strisce davanti a una villa con la facciata rossa">
-          </picture>
+    <div class="svc-wrap">
+      <ol class="svc-list reveal">
+        <li class="svc-item is-open" data-i="0">
+          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn0" aria-expanded="true" aria-controls="svcPanel0"><span class="svc-name">Manutenzione del verde</span><span class="svc-tag">Prato, aiuole e bordi in ordine, tutto l'anno.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
+          <div class="svc-panel" id="svcPanel0" role="region" aria-labelledby="svcBtn0">
+            <div class="svc-panel-in">
+              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/gal-10-480.avif 480w, assets/img/gal-10-800.avif 800w, assets/img/gal-10-1200.avif 1200w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/gal-10-480.webp 480w, assets/img/gal-10-800.webp 800w, assets/img/gal-10-1200.webp 1200w" sizes="calc(100vw - 3rem)"><img src="assets/img/gal-10-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato rasato a strisce davanti a una villa con la facciata rossa"></picture>
+              <ul class="svc-points"><li>Taglio del prato</li><li>Pulizia di aiuole e vialetti</li><li>Rimozione delle erbe infestanti</li><li>Raccolta del verde tagliato</li></ul>
+              <p class="svc-desc">Interventi periodici o singoli, per chi non ha tempo di seguire il giardino o vuole tenerlo curato con continuità.</p>
+              <a href="#preventivo" class="svc-cta" data-servizio="Manutenzione ordinaria">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </li>
+        <li class="svc-item is-open" data-i="1">
+          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn1" aria-expanded="true" aria-controls="svcPanel1"><span class="svc-name">Cura piante e siepi</span><span class="svc-tag">Siepi, arbusti e piante ornamentali in forma.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
+          <div class="svc-panel" id="svcPanel1" role="region" aria-labelledby="svcBtn1">
+            <div class="svc-panel-in">
+              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/bosso-lavanda-rosa-alberello-400.avif 400w, assets/img/bosso-lavanda-rosa-alberello-520.avif 520w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/bosso-lavanda-rosa-alberello-400.webp 400w, assets/img/bosso-lavanda-rosa-alberello-520.webp 520w" sizes="calc(100vw - 3rem)"><img src="assets/img/bosso-lavanda-rosa-alberello-520.jpg" width="520" height="650" loading="lazy" decoding="async" alt="Bosso sagomato, lavanda e rosa ad alberello in un'aiuola con corteccia lungo un vialetto in pietra"></picture>
+              <ul class="svc-points"><li>Potatura delle siepi</li><li>Rifinitura degli arbusti</li><li>Cura delle piante ornamentali</li><li>Intervento nel periodo adatto a ogni specie</li></ul>
+              <p class="svc-desc">Per contenere la crescita, mantenere la forma e tenere le piante in salute.</p>
+              <a href="#preventivo" class="svc-cta" data-servizio="Potatura e sfalcio">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </li>
+        <li class="svc-item is-open" data-i="2">
+          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn2" aria-expanded="true" aria-controls="svcPanel2"><span class="svc-name">Sistemi di irrigazione</span><span class="svc-tag">L'acqua giusta per ogni zona del giardino.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
+          <div class="svc-panel" id="svcPanel2" role="region" aria-labelledby="svcBtn2">
+            <div class="svc-panel-in">
+              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif 480w, assets/img/pd-corten-ghiaia-720.avif 720w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="calc(100vw - 3rem)"><img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Linea di irrigazione a goccia posata sul telo antierba in un'aiuola con ghiaia chiara"></picture>
+              <ul class="svc-points"><li>Progettazione su misura</li><li>Posa dell'impianto</li><li>Irrigazione a goccia per aiuole e vasche</li><li>Manutenzione degli impianti</li></ul>
+              <p class="svc-desc">Per ridurre le annaffiature a mano e dare a prato e piante l'acqua di cui hanno bisogno.</p>
+              <a href="#preventivo" class="svc-cta" data-servizio="Impianto irrigazione">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </li>
+        <li class="svc-item is-open" data-i="3">
+          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn3" aria-expanded="true" aria-controls="svcPanel3"><span class="svc-name">Realizzazione aree verdi</span><span class="svc-tag">Dal terreno nudo al giardino finito.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
+          <div class="svc-panel" id="svcPanel3" role="region" aria-labelledby="svcBtn3">
+            <div class="svc-panel-in">
+              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/gal-11-480.avif 480w, assets/img/gal-11-800.avif 800w, assets/img/gal-11-1200.avif 1200w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/gal-11-480.webp 480w, assets/img/gal-11-800.webp 800w, assets/img/gal-11-1200.webp 1200w" sizes="calc(100vw - 3rem)"><img src="assets/img/gal-11-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure in ghiaia rossa e piante, con le colline sullo sfondo"></picture>
+              <ul class="svc-points"><li>Prati a semina o in rotoli</li><li>Aiuole e bordure</li><li>Pacciamatura con corteccia</li><li>Ghiaia decorativa</li></ul>
+              <p class="svc-desc">Si parte dallo spazio com'è oggi per arrivare a un giardino pensato su misura per chi lo vive.</p>
+              <a href="#preventivo" class="svc-cta" data-servizio="Nuovo giardino">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </li>
+      </ol>
+      <div class="svc-stage reveal reveal-delay-1" aria-hidden="true">
+        <div class="svc-frame">
+          <picture class="svc-shot is-on" data-i="0"><source type="image/avif" srcset="assets/img/gal-10-480.avif 480w, assets/img/gal-10-800.avif 800w, assets/img/gal-10-1200.avif 1200w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/gal-10-480.webp 480w, assets/img/gal-10-800.webp 800w, assets/img/gal-10-1200.webp 1200w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/gal-10-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato rasato a strisce davanti a una villa con la facciata rossa"></picture>
+          <picture class="svc-shot" data-i="1"><source type="image/avif" srcset="assets/img/bosso-lavanda-rosa-alberello-400.avif 400w, assets/img/bosso-lavanda-rosa-alberello-520.avif 520w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/bosso-lavanda-rosa-alberello-400.webp 400w, assets/img/bosso-lavanda-rosa-alberello-520.webp 520w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/bosso-lavanda-rosa-alberello-520.jpg" width="520" height="650" loading="lazy" decoding="async" alt="Bosso sagomato, lavanda e rosa ad alberello in un'aiuola con corteccia lungo un vialetto in pietra"></picture>
+          <picture class="svc-shot" data-i="2"><source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif 480w, assets/img/pd-corten-ghiaia-720.avif 720w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Linea di irrigazione a goccia posata sul telo antierba in un'aiuola con ghiaia chiara"></picture>
+          <picture class="svc-shot" data-i="3"><source type="image/avif" srcset="assets/img/gal-11-480.avif 480w, assets/img/gal-11-800.avif 800w, assets/img/gal-11-1200.avif 1200w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/gal-11-480.webp 480w, assets/img/gal-11-800.webp 800w, assets/img/gal-11-1200.webp 1200w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/gal-11-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure in ghiaia rossa e piante, con le colline sullo sfondo"></picture>
         </div>
-        <div class="svc-body">
-          <h3>Manutenzione del verde</h3>
-          <p class="svc-tag">Prato, aiuole e bordi in ordine, tutto l'anno.</p>
-                    <p class="svc-desc">Taglio del prato, pulizia di aiuole e vialetti, rimozione delle erbe infestanti e raccolta del verde tagliato. Interventi periodici o singoli, per chi non ha tempo di seguire il giardino o vuole tenerlo curato con continuità.</p>
-          <a href="#preventivo" class="svc-cta" data-servizio="Manutenzione ordinaria">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        </div>
-      </article>
-      <article class="svc svc--2 reveal reveal-delay-1">
-        <div class="svc-media">
-          <picture>
-            <source type="image/avif" srcset="assets/img/arbusti-sagomati-lavanda-rose-440.avif 440w" sizes="(min-width: 1000px) 440px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
-            <source type="image/webp" srcset="assets/img/arbusti-sagomati-lavanda-rose-440.webp 440w" sizes="(min-width: 1000px) 440px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
-            <img src="assets/img/arbusti-sagomati-lavanda-rose-440.jpg" width="440" height="420" loading="lazy" decoding="async" alt="Arbusti sagomati, lavanda e rose in un'aiuola con corteccia lungo un vialetto in pietra">
-          </picture>
-        </div>
-        <div class="svc-body">
-          <h3>Cura piante e siepi</h3>
-          <p class="svc-tag">Siepi, arbusti e piante ornamentali in forma.</p>
-                    <p class="svc-desc">Potatura e rifinitura di siepi, arbusti e piante ornamentali per contenerne la crescita, mantenerne la forma e tenerle in salute. Si interviene nel periodo adatto a ciascuna specie.</p>
-          <a href="#preventivo" class="svc-cta" data-servizio="Potatura e sfalcio">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        </div>
-      </article>
-      <article class="svc svc--3 reveal">
-        <div class="svc-media">
-          <picture>
-            <source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif 480w, assets/img/pd-corten-ghiaia-720.avif 720w" sizes="(min-width: 1000px) 440px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
-            <source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="(min-width: 1000px) 440px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
-            <img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Linea di irrigazione a goccia posata sul telo antierba in un'aiuola con ghiaia chiara">
-          </picture>
-        </div>
-        <div class="svc-body">
-          <h3>Sistemi di irrigazione</h3>
-          <p class="svc-tag">L'acqua giusta per ogni zona del giardino.</p>
-                    <p class="svc-desc">Progettazione, posa e manutenzione di impianti su misura, anche a goccia per aiuole e vasche. Utile a chi vuole ridurre le annaffiature a mano e dare a prato e piante l'acqua di cui hanno bisogno.</p>
-          <a href="#preventivo" class="svc-cta" data-servizio="Impianto irrigazione">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        </div>
-      </article>
-      <article class="svc svc--4 reveal reveal-delay-1">
-        <div class="svc-media">
-          <picture>
-            <source type="image/avif" srcset="assets/img/gal-11-480.avif 480w, assets/img/gal-11-800.avif 800w, assets/img/gal-11-1200.avif 1200w" sizes="(min-width: 1000px) 620px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
-            <source type="image/webp" srcset="assets/img/gal-11-480.webp 480w, assets/img/gal-11-800.webp 800w, assets/img/gal-11-1200.webp 1200w" sizes="(min-width: 1000px) 620px, (min-width: 700px) 46vw, calc(100vw - 3rem)">
-            <img src="assets/img/gal-11-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure in ghiaia rossa e piante, con le colline sullo sfondo">
-          </picture>
-        </div>
-        <div class="svc-body">
-          <h3>Realizzazione aree verdi</h3>
-          <p class="svc-tag">Dal terreno nudo al giardino finito.</p>
-                    <p class="svc-desc">Nuovi prati a semina o in rotoli, aiuole, bordure e pacciamature con corteccia o ghiaia decorativa. Si parte dallo spazio com'è oggi per arrivare a un giardino pensato su misura per chi lo vive.</p>
-          <a href="#preventivo" class="svc-cta" data-servizio="Nuovo giardino">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        </div>
-      </article>
+        <p class="svc-caps"><span class="svc-cap is-on" data-i="0">Prato rasato a strisce davanti alla villa</span><span class="svc-cap" data-i="1">Bosso, lavanda e rosa ad alberello lungo il vialetto</span><span class="svc-cap" data-i="2">Ala gocciolante posata sul telo, prima della ghiaia</span><span class="svc-cap" data-i="3">Prato all'inglese con bordure in ghiaia rossa</span></p>
+      </div>
     </div>
   </div>
 </section>
@@ -2519,6 +2563,57 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     }, { passive: true });
     applyParallax();
   }
+
+  // ── Servizi: un servizio aperto alla volta, la foto grande lo segue ──
+  (function() {
+    var items = Array.prototype.slice.call(document.querySelectorAll('.svc-item'));
+    if (!items.length) return;
+    var shots = document.querySelectorAll('.svc-shot');
+    var caps = document.querySelectorAll('.svc-cap');
+    var desk = window.matchMedia('(min-width: 1000px)');
+    var current = 0;
+    function show(i) {
+      Array.prototype.forEach.call(shots, function(el, k) {
+        el.classList.toggle('was-on', k === current && k !== i);
+        el.classList.toggle('is-on', k === i);
+        if (k !== i && k !== current) el.classList.remove('was-on');
+      });
+      Array.prototype.forEach.call(caps, function(el, k) { el.classList.toggle('is-on', k === i); });
+      current = i;
+    }
+    function open(i, toggle) {
+      items.forEach(function(it, k) {
+        var on = k === i ? (toggle && !desk.matches ? !it.classList.contains('is-open') : true) : false;
+        it.classList.toggle('is-open', on);
+        it.querySelector('.svc-toggle').setAttribute('aria-expanded', on ? 'true' : 'false');
+      });
+      if (i !== current) show(i);
+    }
+    items.forEach(function(it, k) {
+      var btn = it.querySelector('.svc-toggle');
+      btn.addEventListener('click', function() {
+        open(k, true);
+        // su telefono, se chiudendo quello sopra il titolo scappa in alto, lo riporta in vista
+        if (!desk.matches) setTimeout(function() {
+          var top = it.getBoundingClientRect().top;
+          if (top < 70) window.scrollBy({ top: top - 80, behavior: prefersReduced ? 'auto' : 'smooth' });
+        }, 720);
+      });
+      // con il mouse basta passarci sopra (con un attimo di pausa, per non far ballare le foto)
+      var t = null;
+      btn.addEventListener('mouseenter', function() {
+        if (!desk.matches) return;
+        t = setTimeout(function() { open(k, false); }, 140);
+      });
+      btn.addEventListener('mouseleave', function() { clearTimeout(t); });
+    });
+    // senza script restano tutti aperti; con lo script si parte dal primo
+    open(0, false);
+    desk.addEventListener('change', function() {
+      var openOne = items.filter(function(it) { return it.classList.contains('is-open'); })[0];
+      open(openOne ? items.indexOf(openOne) : current, false);
+    });
+  })();
 
   // ── Prima e dopo: confronto a più fasi ──
   // Ogni lavoro ha le sue fasi, tutte riprese e allineate sulla stessa
