@@ -558,17 +558,6 @@ section { padding: 5rem 1.5rem; }
 
 .container { max-width: 1080px; margin: 0 auto; }
 
-.section-eyebrow {
-  display: flex;
-  align-items: baseline;
-  gap: 0.65rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--leaf);
-  margin-bottom: 0.9rem;
-}
 .section-title {
   font-family: var(--font-display);
   font-size: var(--fz-2xl);
@@ -580,11 +569,6 @@ section { padding: 5rem 1.5rem; }
   margin-bottom: 1rem;
   text-wrap: balance;
 }
-.section-title .light {
-  font-style: italic;
-  font-weight: 450;
-  color: var(--green);
-}
 .section-sub {
   font-size: var(--fz-md);
   color: var(--text-muted);
@@ -592,30 +576,14 @@ section { padding: 5rem 1.5rem; }
   line-height: 1.65;
   font-weight: 400;
 }
-/* Intestazione uguale per tutte le sezioni: numero, titolo, sottotitolo */
-.sec-num {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 0.95rem;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--green);
-}
-.sec-head { display: grid; gap: 1rem; margin-bottom: clamp(2.5rem, 5vw, 3.75rem); }
+/* Intestazione delle sezioni: titolo e, sotto, una riga di testo */
+.sec-head { display: grid; gap: 0.9rem; margin-bottom: clamp(2.25rem, 4.5vw, 3.25rem); max-width: 40rem; }
 .sec-head .section-title { margin-bottom: 0; }
 .sec-head .section-sub { margin: 0; }
-@media (min-width: 1000px) {
-  .sec-head { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); column-gap: 4rem; align-items: end; }
-  .sec-head .section-sub { padding-bottom: 0.45rem; }
-}
 /* Due soli fondi: avorio per le sezioni chiare, verde scurissimo per quelle scure */
 .is-light { background: var(--ivory); }
 .is-dark { background: var(--ink); color: #fff; }
-.is-dark .section-eyebrow { color: var(--sage); }
-.is-dark .sec-num { color: #cfe2c2; }
 .is-dark .section-title { color: #fff; }
-.is-dark .section-title .light { color: #b9d3a9; }
 .is-dark .section-sub { color: rgba(255,255,255,0.72); }
 /* due sezioni chiare di seguito: le separa un filo sottile */
 .has-divider { padding-top: 0; }
@@ -629,10 +597,8 @@ section { padding: 5rem 1.5rem; }
   .svc--1, .svc--4 { grid-column: span 7; }
   .svc--2, .svc--3 { grid-column: span 5; }
 }
-/* stessa struttura per i quattro box; ognuno ha la sua foto e il suo angolo "a foglia" */
+/* stessa struttura per i quattro box, ognuno con la sua foto */
 .svc {
-  --leaf: 96px;
-  --r: 20px;
   position: relative;
   isolation: isolate;
   display: flex;
@@ -641,10 +607,9 @@ section { padding: 5rem 1.5rem; }
   overflow: hidden;
   color: #fff;
   background: var(--ink);
-  border-radius: var(--r) var(--leaf) var(--r) var(--r);
-  transition: border-radius 0.9s var(--ease-out), opacity 0.9s var(--ease), transform 1s var(--ease-out);
+  border-radius: var(--radius);
+  transition: opacity 0.9s var(--ease), transform 1s var(--ease-out);
 }
-.svc--2, .svc--4 { border-radius: var(--leaf) var(--r) var(--r) var(--r); }
 @media (min-width: 1000px) { .svc { min-height: 460px; } }
 .svc-media { position: absolute; inset: 0; z-index: -1; }
 .svc-media img {
@@ -661,14 +626,6 @@ section { padding: 5rem 1.5rem; }
   background: linear-gradient(0deg, rgba(14, 26, 17, 0.95) 0%, rgba(14, 26, 17, 0.8) 36%, rgba(14, 26, 17, 0.25) 66%, rgba(14, 26, 17, 0.04) 100%);
 }
 .svc-body { position: relative; width: 100%; padding: clamp(1.5rem, 3vw, 2.25rem); }
-.svc-num {
-  display: block;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1rem;
-  color: #cfe2c2;
-  margin-bottom: 0.4rem;
-}
 .svc h3 {
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
@@ -697,7 +654,6 @@ section { padding: 5rem 1.5rem; }
 .svc-cta:hover svg { translate: 3px 0; }
 .svc-cta:focus-visible { outline: 3px solid #eef3e9; outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
-  .svc:hover { --leaf: 40px; }
   .svc.visible:hover .svc-media img { transform: scale(1.04); }
 }
 
@@ -975,16 +931,6 @@ section { padding: 5rem 1.5rem; }
   margin-bottom: 1.25rem;
   max-width: 36em;
 }
-.about-lead::first-letter {
-  float: left;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 450;
-  font-size: 3.7em;
-  line-height: 0.8;
-  margin: 0.08em 0.12em 0 0;
-  color: var(--green);
-}
 .about-body p:not(.about-lead):not(.about-note) {
   font-size: 1rem;
   line-height: 1.75;
@@ -993,69 +939,29 @@ section { padding: 5rem 1.5rem; }
   max-width: 36em;
 }
 .about-note {
-  margin: 2rem 0 0;
-  padding-left: 1.2rem;
-  border-left: 2px solid var(--sage);
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(1.15rem, 1.05rem + 0.4vw, 1.35rem);
-  line-height: 1.4;
-  color: var(--ink);
-  max-width: 28em;
-}
-/* Foto: ritratto grande, dettaglio di cantiere sovrapposto */
-.about-media { position: relative; padding-bottom: 22%; align-self: start; }
-@media (min-width: 900px) { .about-media { padding-bottom: 26%; } }
-.about-portrait { margin: 0 0 0 auto; width: 80%; position: relative; }
-.about-frame { border-radius: var(--radius); overflow: hidden; background: var(--cream); }
-.about-portrait .about-frame { aspect-ratio: 4 / 5; }
-.about-frame img { width: 100%; height: 100%; object-fit: cover; }
-.about-portrait figcaption {
-  position: absolute;
-  left: -1.9rem; top: 0;
-  writing-mode: vertical-rl;
-  rotate: 180deg;
-  font-size: 0.68rem;
+  margin: 1.6rem 0 0;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 36em;
 }
+/* Foto: il ritratto del titolare */
+.about-media { align-self: start; }
+.about-portrait { margin: 0; max-width: 420px; }
+@media (min-width: 900px) { .about-portrait { margin-left: auto; } }
+.about-frame { border-radius: var(--radius); overflow: hidden; background: var(--cream); aspect-ratio: 4 / 5; }
+.about-frame img { width: 100%; height: 100%; object-fit: cover; }
+.about-portrait figcaption { margin-top: 0.7rem; font-size: 0.85rem; color: var(--text-muted); }
 .about-portrait figcaption strong { color: var(--ink); font-weight: 600; }
-.about-detail { position: absolute; left: 0; bottom: 0; width: 54%; margin: 0; }
-.about-detail .about-frame {
-  aspect-ratio: 3 / 2;
-  border-radius: var(--radius-sm);
-  border: 6px solid var(--ivory);
-  box-shadow: var(--shadow-lg);
-}
-.about-detail figcaption {
-  margin-top: 0.4rem;
-  padding-left: 6px;
-  font-size: 0.78rem;
-  line-height: 1.45;
-  color: var(--text-muted);
-  max-width: 26ch;
-}
-.about-media.reveal { transform: none; }
-.about-media .about-frame img { scale: 1.08; transition: scale 1.4s var(--ease-out); }
-.about-media .about-detail { translate: 0 30px; opacity: 0; transition: translate 1s var(--ease-out) 0.3s, opacity 0.9s var(--ease) 0.3s; }
-.about-media.visible .about-frame img { scale: 1; }
-.about-media.visible .about-detail { translate: 0 0; opacity: 1; }
-@media (hover: hover) {
-  .about-media.visible .about-portrait:hover img { scale: 1.04; }
-}
 
-/* Formazione e qualifiche: badge vettoriali, stessa struttura per tutti */
+/* Formazione e qualifiche: un elenco, una riga per titolo */
 .quals {
   margin-top: clamp(4rem, 8vw, 6rem);
   padding-top: clamp(2.5rem, 5vw, 3.5rem);
   border-top: 1px solid var(--line);
 }
-.quals-head { display: grid; gap: 0.4rem; margin-bottom: 1.75rem; }
-@media (min-width: 1000px) {
-  .quals-head { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); column-gap: 4rem; align-items: end; }
-}
+.quals-head { display: grid; gap: 0.4rem; margin-bottom: 1.5rem; max-width: 40rem; }
 .quals-title {
   font-family: var(--font-display);
   font-size: var(--fz-lg);
@@ -1064,66 +970,23 @@ section { padding: 5rem 1.5rem; }
   color: var(--ink);
 }
 .quals-sub { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); }
-.cred-list { list-style: none; display: grid; gap: 1rem; }
-@media (min-width: 900px) { .cred-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; } }
-.cred {
-  position: relative;
-  display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
-  gap: 1.1rem;
-  align-items: start;
-  padding: 1.4rem;
-  background: var(--surface);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  transition: translate 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
+.cred-list { list-style: none; border-top: 1px solid var(--line); }
+.cred { padding: 1.15rem 0; border-bottom: 1px solid var(--line); color: var(--ink); }
+.cred > div { display: grid; gap: 0.3rem; }
+@media (min-width: 800px) {
+  .cred > div { grid-template-columns: 11rem minmax(0, 1fr) minmax(0, 1fr); column-gap: 2rem; align-items: baseline; }
 }
-.cred::before {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  border: 1px solid rgba(53, 106, 57, 0.28);
-  border-radius: 4px;
-  pointer-events: none;
-}
-@media (min-width: 900px) { .cred { grid-template-columns: 1fr; padding: 1.75rem 1.6rem; } }
-.cred-seal { width: 72px; height: 72px; color: var(--green); transition: rotate 1.2s var(--ease-out); }
-.cred-seal text { font-family: var(--font-sans); font-size: 7.2px; font-weight: 600; fill: currentColor; }
-.cred-seal .cred-glyph { font-family: var(--font-display); font-style: italic; font-size: 30px; font-weight: 450; letter-spacing: 0; }
-@media (hover: hover) {
-  .cred:hover { translate: 0 -3px; box-shadow: var(--shadow-md); }
-  .cred:hover .cred-seal { rotate: -14deg; }
-}
-.cred-type {
-  display: block;
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--green);
-  margin-bottom: 0.45rem;
-}
+.cred-type { font-size: 0.85rem; color: var(--text-muted); }
 .cred-title {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 450;
-  line-height: 1.22;
+  line-height: 1.3;
   color: var(--ink);
-  text-wrap: balance;
 }
-.cred-ref {
-  margin-top: 0.75rem;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--line);
-  font-size: 0.82rem;
-  line-height: 1.5;
-  color: var(--text-muted);
-}
+.cred-ref { font-size: 0.88rem; line-height: 1.5; color: var(--text-muted); }
 .cred-ref strong { color: var(--ink); font-weight: 600; }
-/* badge predisposti: cornice tratteggiata finché mancano i dati */
-.cred.is-pending::before { border-style: dashed; }
-.cred.is-pending .cred-seal { color: #7d8c80; }
+.cred.is-pending .cred-ref { font-style: italic; }
 
 /* ── PREVENTIVO E CONTATTI ── */
 .preventivo { position: relative; }
@@ -1400,75 +1263,28 @@ a.prev-contact:hover { background: rgba(255,255,255,0.06); border-color: rgba(25
 }
 
 /* ── ZONE ── */
-.zone-grid { display: grid; gap: 2.5rem; align-items: center; }
+.zone-groups { display: grid; gap: 0; }
 @media (min-width: 900px) {
-  .zone-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(3rem, 6vw, 6rem); }
+  .zone-groups { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.1fr) minmax(0, 1.1fr); column-gap: clamp(2rem, 4vw, 3.5rem); }
+  .zone-more { grid-column: 1 / -1; justify-self: start; }
 }
-/* schema ad anelli: livelli di vicinanza, non una mappa */
-.zone-rings { width: min(100%, 420px); margin: 0 auto; }
-@media (max-width: 699px) { .zone-rings { display: none; } }
-.zone-rings svg { display: block; width: 100%; height: auto; overflow: visible; }
-.zone-disc { fill: var(--green-deep); }
-.zone-ring { fill: none; stroke: #cfe2c2; stroke-width: 1; }
-.zone-ring--1 { stroke-opacity: 0.75; }
-.zone-ring--2 { stroke-opacity: 0.45; }
-.zone-ring--3 { stroke-opacity: 0.35; stroke-dasharray: 2 5; }
-.zone-rings text { font-family: var(--font-sans); font-size: 9px; font-weight: 600; letter-spacing: 0.16em; fill: #e3eedb; }
-.zone-rings .zone-ring-label--3 { fill: #b9d3a9; }
-.zone-home-dot { fill: #fff; }
-.zone-home-halo { fill: #fff; opacity: 0.1; }
-.zone-rings .zone-home-name { font-family: var(--font-display); font-size: 22px; font-weight: 450; letter-spacing: 0; fill: #fff; }
-.zone-rings .zone-home-sub { font-size: 8px; letter-spacing: 0.2em; fill: #b9d3a9; }
-.zone-rings .zone-ring, .zone-rings text { opacity: 0; transition: opacity 0.9s var(--ease); }
-.zone-rings .zone-ring { transform-box: fill-box; transform-origin: center; scale: 0.85; transition: opacity 0.9s var(--ease), scale 1.2s var(--ease-out); }
-.zone-rings.visible .zone-ring, .zone-rings.visible text { opacity: 1; }
-.zone-rings.visible .zone-ring { scale: 1; }
-.zone-rings.visible .zone-ring--2, .zone-rings.visible .zone-ring-label--2 { transition-delay: 0.2s; }
-.zone-rings.visible .zone-ring--3, .zone-rings.visible .zone-ring-label--3 { transition-delay: 0.4s; }
-
-.zone-group + .zone-group { margin-top: 1.8rem; padding-top: 1.8rem; border-top: 1px solid var(--line); }
+.zone-group { padding: 1.5rem 0; border-top: 1px solid var(--line); }
 .zone-group h3 {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--green);
-  margin-bottom: 0.8rem;
-}
-.zone-group h3 span { font-weight: 500; letter-spacing: 0.04em; text-transform: none; color: var(--text-muted); font-size: 0.8rem; }
-.zone-main { list-style: none; display: flex; flex-wrap: wrap; gap: 0.25rem 1.4rem; }
-.zone-main li {
   font-family: var(--font-display);
-  font-size: clamp(1.45rem, 1.2rem + 1vw, 1.95rem);
+  font-size: 1.15rem;
   font-weight: 450;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
   color: var(--ink);
+  margin-bottom: 0.75rem;
 }
-.zone-main li small {
-  font-family: var(--font-sans);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--green);
-  margin-left: 0.4rem;
-  vertical-align: 0.5em;
-}
-.zone-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.45rem; }
-.zone-list li {
-  padding: 0.38rem 0.8rem;
-  border: 1px solid var(--line);
-  border-radius: 50px;
-  font-size: 0.88rem;
-  color: var(--text);
-  background: var(--surface);
-}
+.zone-group h3 span { font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-muted); margin-left: 0.3rem; }
+.zone-main { list-style: none; }
+.zone-main li { font-size: 1.05rem; line-height: 1.75; color: var(--ink); }
+.zone-main li small { font-size: 0.85rem; color: var(--text-muted); margin-left: 0.35rem; }
+.zone-list { list-style: none; font-size: 1rem; line-height: 1.75; color: var(--text); }
+.zone-list li { display: inline; }
+.zone-list li:not(:last-child)::after { content: ", "; }
 .zone-group p { font-size: 0.95rem; line-height: 1.65; color: var(--text-muted); max-width: 46ch; }
-.zone-note { margin-top: 0.8rem; font-size: 0.85rem !important; }
+.zone-note { margin-top: 0.8rem; font-size: 0.88rem !important; }
 .zone-more {
   display: inline-flex;
   align-items: center;
@@ -2112,11 +1928,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 <section class="about is-light" id="chi-siamo" aria-labelledby="aboutTitle">
   <div class="container">
     <div class="sec-head reveal">
-      <div>
-        <span class="section-eyebrow"><span class="sec-num">01</span>Chi siamo</span>
-        <h2 class="section-title" id="aboutTitle">Una passione <span class="light">diventata mestiere.</span></h2>
-      </div>
-      <p class="section-sub">Lisa Garden è la ditta individuale di Andrea Lisa, con sede a Vignolo (CN).</p>
+      <h2 class="section-title" id="aboutTitle">Andrea Lisa, giardiniere a Vignolo</h2>
     </div>
     <div class="about-grid">
       <div class="about-body reveal">
@@ -2134,17 +1946,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
               <img src="assets/img/andrea-lisa-ritratto-800.jpg" width="800" height="1000" loading="lazy" decoding="async" alt="Andrea Lisa, titolare di Lisa Garden, con la polo verde dell'azienda">
             </picture>
           </div>
-          <figcaption><strong>Andrea Lisa</strong> &middot; titolare</figcaption>
-        </figure>
-        <figure class="about-detail">
-          <div class="about-frame">
-            <picture>
-              <source type="image/avif" srcset="assets/img/attrezzi-terreno-livellato-400.avif 400w, assets/img/attrezzi-terreno-livellato-640.avif 640w" sizes="(min-width: 900px) 250px, 50vw">
-              <source type="image/webp" srcset="assets/img/attrezzi-terreno-livellato-400.webp 400w, assets/img/attrezzi-terreno-livellato-640.webp 640w" sizes="(min-width: 900px) 250px, 50vw">
-              <img src="assets/img/attrezzi-terreno-livellato-640.jpg" width="640" height="427" loading="lazy" decoding="async" alt="Rastrello, zappa e seghetto accanto a un'aiuola appena livellata, lungo un vialetto in pietra">
-            </picture>
-          </div>
-          <figcaption>Terreno ripulito e livellato, pronto per la ghiaia.</figcaption>
+          <figcaption><strong>Andrea Lisa</strong>, titolare</figcaption>
         </figure>
       </div>
     </div>
@@ -2155,7 +1957,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       </div>
       <ul class="cred-list">
         <li class="cred">
-          <svg class="cred-seal" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><defs><path id="credRing1" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="29" fill="none" stroke="currentColor" stroke-width="0.7"/><text><textPath href="#credRing1" startOffset="0" textLength="230" lengthAdjust="spacing">QUALIFICA &#183; LISA GARDEN &#183; VIGNOLO &#183; </textPath></text><text class="cred-glyph" x="50" y="58" text-anchor="middle">Q</text><g fill="currentColor" opacity="0.9"><path d="M50 74 C44 72 39 68 36 62 C40 62 44 65 46 69 Z"/><path d="M50 74 C56 72 61 68 64 62 C60 62 56 65 54 69 Z"/><ellipse cx="38.5" cy="66" rx="2.6" ry="1.3" transform="rotate(-40 38.5 66)"/><ellipse cx="61.5" cy="66" rx="2.6" ry="1.3" transform="rotate(40 61.5 66)"/></g></svg>
           <div>
             <span class="cred-type">Qualifica professionale</span>
             <h4 class="cred-title">Responsabile tecnico per la manutenzione delle aree verdi</h4>
@@ -2164,7 +1965,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         </li>
         <!-- DA COMPLETARE: nome esatto del patentino, ente che lo rilascia e anno (solo dati verificati) -->
         <li class="cred is-pending">
-          <svg class="cred-seal" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><defs><path id="credRing2" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="29" fill="none" stroke="currentColor" stroke-width="0.7"/><text><textPath href="#credRing2" startOffset="0" textLength="230" lengthAdjust="spacing">PATENTINO &#183; LISA GARDEN &#183; VIGNOLO &#183; </textPath></text><text class="cred-glyph" x="50" y="58" text-anchor="middle">P</text><g fill="currentColor" opacity="0.9"><path d="M50 74 C44 72 39 68 36 62 C40 62 44 65 46 69 Z"/><path d="M50 74 C56 72 61 68 64 62 C60 62 56 65 54 69 Z"/><ellipse cx="38.5" cy="66" rx="2.6" ry="1.3" transform="rotate(-40 38.5 66)"/><ellipse cx="61.5" cy="66" rx="2.6" ry="1.3" transform="rotate(40 61.5 66)"/></g></svg>
           <div>
             <span class="cred-type">Formazione</span>
             <h4 class="cred-title">Patentino</h4>
@@ -2173,7 +1973,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         </li>
         <!-- DA COMPLETARE: nome esatto del certificato, ente che lo rilascia e anno (solo dati verificati) -->
         <li class="cred is-pending">
-          <svg class="cred-seal" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><defs><path id="credRing3" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="29" fill="none" stroke="currentColor" stroke-width="0.7"/><text><textPath href="#credRing3" startOffset="0" textLength="230" lengthAdjust="spacing">CERTIFICATO &#183; LISA GARDEN &#183; VIGNOLO &#183; </textPath></text><text class="cred-glyph" x="50" y="58" text-anchor="middle">C</text><g fill="currentColor" opacity="0.9"><path d="M50 74 C44 72 39 68 36 62 C40 62 44 65 46 69 Z"/><path d="M50 74 C56 72 61 68 64 62 C60 62 56 65 54 69 Z"/><ellipse cx="38.5" cy="66" rx="2.6" ry="1.3" transform="rotate(-40 38.5 66)"/><ellipse cx="61.5" cy="66" rx="2.6" ry="1.3" transform="rotate(40 61.5 66)"/></g></svg>
           <div>
             <span class="cred-type">Formazione</span>
             <h4 class="cred-title">Certificato</h4>
@@ -2191,10 +1990,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 <section class="servizi is-light has-divider" id="servizi" aria-labelledby="serviziTitle">
   <div class="container">
     <div class="sec-head reveal">
-      <div>
-        <span class="section-eyebrow"><span class="sec-num">02</span>Servizi</span>
-        <h2 class="section-title" id="serviziTitle">Quattro servizi, <span class="light">un solo referente.</span></h2>
-      </div>
+      <h2 class="section-title" id="serviziTitle">Cosa facciamo</h2>
       <p class="section-sub">Dalla manutenzione di tutti i giorni alla realizzazione di un giardino nuovo. Ogni lavoro parte da una visita sul posto e da un preventivo su misura.</p>
     </div>
     <div class="svc-grid">
@@ -2207,7 +2003,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
           </picture>
         </div>
         <div class="svc-body">
-          <span class="svc-num" aria-hidden="true">01</span>
           <h3>Manutenzione del verde</h3>
           <p class="svc-tag">Prato, aiuole e bordi in ordine, tutto l'anno.</p>
                     <p class="svc-desc">Taglio del prato, pulizia di aiuole e vialetti, rimozione delle erbe infestanti e raccolta del verde tagliato. Interventi periodici o singoli, per chi non ha tempo di seguire il giardino o vuole tenerlo curato con continuità.</p>
@@ -2223,7 +2018,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
           </picture>
         </div>
         <div class="svc-body">
-          <span class="svc-num" aria-hidden="true">02</span>
           <h3>Cura piante e siepi</h3>
           <p class="svc-tag">Siepi, arbusti e piante ornamentali in forma.</p>
                     <p class="svc-desc">Potatura e rifinitura di siepi, arbusti e piante ornamentali per contenerne la crescita, mantenerne la forma e tenerle in salute. Si interviene nel periodo adatto a ciascuna specie.</p>
@@ -2239,7 +2033,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
           </picture>
         </div>
         <div class="svc-body">
-          <span class="svc-num" aria-hidden="true">03</span>
           <h3>Sistemi di irrigazione</h3>
           <p class="svc-tag">L'acqua giusta per ogni zona del giardino.</p>
                     <p class="svc-desc">Progettazione, posa e manutenzione di impianti su misura, anche a goccia per aiuole e vasche. Utile a chi vuole ridurre le annaffiature a mano e dare a prato e piante l'acqua di cui hanno bisogno.</p>
@@ -2255,7 +2048,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
           </picture>
         </div>
         <div class="svc-body">
-          <span class="svc-num" aria-hidden="true">04</span>
           <h3>Realizzazione aree verdi</h3>
           <p class="svc-tag">Dal terreno nudo al giardino finito.</p>
                     <p class="svc-desc">Nuovi prati a semina o in rotoli, aiuole, bordure e pacciamature con corteccia o ghiaia decorativa. Si parte dallo spazio com'è oggi per arrivare a un giardino pensato su misura per chi lo vive.</p>
@@ -2270,10 +2062,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 <section class="prima-dopo is-dark" id="prima-dopo" aria-labelledby="pdTitleMain">
   <div class="container">
     <div class="sec-head reveal">
-      <div>
-        <span class="section-eyebrow"><span class="sec-num">03</span>Prima e dopo</span>
-        <h2 class="section-title" id="pdTitleMain">Prima e <span class="light">dopo.</span></h2>
-      </div>
+      <h2 class="section-title" id="pdTitleMain">Prima e dopo</h2>
       <p class="section-sub">Come cambia uno spazio verde quando ci lavoriamo: le foto sono quelle dei cantieri, scattate prima, durante e dopo.</p>
     </div>
     <div class="pd" id="pd">
@@ -2358,11 +2147,8 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 <section class="galleria is-light" id="galleria" aria-labelledby="galTitle">
   <div class="container">
     <div class="sec-head reveal">
-      <div>
-        <span class="section-eyebrow"><span class="sec-num">04</span>Lavori</span>
-        <h2 class="section-title" id="galTitle">Galleria <span class="light">progetti.</span></h2>
-      </div>
-      <p class="section-sub">Una selezione dei giardini che abbiamo curato e trasformato. Tocca una foto per ingrandirla.</p>
+      <h2 class="section-title" id="galTitle">Lavori fatti</h2>
+      <p class="section-sub">Una selezione dei giardini curati da Lisa Garden. Tocca una foto per ingrandirla.</p>
     </div>
     <div class="gal-filters" role="group" aria-label="Filtra i lavori">
       <button type="button" class="gal-filter" data-filter="tutti" aria-pressed="true">Tutti<span>11</span></button>
@@ -2467,18 +2253,15 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 <section class="zone is-light has-divider" id="zone" aria-labelledby="zoneTitle">
   <div class="container">
     <div class="sec-head reveal">
-      <div>
-        <span class="section-eyebrow"><span class="sec-num">05</span>Dove lavoriamo</span>
-        <h2 class="section-title" id="zoneTitle">Cuneo <span class="light">e provincia.</span></h2>
-      </div>
+      <h2 class="section-title" id="zoneTitle">Dove lavoriamo</h2>
       <p class="section-sub">La sede è a Vignolo. Lavoriamo soprattutto a Cuneo e nei comuni intorno; per il resto della provincia valutiamo ogni richiesta in base alla distanza e al tipo di lavoro.</p>
     </div>
     <div class="zone-grid">
       <div class="zone-groups reveal">
         <div class="zone-group">
-          <h3>Le nostre zone</h3>
+          <h3>Zone principali</h3>
           <ul class="zone-main">
-            <li>Vignolo<small>sede</small></li>
+            <li>Vignolo<small>(sede)</small></li>
             <li>Cuneo</li>
             <li>Borgo San Dalmazzo</li>
             <li>Boves</li>
@@ -2498,21 +2281,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         </div>
         <a class="zone-more" href="#preventivo">Non trovi il tuo comune? Scrivici<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
-      <div class="zone-rings reveal reveal-delay-1" aria-hidden="true">
-        <svg viewBox="0 0 400 400" focusable="false">
-          <circle class="zone-disc" cx="200" cy="200" r="200"/>
-          <circle class="zone-ring zone-ring--3" cx="200" cy="200" r="168"/>
-          <circle class="zone-ring zone-ring--2" cx="200" cy="200" r="122"/>
-          <circle class="zone-ring zone-ring--1" cx="200" cy="200" r="74"/>
-          <path id="zoneArc1" d="M200 200 m-82 0 a82 82 0 1 1 164 0" fill="none"/><text class="zone-ring-label--1"><textPath href="#zoneArc1" startOffset="50%" text-anchor="middle">CUNEO &#183; BORGO SAN DALMAZZO &#183; BOVES</textPath></text>
-          <path id="zoneArc2" d="M200 200 m-130 0 a130 130 0 1 1 260 0" fill="none"/><text class="zone-ring-label--2"><textPath href="#zoneArc2" startOffset="50%" text-anchor="middle">COMUNI VICINI</textPath></text>
-          <path id="zoneArc3" d="M200 200 m-176 0 a176 176 0 1 1 352 0" fill="none"/><text class="zone-ring-label--3"><textPath href="#zoneArc3" startOffset="50%" text-anchor="middle">PROVINCIA DI CUNEO</textPath></text>
-          <circle class="zone-home-halo" cx="200" cy="200" r="34"/>
-          <circle class="zone-home-dot" cx="200" cy="200" r="5"/>
-          <text class="zone-home-name" x="200" y="238" text-anchor="middle">Vignolo</text>
-          <text class="zone-home-sub" x="200" y="252" text-anchor="middle">SEDE</text>
-        </svg>
-      </div>
     </div>
   </div>
 </section>
@@ -2522,10 +2290,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 <section class="preventivo is-dark" id="preventivo" aria-labelledby="prevTitle">
   <div class="container">
     <div class="sec-head reveal">
-      <div>
-        <span class="section-eyebrow"><span class="sec-num">06</span>Preventivo</span>
-        <h2 class="section-title" id="prevTitle">Raccontaci <span class="light">il tuo progetto.</span></h2>
-      </div>
+      <h2 class="section-title" id="prevTitle">Chiedi un preventivo</h2>
       <p class="section-sub">Rispondi a qualche domanda e ti contatteremo con un preventivo su misura.</p>
     </div>
     <div class="prev-grid">
