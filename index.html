@@ -6,9 +6,9 @@
 <title>Giardiniere a Vignolo, Cuneo e provincia | Lisa Garden</title>
 <meta name="description" content="Lisa Garden di Andrea Lisa, giardiniere con sede a Vignolo: manutenzione del verde, potature, irrigazione e nuovi giardini a Cuneo, Borgo San Dalmazzo, Boves e provincia.">
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/fraunces-logo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/urbanist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" type="image/avif" href="assets/img/hero-960.avif" imagesrcset="assets/img/hero-640.avif 640w, assets/img/hero-960.avif 960w, assets/img/hero-1200.avif 1200w" imagesizes="(min-width: 1000px) 520px, 88vw">
+<link rel="preload" as="image" type="image/avif" href="assets/img/hero-prima-erbacce-816.avif" imagesrcset="assets/img/hero-prima-erbacce-480.avif 480w, assets/img/hero-prima-erbacce-640.avif 640w, assets/img/hero-prima-erbacce-816.avif 816w" imagesizes="(min-width: 1000px) 54vw, 88vw" fetchpriority="high">
 
 <!-- Canonical / lingua -->
 <link rel="canonical" href="https://andrealisagarden.it/">
@@ -58,15 +58,16 @@
       }
     },
     {
-      "@type": "LocalBusiness",
+      "@type": ["LocalBusiness", "HomeAndConstructionBusiness"],
       "@id": "https://andrealisagarden.it/#business",
+      "logo": "https://andrealisagarden.it/icon-512.png",
       "name": "Lisa Garden",
       "alternateName": "Lisa Garden di Andrea Lisa",
       "description": "Ditta individuale di cura del verde con sede a Vignolo (CN): manutenzione, potatura, irrigazione e realizzazione giardini a Cuneo e in provincia.",
       "url": "https://andrealisagarden.it/",
       "image": [
         "https://andrealisagarden.it/assets/img/og-image.jpg",
-        "https://andrealisagarden.it/assets/img/hero-1200.jpg"
+        "https://andrealisagarden.it/assets/img/hero-dopo-prato-816.jpg"
       ],
       "telephone": "+393209517477",
       "founder": {
@@ -253,7 +254,7 @@
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url('assets/fonts/fraunces-latin-wght-normal.woff2') format('woff2');
+  src: url('assets/fonts/fraunces-logo.woff2') format('woff2'); /* solo le lettere del logo */
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -354,6 +355,11 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   padding: 0 1.5rem;
   transition: background 0.4s, backdrop-filter 0.4s;
 }
+.nav.over-hero {
+  background: rgba(10, 20, 13, 0.35);
+  backdrop-filter: saturate(160%) blur(16px);
+  -webkit-backdrop-filter: saturate(160%) blur(16px);
+}
 .nav.scrolled {
   background: rgba(246, 243, 236, 0.82);
   backdrop-filter: saturate(180%) blur(20px);
@@ -416,206 +422,176 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 }
 
 /* ── HERO ──
-   Fondo bosco; testo a sinistra, a destra la foto del giardino in un arco
-   con la buganvillea che ricade sopra, il "timbro" dell'impronta di foglie
-   e un lavoro recente. La sottolineatura con l'erba tagliata resta. */
+   La foto è la protagonista: lo stesso giardino prima e dopo. Scorrendo,
+   una linea di taglio sale dal basso e lascia il prato finito, con i fili
+   d'erba che saltano via come nella sottolineatura del titolo. */
 .hero {
   position: relative;
-  isolation: isolate;
-  min-height: 100vh;
-  min-height: 100svh;
+  height: 240vh;
   padding: 0;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
   color: #fff;
+  background: #0b140e;
+}
+.hero-stage {
+  position: sticky; top: 0;
+  height: 100vh; height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
   background:
-    radial-gradient(60rem 40rem at 78% 30%, rgba(98, 160, 74, 0.28), transparent 60%),
-    radial-gradient(40rem 30rem at 8% 100%, rgba(143, 174, 132, 0.14), transparent 62%),
+    radial-gradient(50rem 34rem at 20% 30%, rgba(98, 160, 74, 0.18), transparent 62%),
     linear-gradient(180deg, #0f1c14 0%, #0b140e 100%);
 }
-.hero-glow {
-  position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background:
-    radial-gradient(22rem 22rem at 70% 18%, rgba(214, 51, 132, 0.10), transparent 70%),
-    repeating-linear-gradient(115deg, rgba(255,255,255,0.018) 0 2px, transparent 2px 9px);
+.hero-glow { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: repeating-linear-gradient(115deg, rgba(255,255,255,0.016) 0 2px, transparent 2px 9px); }
+/* la foto: tutto schermo su telefono, metà abbondante da desktop */
+.hero-shot { position: absolute; left: 0; right: 0; top: 0; height: 56svh; overflow: hidden; background: #18281e; border-radius: 0 0 30px 30px; --p: 0; }
+@media (min-width: 1000px) {
+  .hero-shot { inset: 0.9rem 0.9rem 0.9rem auto; height: auto; width: 54vw; border-radius: 34px; box-shadow: 0 40px 100px rgba(0,0,0,0.45); }
 }
+.hero-before, .hero-before img, .hero-after picture, .hero-after img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-before img, .hero-after img { object-fit: cover; object-position: 50% 60%; }
+.hero-before img { transform: scale(calc(1.08 - var(--p) * 0.06)); }
+.hero-after { position: absolute; inset: 0; clip-path: inset(calc((1 - var(--p)) * 100%) 0 0 0); }
+.hero-after img { transform: scale(calc(1.12 - var(--p) * 0.12)); }
+.hero-shot img, .hero-after { will-change: transform, clip-path; }
+/* linea di taglio sul confine tra prima e dopo */
+.hero-cut { position: absolute; left: 0; right: 0; top: calc((1 - var(--p)) * 100%); height: 0; z-index: 3; opacity: calc(min(var(--p) * 30, (1 - var(--p)) * 30, 1)); pointer-events: none; }
+.hero-cut-line { position: absolute; left: 0; right: 0; top: -1.5px; height: 3px; background: linear-gradient(90deg, transparent, #cfe8b8 12%, #a9d18e 50%, #cfe8b8 88%, transparent); box-shadow: 0 0 18px 2px rgba(169, 209, 142, 0.7), 0 0 60px 8px rgba(169, 209, 142, 0.25); }
+.hero-cut-clips i {
+  position: absolute; top: 0;
+  left: calc(4% + var(--i) * 6.8%);
+  width: 3px; height: 11px;
+  border-radius: 50% 50% 40% 40% / 75% 75% 25% 25%;
+  background: linear-gradient(0deg, #4f8340, #b9d3a9);
+  opacity: 0;
+}
+.hero.is-cutting .hero-cut-clips i { animation: cutClip 0.9s cubic-bezier(.2,.7,.4,1) infinite; animation-delay: calc(var(--i) * -0.137s); }
+.hero.is-cutting.is-up .hero-cut-clips i { animation-name: cutClipUp; }
+@keyframes cutClip {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc((var(--i) - 6.5) * 2px), 34px) rotate(260deg); }
+}
+@keyframes cutClipUp {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc((var(--i) - 6.5) * 2px), -38px) rotate(-260deg); }
+}
+.hero-shot-shade { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(180deg, rgba(8,16,10,0.6) 0%, rgba(8,16,10,0) 26%, rgba(8,16,10,0) 70%, rgba(8,16,10,0.45) 100%); }
+@media (min-width: 1000px) { .hero-shot-shade { background: linear-gradient(180deg, rgba(8,16,10,0.25), rgba(8,16,10,0) 30%, rgba(8,16,10,0) 70%, rgba(8,16,10,0.4)); } }
+/* "Prima" / "Dopo" grande sulla foto */
+.hero-state { position: absolute; z-index: 4; right: 1.25rem; bottom: 1rem; height: 1.2em; overflow: hidden; font-family: var(--font-head); font-weight: 700; font-size: clamp(1.4rem, 1rem + 1.6vw, 2.4rem); letter-spacing: -0.03em; line-height: 1.2; }
+@media (min-width: 1000px) { .hero-state { bottom: auto; top: 4.6rem; right: 1.9rem; } }
+.hero-state span { display: block; transition: transform 0.7s var(--ease-out); }
+.hero-state-b { color: #a9d18e; }
+.hero.is-after .hero-state span { transform: translateY(-100%); }
+/* timbro dell'impronta */
+.hero-mark {
+  position: absolute; z-index: 4;
+  left: 1rem; bottom: 1rem;
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.5rem 1.1rem 0.5rem 0.55rem;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  background: linear-gradient(150deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04)), rgba(10, 20, 13, 0.4);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  animation: heroStamp 0.9s cubic-bezier(.2, 1.4, .4, 1) 2.25s both;
+}
+@media (min-width: 1000px) { .hero-mark { left: 1.4rem; bottom: 1.4rem; } }
+.hero-print { display: block; width: 34px; flex: 0 0 auto; }
+@media (min-width: 1000px) { .hero-print { width: 44px; } }
+.hero-print img { width: 100%; height: auto; }
+.hero-mark p { display: grid; line-height: 1.25; }
+.hero-mark strong { font-family: var(--font-head); font-size: 0.95rem; font-weight: 700; letter-spacing: -0.02em; }
+.hero-mark span { font-size: 0.72rem; color: rgba(255,255,255,0.7); }
+@media (max-width: 999px) { .hero-mark { bottom: auto; top: 4.3rem; } .hero-mark span { display: none; } }
+@keyframes heroStamp { 0% { opacity: 0; transform: scale(1.35) rotate(-6deg); } 60% { opacity: 1; transform: scale(0.96) rotate(1deg); } 100% { opacity: 1; transform: none; } }
+
+/* testo */
 .hero-content {
-  position: relative;
-  z-index: 2;
+  position: relative; z-index: 5;
+  height: 100%;
+  display: flex; flex-direction: column; justify-content: flex-end;
   width: min(1180px, calc(100% - 3rem));
   margin: 0 auto;
-  padding: 6.5rem 0 4rem;
-  display: grid;
-  gap: 3.5rem;
-  align-items: center;
+  padding: 0 0 1.4rem;
 }
 @media (min-width: 1000px) {
-  .hero-content { width: min(1180px, calc(100% - 4rem)); grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); gap: clamp(3rem, 6vw, 6rem); padding: 7.5rem 0 5.5rem; }
+  .hero-content { justify-content: center; width: auto; margin: 0 0 0 max(2.5rem, calc((100vw - 1180px) / 2)); max-width: calc(46vw - max(2.5rem, calc((100vw - 1180px) / 2)) - 3rem); padding: 6rem 0 3rem; }
 }
-.hero-copy { max-width: 40rem; }
+.hero-copy { max-width: 38rem; }
 .hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
+  display: inline-flex; align-items: center; gap: 0.6rem;
   padding: 0.45rem 0.95rem 0.45rem 0.7rem;
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.16);
   border-radius: 999px;
-  background: rgba(255,255,255,0.05);
-  font-size: 0.74rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: rgba(255,255,255,0.86);
-  margin-bottom: 1.6rem;
+  background: rgba(10,20,13,0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 0.74rem; font-weight: 500; letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 1.4rem;
 }
 .hero-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #a9d18e; }
 .hero-dot::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid #a9d18e; animation: heroPulse 2.4s var(--ease-out) infinite; }
 @keyframes heroPulse { from { opacity: 0.9; transform: scale(0.6); } to { opacity: 0; transform: scale(1.8); } }
 .hero h1 {
   font-family: var(--font-head);
-  font-size: clamp(3rem, 1rem + 5.2vw, 6rem);
+  font-size: clamp(2.7rem, 1.2rem + 5.2vw, 5.6rem);
   font-weight: 700;
   letter-spacing: -0.045em;
   line-height: 0.95;
   color: #fff;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1.3rem;
   text-wrap: balance;
 }
+@media (min-width: 1000px) { .hero h1 { font-size: clamp(3rem, 0.4rem + 4.1vw, 5.4rem); } }
 .hero h1 .thin { display: block; font-weight: 300; color: #a9d18e; letter-spacing: -0.04em; }
-.hero-sub {
-  font-size: var(--fz-md);
-  color: rgba(255,255,255,0.74);
-  line-height: 1.65;
-  max-width: 33rem;
-  margin-bottom: 2.2rem;
-  text-wrap: pretty;
+.hero-sub { font-size: var(--fz-md); color: rgba(255,255,255,0.78); line-height: 1.6; max-width: 32rem; margin-bottom: 1.8rem; text-wrap: pretty; }
+@media (max-width: 999px) {
+  .hero h1 { font-size: clamp(2.3rem, 1.4rem + 4.4vw, 3.6rem); margin-bottom: 0.8rem; }
+  .hero-eyebrow { display: none; }
+  .hero-actions { gap: 0.8rem 1.1rem; }
+  .hero-sub { font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.1rem; }
+  .hero-cta { padding: 0.85rem 1.3rem 0.85rem 1.5rem; font-size: 0.93rem; }
+  .hero-scrub-hint { display: none; }
 }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.6rem; }
 .hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
+  display: inline-flex; align-items: center; gap: 0.6rem;
   padding: 1rem 1.6rem 1rem 1.8rem;
-  background: #a9d18e;
-  color: #0c1610;
+  background: #a9d18e; color: #0c1610;
   border-radius: 999px;
-  font-size: 0.98rem;
-  font-weight: 650;
-  letter-spacing: -0.01em;
+  font-size: 0.98rem; font-weight: 650; letter-spacing: -0.01em;
   transition: transform 0.35s var(--ease-out), box-shadow 0.35s, background-color 0.35s;
 }
 .hero-cta svg { width: 18px; height: 18px; transition: translate 0.35s var(--ease-out); }
 .hero-cta:hover { background: #bfe0a6; box-shadow: 0 14px 40px rgba(169, 209, 142, 0.28); }
 .hero-cta:hover svg { translate: 4px 0; }
-.hero-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.5rem 0;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #fff;
-  border-bottom: 1px solid rgba(255,255,255,0.35);
-  transition: border-color 0.3s;
-}
+.hero-link { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.5rem 0; font-size: 0.95rem; font-weight: 500; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.35); transition: border-color 0.3s; }
 .hero-link svg { width: 16px; height: 16px; transition: translate 0.35s var(--ease-out); }
 .hero-link:hover { border-color: #fff; }
 .hero-link:hover svg { translate: 0 3px; }
-
-/* composizione a destra */
-.hero-visual {
-  position: relative;
-  width: min(100%, 470px);
-  aspect-ratio: 4 / 5;
-  justify-self: center;
+/* barra prima → dopo legata allo scroll */
+.hero-scrub { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; column-gap: 0.8rem; row-gap: 0.45rem; margin-top: 2rem; max-width: 26rem; font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.7); }
+.hero-scrub-bar { position: relative; height: 3px; border-radius: 3px; background: rgba(255,255,255,0.16); overflow: hidden; }
+.hero-scrub-bar i { position: absolute; inset: 0; background: #a9d18e; transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+.hero-scrub-hint { grid-column: 1 / -1; font-weight: 500; color: rgba(255,255,255,0.5); transition: opacity 0.5s; }
+.hero.is-after .hero-scrub-hint { opacity: 0; }
+@media (max-width: 999px) { .hero-scrub { margin-top: 1.1rem; } }
+@media (max-height: 760px) and (max-width: 999px) {
+  .hero-shot { height: 50svh; }
+  .hero-sub { display: none; }
+  .hero-eyebrow { display: none; }
 }
-@media (min-width: 1000px) { .hero-visual { justify-self: end; max-height: 74svh; width: auto; height: min(74svh, 600px); } }
-.hero-bg {
-  position: absolute; inset: 0;
-  border-radius: 999px 999px 40px 40px;
-  overflow: hidden;
-  background: #18281e;
-  box-shadow: 0 50px 100px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.08);
-  animation: heroArch 1.4s var(--ease-out) 0.15s both;
-}
-.hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; transform: scale(1.08); will-change: transform; }
-@keyframes heroArch { from { clip-path: inset(100% 0 0 0 round 999px 999px 40px 40px); } to { clip-path: inset(0 0 0 0 round 999px 999px 40px 40px); } }
-/* buganvillea: scende dall'alto e poi ondeggia piano */
-.hero-bouga {
-  position: absolute; z-index: 3;
-  top: -10%; right: -20%;
-  width: 66%;
-  pointer-events: none;
-  animation: heroBougaIn 1.6s var(--ease-out) 0.7s both;
-}
-.hero-bouga img { width: 100%; height: auto; transform-origin: 50% 0; animation: heroSway 7s ease-in-out 2.4s infinite alternate; }
-@keyframes heroBougaIn { from { clip-path: inset(0 0 100% 0); transform: translateY(-14px); } to { clip-path: inset(0 0 0 0); transform: none; } }
-@keyframes heroSway { from { rotate: -1.4deg; } to { rotate: 1.6deg; } }
-/* impronta: arriva come un timbro quando la linea ha finito di "tagliare" */
-.hero-mark {
-  position: absolute; z-index: 4;
-  left: -14%; bottom: 20%;
-  display: flex; align-items: center; gap: 0.75rem;
-  padding: 0.55rem 1.2rem 0.55rem 0.6rem;
-  border: 1px solid rgba(255,255,255,0.16);
-  border-radius: 999px;
-  background: linear-gradient(150deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04)), rgba(10, 20, 13, 0.45);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  box-shadow: 0 24px 50px rgba(0,0,0,0.35);
-  animation: heroStamp 0.9s cubic-bezier(.2, 1.4, .4, 1) 2.25s both;
-}
-.hero-print { display: block; width: 52px; flex: 0 0 auto; }
-.hero-print img { width: 100%; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.35)); }
-.hero-mark p { display: grid; line-height: 1.25; }
-.hero-mark strong { font-family: var(--font-head); font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; }
-.hero-mark span { font-size: 0.75rem; color: rgba(255,255,255,0.66); }
-@keyframes heroStamp { 0% { opacity: 0; transform: scale(1.35) rotate(-6deg); } 60% { opacity: 1; transform: scale(0.96) rotate(1deg); } 100% { opacity: 1; transform: none; } }
-/* lavoro recente, sotto a destra */
-.hero-card {
-  position: absolute; z-index: 4;
-  right: -8%; bottom: -6%;
-  display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
-  column-gap: 0.9rem;
-  align-items: center;
-  width: 270px;
-  padding: 0.65rem 1.1rem 0.65rem 0.65rem;
-  background: linear-gradient(150deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04)), rgba(10, 20, 13, 0.5);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 24px;
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  color: #fff;
-  box-shadow: 0 24px 50px rgba(0,0,0,0.35);
-  transition: transform 0.6s var(--ease-out), border-color 0.4s;
-  animation: heroCardIn 1s var(--ease-out) 1.4s both;
-}
-.hero-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.32); }
-.hero-card-media { grid-row: 1 / span 3; aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; }
-.hero-card-media img { width: 100%; height: 100%; object-fit: cover; }
-.hero-card-kicker { font-size: 0.7rem; color: rgba(255,255,255,0.62); }
-.hero-card-title { font-family: var(--font-head); font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
-.hero-card-cta { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.25rem; font-size: 0.8rem; font-weight: 600; color: #a9d18e; }
-.hero-card-cta svg { width: 14px; height: 14px; transition: translate 0.35s var(--ease-out); }
-.hero-card:hover .hero-card-cta svg { translate: 3px 0; }
-@keyframes heroCardIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-@media (min-width: 1000px) and (max-width: 1239px) {
-  .hero-mark { left: -8%; bottom: 14%; }
-  .hero-mark span { display: none; }
-  .hero-card { right: -3%; }
-  .hero-bouga { right: -10%; }
-}
-@media (max-width: 999px) {
-  .hero-visual { width: min(78%, 400px); margin-top: 0.5rem; }
-  .hero-mark { left: -18%; bottom: 14%; padding-right: 1rem; }
-  .hero-mark span { display: none; }
-  .hero-card { right: -14%; bottom: -8%; width: 220px; grid-template-columns: 56px minmax(0, 1fr); }
-  .hero-card-kicker { display: none; }
-}
-@media (max-width: 420px) { .hero-card { display: none; } .hero-mark span { display: block; } }
+/* senza movimento: niente scorrimento bloccato, si vede il lavoro finito */
 @media (prefers-reduced-motion: reduce) {
-  .hero-bg, .hero-bouga, .hero-bouga img, .hero-mark, .hero-card, .hero-dot::after { animation: none; }
+  .hero { height: auto; }
+  .hero-stage { position: relative; min-height: 100svh; height: auto; }
+  .hero-shot { --p: 1 !important; }
+  .hero-cut, .hero-scrub { display: none; }
+  .hero-mark, .hero-dot::after { animation: none; }
+  .hero-state span { transform: translateY(-100%); transition: none; }
 }
 
 /* ── SECTIONS ── */
@@ -2187,10 +2163,21 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 .zone-group h3 { font-weight: 650; letter-spacing: -0.02em; font-size: 1.25rem; }
 @media (min-width: 900px) { .zone-groups { align-items: start; } .zone-group:not(:first-child) { border-top: none; padding-top: 1.8rem; } }
 
+/* fascia fotografica delle zone */
+.zone-photo { position: relative; margin: 0 0 clamp(2rem, 4vw, 3rem); border-radius: 30px; overflow: hidden; aspect-ratio: 1200 / 620; background: var(--cream); }
+@media (max-width: 699px) { .zone-photo { aspect-ratio: 4 / 3; border-radius: 22px; } }
+.zone-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; scale: 1.06; transition: scale 1.6s var(--ease-out); }
+.zone-photo.visible img { scale: 1; }
+.zone-photo figcaption { position: absolute; left: 1rem; bottom: 1rem; padding: 0.5rem 0.9rem; border-radius: 999px; font-size: 0.78rem; color: #fff; background: rgba(10,20,13,0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+
 /* ── PREVENTIVO ── */
 .prev-aside-title { font-weight: 650; letter-spacing: -0.025em; font-size: 1.6rem; }
 .prev-form { border-radius: 30px; }
-.prev-plant { position: absolute; z-index: -1; left: -70px; bottom: -40px; width: min(460px, 70vw); opacity: 0.32; pointer-events: none; transform: rotate(-8deg); }
+.prev-plant { position: absolute; z-index: -1; right: max(-40px, calc((100vw - 1180px) / 2 - 220px)); top: -30px; width: min(360px, 46vw); opacity: 0.55; pointer-events: none; transform-origin: 50% 0; }
+.prev-plant img { width: 100%; height: auto; transform-origin: 50% 0; animation: heroSway 8s ease-in-out infinite alternate; }
+@keyframes heroSway { from { rotate: -1.4deg; } to { rotate: 1.6deg; } }
+@media (max-width: 899px) { .prev-plant { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .prev-plant img { animation: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   .about-pills li, .step, .hero-card { transition: none; }
@@ -2221,9 +2208,21 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 <main id="main">
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-glow" aria-hidden="true"></div>
-  <div class="hero-content">
+<section class="hero" id="top" aria-label="Lisa Garden, giardiniere a Vignolo">
+  <div class="hero-stage">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-shot" id="heroShot">
+      <picture class="hero-before"><source type="image/avif" srcset="assets/img/hero-prima-erbacce-480.avif 480w, assets/img/hero-prima-erbacce-640.avif 640w, assets/img/hero-prima-erbacce-816.avif 816w" sizes="(min-width: 1000px) 54vw, 88vw"><source type="image/webp" srcset="assets/img/hero-prima-erbacce-480.webp 480w, assets/img/hero-prima-erbacce-640.webp 640w, assets/img/hero-prima-erbacce-816.webp 816w" sizes="(min-width: 1000px) 54vw, 88vw"><img src="assets/img/hero-prima-erbacce-816.jpg" width="816" height="1020" decoding="async" fetchpriority="high" alt="Prima: giardino coperto di erbacce visto dagli scalini in pietra"></picture>
+      <div class="hero-after" id="heroAfter"><picture class=""><source type="image/avif" data-srcset="assets/img/hero-dopo-prato-480.avif 480w, assets/img/hero-dopo-prato-640.avif 640w, assets/img/hero-dopo-prato-816.avif 816w" sizes="(min-width: 1000px) 54vw, 88vw"><source type="image/webp" data-srcset="assets/img/hero-dopo-prato-480.webp 480w, assets/img/hero-dopo-prato-640.webp 640w, assets/img/hero-dopo-prato-816.webp 816w" sizes="(min-width: 1000px) 54vw, 88vw"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" data-src="assets/img/hero-dopo-prato-816.jpg" width="816" height="1020" decoding="async" alt="Dopo: prato nuovo con vialetto in pietra e bordure in corteccia, nella stessa inquadratura"></picture></div>
+      <div class="hero-cut" id="heroCut" aria-hidden="true"><span class="hero-cut-line"></span><span class="hero-cut-clips"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i><i style="--i:8"></i><i style="--i:9"></i><i style="--i:10"></i><i style="--i:11"></i><i style="--i:12"></i><i style="--i:13"></i></span></div>
+      <div class="hero-shot-shade" aria-hidden="true"></div>
+      <p class="hero-state" aria-hidden="true"><span class="hero-state-a">Prima</span><span class="hero-state-b">Dopo</span></p>
+      <div class="hero-mark">
+        <picture class="hero-print" aria-hidden="true"><source type="image/avif" srcset="assets/img/impronta-foglie-240.avif 240w, assets/img/impronta-foglie-360.avif 360w" sizes="(min-width: 1000px) 120px, 84px"><img src="assets/img/impronta-foglie-240.webp" width="240" height="404" srcset="assets/img/impronta-foglie-240.webp 240w, assets/img/impronta-foglie-360.webp 360w" sizes="(min-width: 1000px) 120px, 84px" alt="" decoding="async" loading="lazy"></picture>
+        <p><strong>La nostra impronta</strong><span>Da erbacce a prato, stesso giardino</span></p>
+      </div>
+    </div>
+    <div class="hero-content">
     <div class="hero-copy">
       <p class="hero-eyebrow"><span class="hero-dot" aria-hidden="true"></span>Giardiniere a Vignolo &middot; Cuneo e provincia</p>
       <h1>Il tuo giardino,<span class="thin"><span class="hero-underline-wrap">curato davvero.<svg class="hero-underline" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M3 11 C 70 3, 160 2, 297 8"/></svg><span class="hero-clips" aria-hidden="true"><i style="--x:5.9%;--y:58.7%;--d:1.28s;--tx:-0.61em;--ty:-0.46em;--r:221deg;--t:1.01s;--w:0.053em;--h:0.226em"></i><i style="--x:5.9%;--y:58.7%;--d:1.32s;--tx:-0.64em;--ty:-0.27em;--r:195deg;--t:0.82s;--w:0.065em;--h:0.219em"></i><i style="--x:12.3%;--y:48.2%;--d:1.34s;--tx:0.2em;--ty:-0.47em;--r:-252deg;--t:1.01s;--w:0.051em;--h:0.172em"></i><i style="--x:18.8%;--y:40.1%;--d:1.38s;--tx:-0.63em;--ty:-0.42em;--r:219deg;--t:1.01s;--w:0.059em;--h:0.215em"></i><i style="--x:18.8%;--y:40.1%;--d:1.42s;--tx:-0.66em;--ty:-0.34em;--r:213deg;--t:0.94s;--w:0.067em;--h:0.176em"></i><i style="--x:25.2%;--y:34.1%;--d:1.41s;--tx:-0.72em;--ty:-0.35em;--r:-153deg;--t:0.99s;--w:0.057em;--h:0.229em"></i><i style="--x:31.6%;--y:29.9%;--d:1.43s;--tx:-0.83em;--ty:-0.44em;--r:-178deg;--t:1.03s;--w:0.051em;--h:0.196em"></i><i style="--x:31.6%;--y:29.9%;--d:1.47s;--tx:-0.53em;--ty:-0.37em;--r:-280deg;--t:0.87s;--w:0.052em;--h:0.193em"></i><i style="--x:38.1%;--y:27.3%;--d:1.46s;--tx:-0.72em;--ty:-0.25em;--r:-267deg;--t:0.8s;--w:0.058em;--h:0.204em"></i><i style="--x:44.5%;--y:26.1%;--d:1.48s;--tx:-0.4em;--ty:-0.35em;--r:-215deg;--t:0.9s;--w:0.057em;--h:0.239em"></i><i style="--x:44.5%;--y:26.1%;--d:1.52s;--tx:0.18em;--ty:-0.47em;--r:320deg;--t:0.8s;--w:0.053em;--h:0.24em"></i><i style="--x:51.0%;--y:26.0%;--d:1.5s;--tx:-0.62em;--ty:-0.23em;--r:-178deg;--t:0.86s;--w:0.064em;--h:0.193em"></i><i style="--x:57.4%;--y:26.9%;--d:1.53s;--tx:-0.34em;--ty:-0.24em;--r:-143deg;--t:0.89s;--w:0.061em;--h:0.179em"></i><i style="--x:57.4%;--y:26.9%;--d:1.57s;--tx:-0.76em;--ty:-0.26em;--r:173deg;--t:0.84s;--w:0.066em;--h:0.227em"></i><i style="--x:63.9%;--y:28.7%;--d:1.56s;--tx:-0.4em;--ty:-0.41em;--r:-264deg;--t:0.9s;--w:0.059em;--h:0.175em"></i><i style="--x:70.3%;--y:31.3%;--d:1.59s;--tx:0.08em;--ty:-0.35em;--r:183deg;--t:0.98s;--w:0.055em;--h:0.228em"></i><i style="--x:70.3%;--y:31.3%;--d:1.63s;--tx:-0.46em;--ty:-0.27em;--r:-163deg;--t:0.92s;--w:0.062em;--h:0.213em"></i><i style="--x:76.8%;--y:34.5%;--d:1.64s;--tx:0.09em;--ty:-0.46em;--r:-152deg;--t:0.9s;--w:0.054em;--h:0.173em"></i><i style="--x:83.2%;--y:38.4%;--d:1.69s;--tx:-0.59em;--ty:-0.47em;--r:-205deg;--t:1.02s;--w:0.068em;--h:0.216em"></i><i style="--x:83.2%;--y:38.4%;--d:1.73s;--tx:-0.62em;--ty:-0.26em;--r:-306deg;--t:0.92s;--w:0.056em;--h:0.192em"></i><i style="--x:89.6%;--y:42.8%;--d:1.77s;--tx:0.14em;--ty:-0.24em;--r:-271deg;--t:0.88s;--w:0.068em;--h:0.175em"></i><i style="--x:96.1%;--y:47.6%;--d:1.91s;--tx:-0.71em;--ty:-0.45em;--r:-283deg;--t:1.03s;--w:0.056em;--h:0.218em"></i><i style="--x:96.1%;--y:47.6%;--d:1.95s;--tx:-0.78em;--ty:-0.33em;--r:-295deg;--t:0.94s;--w:0.061em;--h:0.197em"></i></span></span></span></h1>
@@ -2233,25 +2232,12 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         <a href="#servizi" class="hero-link">Scopri i servizi<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
       </div>
     </div>
-    <div class="hero-visual">
-      <div class="hero-bg">
-    <picture>
-      <source type="image/avif" srcset="assets/img/hero-640.avif 640w, assets/img/hero-960.avif 960w, assets/img/hero-1200.avif 1200w" sizes="(min-width: 1000px) 520px, 88vw">
-      <source type="image/webp" srcset="assets/img/hero-640.webp 640w, assets/img/hero-960.webp 960w, assets/img/hero-1200.webp 1200w" sizes="(min-width: 1000px) 520px, 88vw">
-      <img src="assets/img/hero-1200.jpg" width="1200" height="1600" fetchpriority="high" decoding="async" alt="Giardino privato con prato curato, vialetto in pietra naturale e vista sulle montagne, realizzato da Lisa Garden a Vignolo">
-    </picture>
+      <div class="hero-scrub" aria-hidden="true">
+        <span>Prima</span>
+        <span class="hero-scrub-bar"><i id="heroBar"></i></span>
+        <span>Dopo</span>
+        <span class="hero-scrub-hint">Scorri per vedere il lavoro</span>
       </div>
-      <picture class="hero-bouga" aria-hidden="true"><source type="image/avif" srcset="assets/img/buganvillea-480.avif 480w, assets/img/buganvillea-760.avif 760w" sizes="(min-width: 1000px) 340px, 46vw"><img src="assets/img/buganvillea-480.webp" srcset="assets/img/buganvillea-480.webp 480w, assets/img/buganvillea-760.webp 760w" sizes="(min-width: 1000px) 340px, 46vw" alt="" decoding="async" loading="lazy"></picture>
-      <div class="hero-mark">
-        <picture class="hero-print" aria-hidden="true"><source type="image/avif" srcset="assets/img/impronta-foglie-240.avif 240w, assets/img/impronta-foglie-360.avif 360w" sizes="(min-width: 1000px) 120px, 84px"><img src="assets/img/impronta-foglie-240.webp" srcset="assets/img/impronta-foglie-240.webp 240w, assets/img/impronta-foglie-360.webp 360w" sizes="(min-width: 1000px) 120px, 84px" alt="" decoding="async" loading="lazy"></picture>
-        <p><strong>La nostra impronta</strong><span>Ogni lavoro seguito di persona</span></p>
-      </div>
-      <a class="hero-card" href="#prima-dopo">
-      <span class="hero-card-media"><picture><source type="image/avif" srcset="assets/img/pd-vialetto-finito-480.avif"><img src="assets/img/pd-vialetto-finito-480.webp" width="480" height="600" alt="" loading="lazy" decoding="async"></picture></span>
-      <span class="hero-card-kicker">Un lavoro recente</span>
-      <span class="hero-card-title">Aiuola lungo il vialetto</span>
-      <span class="hero-card-cta">Guarda prima e dopo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-    </a>
     </div>
   </div>
 </section>
@@ -2594,6 +2580,10 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       <h2 class="section-title" id="zoneTitle">Dove lavoriamo</h2>
       <p class="section-sub">La sede è a Vignolo. Lavoriamo soprattutto a Cuneo e nei comuni intorno; per il resto della provincia valutiamo ogni richiesta in base alla distanza e al tipo di lavoro.</p>
     </div>
+    <figure class="zone-photo reveal">
+      <picture><source type="image/avif" srcset="assets/img/giardino-montagna-vialetto-pietra-720.avif 720w, assets/img/giardino-montagna-vialetto-pietra-1200.avif 1200w" sizes="(min-width: 1180px) 1180px, calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/giardino-montagna-vialetto-pietra-720.webp 720w, assets/img/giardino-montagna-vialetto-pietra-1200.webp 1200w" sizes="(min-width: 1180px) 1180px, calc(100vw - 3rem)"><img src="assets/img/giardino-montagna-vialetto-pietra-1200.jpg" width="1200" height="620" loading="lazy" decoding="async" alt="Prato curato e vialetto in pietra in un giardino con le montagne sullo sfondo"></picture>
+      <figcaption>Prato e vialetto in pietra, con le montagne sullo sfondo</figcaption>
+    </figure>
     <div class="zone-grid">
       <div class="zone-groups reveal">
         <div class="zone-group">
@@ -2626,7 +2616,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 
 <!-- PREVENTIVO E CONTATTI -->
 <section class="preventivo is-dark" id="preventivo" aria-labelledby="prevTitle">
-  <picture class="prev-plant" aria-hidden="true"><source type="image/avif" srcset="assets/img/ortensia-560.avif 560w" sizes="(min-width: 900px) 460px, 70vw"><img src="assets/img/ortensia-560.webp" srcset="assets/img/ortensia-560.webp 560w" sizes="(min-width: 900px) 460px, 70vw" alt="" loading="lazy" decoding="async"></picture>
+  <picture class="prev-plant" aria-hidden="true"><source type="image/avif" srcset="assets/img/buganvillea-480.avif 480w, assets/img/buganvillea-760.avif 760w" sizes="(min-width: 900px) 360px, 50vw"><img src="assets/img/buganvillea-480.webp" srcset="assets/img/buganvillea-480.webp 480w, assets/img/buganvillea-760.webp 760w" sizes="(min-width: 900px) 360px, 50vw" alt="" loading="lazy" decoding="async"></picture>
   <div class="container">
     <div class="sec-head reveal">
       <h2 class="section-title" id="prevTitle">Chiedi un preventivo</h2>
@@ -2799,7 +2789,11 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   // ── Nav scroll ──
   var nav = document.getElementById('nav');
   window.addEventListener('scroll', function() {
-    nav.classList.toggle('scrolled', window.scrollY > 50);
+    // sopra l'hero scuro la barra resta trasparente; diventa chiara quando si esce
+    var heroEl = document.querySelector('.hero');
+    var heroEnd = heroEl ? heroEl.offsetTop + heroEl.offsetHeight - 60 : 50;
+    nav.classList.toggle('scrolled', window.scrollY > heroEnd);
+    nav.classList.toggle('over-hero', window.scrollY > 50 && window.scrollY <= heroEnd);
   }, { passive: true });
 
   // ── Menu mobile ──
@@ -2841,23 +2835,69 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     waObserver.observe(prevSection);
   }
 
-  // ── Parallax leggero sulla foto hero (solo transform, 60fps) ──
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var heroImg = document.querySelector('.hero-bg img');
-  if (heroImg && !prefersReduced) {
-    var heroTicking = false;
-    var applyParallax = function() {
-      var y = window.scrollY;
-      if (y <= window.innerHeight) {
-        heroImg.style.transform = 'scale(1.08) translate3d(0, ' + (y * 0.06) + 'px, 0)';
+
+  // ── Hero: prima e dopo legato allo scroll ──
+  // La sezione è alta 240vh e la scena resta ferma: lo scroll fa salire la
+  // linea di taglio. Solo transform/clip-path, un aggiornamento per frame.
+  (function() {
+    var hero = document.querySelector('.hero');
+    var shot = document.getElementById('heroShot');
+    var bar = document.getElementById('heroBar');
+    if (!hero || !shot) return;
+    // la foto "dopo" parte quando la pagina è pronta
+    function loadAfter() {
+      var box = document.getElementById('heroAfter');
+      box.querySelectorAll('[data-srcset]').forEach(function(el) { el.srcset = el.dataset.srcset; el.removeAttribute('data-srcset'); });
+      var im = box.querySelector('img[data-src]');
+      if (im) { im.src = im.dataset.src; im.removeAttribute('data-src'); }
+    }
+    if (document.readyState === 'complete') loadAfter(); else window.addEventListener('load', loadAfter, { once: true });
+    if (prefersReduced) return;
+    var ticking = false, last = -1, cutTimer = null, teaser = null, touched = false;
+    function setP(p) {
+      shot.style.setProperty('--p', p.toFixed(4));
+      if (bar) bar.style.setProperty('--p', p.toFixed(4));
+      hero.classList.toggle('is-after', p > 0.55);
+      if (last >= 0 && Math.abs(p - last) > 0.0005) {
+        hero.classList.add('is-cutting');
+        hero.classList.toggle('is-up', p < last);
+        clearTimeout(cutTimer);
+        cutTimer = setTimeout(function() { hero.classList.remove('is-cutting'); }, 160);
       }
-      heroTicking = false;
-    };
+      last = p;
+    }
+    function smooth(t) { return t * t * (3 - 2 * t); }
+    function update() {
+      ticking = false;
+      var r = hero.getBoundingClientRect();
+      var range = r.height - window.innerHeight;
+      var raw = range > 0 ? Math.min(1, Math.max(0, -r.top / range)) : 1;
+      // breve pausa all'inizio e alla fine, in mezzo il taglio
+      var p = smooth(Math.min(1, Math.max(0, (raw - 0.06) / 0.78)));
+      setP(p);
+    }
     window.addEventListener('scroll', function() {
-      if (!heroTicking) { requestAnimationFrame(applyParallax); heroTicking = true; }
+      if (!touched) { touched = true; if (teaser) cancelAnimationFrame(teaser); }
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
     }, { passive: true });
-    applyParallax();
-  }
+    window.addEventListener('resize', update);
+    update();
+    // se dopo un po' nessuno scorre, la linea "assaggia" il prato e torna giù
+    setTimeout(function() {
+      if (touched || window.scrollY > 4) return;
+      var t0 = null;
+      function step(t) {
+        if (touched) return;
+        if (t0 === null) t0 = t;
+        var k = (t - t0) / 1800;
+        if (k >= 1) { setP(0); hero.classList.remove('is-cutting'); return; }
+        setP(Math.sin(k * Math.PI) * 0.22);
+        teaser = requestAnimationFrame(step);
+      }
+      teaser = requestAnimationFrame(step);
+    }, 3200);
+  })();
 
   // ── Servizi: un servizio aperto alla volta, la foto grande lo segue ──
   (function() {

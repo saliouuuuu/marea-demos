@@ -7,7 +7,10 @@
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/hero-1200.jpg</image:loc>
+      <image:loc>https://andrealisagarden.it/assets/img/hero-dopo-prato-816.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/hero-prima-erbacce-816.jpg</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://andrealisagarden.it/assets/img/andrea-lisa-ritratto-800.jpg</image:loc>
@@ -22,19 +25,7 @@
       <image:loc>https://andrealisagarden.it/assets/img/pd-vialetto-finito-720.jpg</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/gal-10-1200.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/gal-11-1200.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/gal-12-1200.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/gal-13-1200.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/gal-14-1200.jpg</image:loc>
+      <image:loc>https://andrealisagarden.it/assets/img/giardino-montagna-vialetto-pietra-1200.jpg</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://andrealisagarden.it/assets/img/gal-1-1200.jpg</image:loc>
@@ -53,6 +44,21 @@
     </image:image>
     <image:image>
       <image:loc>https://andrealisagarden.it/assets/img/gal-8-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-10-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-11-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-12-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-13-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-14-1200.jpg</image:loc>
     </image:image>
   </url>
   <url>
