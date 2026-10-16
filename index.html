@@ -8,7 +8,7 @@
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/fraunces-logo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/urbanist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" type="image/avif" href="assets/img/hero-960.avif" imagesrcset="assets/img/hero-640.avif 640w, assets/img/hero-960.avif 960w, assets/img/hero-1200.avif 1200w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" type="image/avif" href="assets/img/hero-960.avif" imagesrcset="assets/img/hero-640.avif 640w, assets/img/hero-960.avif 960w, assets/img/hero-1200.avif 1200w, assets/img/hero-1600.avif 1600w" imagesizes="100vw" fetchpriority="high">
 
 <!-- Canonical / lingua -->
 <link rel="canonical" href="https://andrealisagarden.it/">
@@ -2167,6 +2167,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     transition: transform 1s cubic-bezier(.2,.8,.2,1), background-position 0.2s linear;
     transition-delay: calc(var(--i) * 70ms + 80ms), 0s;
   }
+  .tex-hedge:not(.is-near) .w > span, .tex-grass:not(.is-near) .w > span { background-image: none !important; }
   .tex-hedge .w > span { background-image: image-set(url('assets/img/texture-siepe.avif') type('image/avif'), url('assets/img/texture-siepe.webp') type('image/webp')); background-color: #1f3d24; }
   .tex-grass .w > span { background-image: image-set(url('assets/img/texture-prato.avif') type('image/avif'), url('assets/img/texture-prato.webp') type('image/webp')); background-color: #8fc06a; background-size: 420px auto; filter: saturate(1.15) brightness(1.15); }
 }
@@ -2183,6 +2184,11 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 
 /* formazione: dalla terra al prato */
 .quals {
+  background:
+    linear-gradient(160deg, rgba(14,24,16,0.55), rgba(8,14,10,0.78)),
+    #2a1d12;
+}
+.quals.is-near {
   background:
     linear-gradient(160deg, rgba(14,24,16,0.55), rgba(8,14,10,0.78)),
     image-set(url('assets/img/texture-terra.avif') type('image/avif'), url('assets/img/texture-terra.webp') type('image/webp')) center / cover,
@@ -2319,6 +2325,101 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   .gal-item .gal-cap { transform: none; opacity: 1; }
   .gal-item.visible::before { animation: none; }
 }
+
+/* ════ RIFINITURE FINALI ════ */
+/* prima e dopo: sfondo, navigazione, "guarda anche" */
+.prima-dopo { isolation: isolate; }
+.pd-ambient { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+.pd-ambient img { position: absolute; inset: -8%; width: 116%; height: 116%; object-fit: cover; filter: blur(34px) saturate(1.3) brightness(0.8); opacity: 0; transition: opacity 1.2s ease; animation: ambDrift 24s ease-in-out infinite alternate; }
+.pd-ambient img.is-on { opacity: 0.55; }
+.prima-dopo::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(180deg, rgba(10,18,12,0.7), rgba(10,18,12,0.45) 45%, rgba(10,18,12,0.85)); }
+.pd-nav { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; }
+.pd-arrow { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: #fff; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); transition: background .3s, border-color .3s, transform .35s var(--ease-out); }
+.pd-arrow svg { width: 18px; height: 18px; }
+.pd-arrow:hover { background: rgba(169,209,142,0.2); border-color: #a9d18e; }
+.pd-arrow:active { transform: scale(0.92); }
+#pdPrev:hover svg { animation: nudgeL .6s ease; } #pdNext:hover svg { animation: nudgeR .6s ease; }
+@keyframes nudgeL { 50% { transform: translateX(-3px); } } @keyframes nudgeR { 50% { transform: translateX(3px); } }
+.pd-count { min-width: 3.2em; text-align: center; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.8); font-variant-numeric: tabular-nums; }
+.pd-dots { display: flex; gap: 5px; margin-left: 0.4rem; }
+.pd-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.22); transition: width .4s var(--ease-out), background .4s; }
+.pd-dots i.is-seen { background: rgba(169,209,142,0.55); }
+.pd-dots i.is-on { width: 20px; border-radius: 3px; background: #a9d18e; }
+.pd-info > .pd-kind, .pd-info > .pd-title, .pd-info > .pd-desc { transition: opacity .35s, transform .5s var(--ease-out); }
+.pd-info.is-swapping > .pd-kind, .pd-info.is-swapping > .pd-title, .pd-info.is-swapping > .pd-desc { opacity: 0; transform: translateY(10px); }
+.pd-upnext { display: grid; grid-template-columns: 56px minmax(0,1fr) 44px; align-items: center; gap: 0.9rem; width: 100%; max-width: 26rem; margin-top: 1.3rem; padding: 0.55rem 0.6rem 0.55rem 0.55rem; text-align: left; border-radius: 22px; border: 1px solid rgba(169,209,142,0.4); background: linear-gradient(150deg, rgba(169,209,142,0.16), rgba(255,255,255,0.04)); color: #fff; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); animation: upIn .7s cubic-bezier(.2,.8,.2,1) both; transition: border-color .3s, transform .4s var(--ease-out); }
+.pd-upnext[hidden] { display: none; }
+.pd-upnext:hover { border-color: #a9d18e; transform: translateY(-2px); }
+@media (max-width: 699px) { .pd-upnext { max-width: calc(100% - 4.4rem); } }
+@keyframes upIn { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+.pd-upnext-img { width: 56px; height: 70px; border-radius: 14px; overflow: hidden; }
+.pd-upnext-img img { width: 100%; height: 100%; object-fit: cover; }
+.pd-upnext-text { display: grid; gap: 0.1rem; }
+.pd-upnext-kicker { font-size: 0.72rem; color: #a9d18e; font-weight: 600; }
+.pd-upnext-title { font-family: var(--font-head); font-size: 1.05rem; font-weight: 650; letter-spacing: -0.02em; line-height: 1.2; }
+.pd-upnext-ring { position: relative; width: 44px; height: 44px; }
+.pd-upnext-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.pd-upnext-ring circle { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 2.5; }
+.pd-upnext-ring .ring-fill { stroke: #a9d18e; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; }
+.pd-upnext.is-counting .ring-fill { animation: ringFill var(--cd, 7s) linear forwards; }
+@keyframes ringFill { to { stroke-dashoffset: 0; } }
+.pd-upnext-ring .ring-arrow { transform: none; inset: 11px; width: 22px; height: 22px; color: #fff; }
+/* invito a trascinare */
+.ba-knob::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.7); animation: knobPulse 1.8s ease-out infinite; }
+.ba-slider.was-touched .ba-knob::after { display: none; }
+@keyframes knobPulse { from { transform: scale(.85); opacity: .9; } to { transform: scale(1.45); opacity: 0; } }
+.pd-hint { display: inline-flex; align-items: center; gap: 0.5rem; }
+.pd-hint-hand { width: 18px; height: 3px; border-radius: 3px; background: rgba(255,255,255,0.5); position: relative; animation: handSlide 2s ease-in-out infinite; }
+@keyframes handSlide { 0%,100% { transform: translateX(-4px); } 50% { transform: translateX(4px); } }
+.pd-pick { transition: border-color .3s, background .3s, transform .35s var(--ease-out); }
+.pd-pick:hover { transform: translateY(-2px); }
+.pd-pick.is-seen .pd-pick-meta::after { content: " · visto"; color: #a9d18e; }
+
+/* chi siamo: pianta che respira, pillole che galleggiano */
+.about-plant img { transform-origin: 30% 100%; animation: plantBreath 7s ease-in-out infinite alternate; }
+@keyframes plantBreath { from { rotate: -1.5deg; scale: 1; } to { rotate: 1.5deg; scale: 1.03; } }
+.about-pills li { animation: pillFloat 5s ease-in-out infinite alternate; }
+.about-pills li:nth-child(2) { animation-delay: -1.2s; } .about-pills li:nth-child(3) { animation-delay: -2.4s; } .about-pills li:nth-child(4) { animation-delay: -3.6s; }
+@keyframes pillFloat { from { translate: 0 -4px; } to { translate: 0 6px; } }
+.about-frame img { translate: 0 var(--ap, 0px); }
+
+/* zone: nomi che entrano uno alla volta */
+.zone-groups.reveal .zone-main li, .zone-groups.reveal .zone-list li { opacity: 0; transform: translateY(12px); transition: opacity .6s, transform .7s var(--ease-out); }
+.zone-groups.reveal.visible .zone-main li, .zone-groups.reveal.visible .zone-list li { opacity: 1; transform: none; }
+.zone-main li:nth-child(1) { transition-delay: .1s !important; } .zone-main li:nth-child(2) { transition-delay: .2s !important; } .zone-main li:nth-child(3) { transition-delay: .3s !important; } .zone-main li:nth-child(4) { transition-delay: .4s !important; }
+.zone-list li { transition-delay: calc(.35s + var(--z, 0) * 40ms) !important; }
+.zone-more svg, .about-works-link svg, .svc-cta svg { transition: translate .35s var(--ease-out); }
+.zone-more:hover svg, .about-works-link:hover svg { translate: 4px 0; }
+
+/* preventivo: scelte vive */
+.prev-option { transition: border-color .3s, background .3s, transform .35s var(--ease-out), box-shadow .3s; }
+@media (hover: hover) { .prev-option:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,0.18); } }
+.prev-option:hover .option-icon svg { animation: iconHop .6s ease; }
+.prev-option.selected .option-icon svg { animation: iconHop .6s ease; }
+@keyframes iconHop { 40% { transform: translateY(-4px) rotate(-6deg); } 70% { transform: translateY(1px); } }
+.prev-dot { transition: width .5s var(--ease-out), background .4s; }
+.prev-step.active { animation: stepIn .5s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes stepIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+.prev-next { position: relative; overflow: hidden; }
+.prev-next::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%); transform: translateX(-120%); }
+.prev-next:hover::after { transition: transform .9s ease; transform: translateX(120%); }
+
+/* footer: link più comodi da toccare */
+.footer-links a { display: inline-block; padding: 0.35rem 0; }
+.footer-links a:hover { transform: translateX(3px); }
+.footer-links a { transition: color .3s, transform .3s var(--ease-out); }
+
+/* pulsanti principali: leggero effetto "magnete" col mouse */
+.hero-cta, .prev-next, .nav-cta-link { translate: var(--mgx, 0) var(--mgy, 0); transition-property: transform, box-shadow, background-color, translate; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pd-ambient img, .about-plant img, .about-pills li, .pd-hint-hand, .ba-knob::after, .prev-step.active { animation: none; }
+  .zone-groups.reveal .zone-main li, .zone-groups.reveal .zone-list li { opacity: 1; transform: none; }
+  .pd-upnext.is-counting .ring-fill { animation: none; stroke-dashoffset: 0; }
+}
+
+.hp img, .svc-amb img, .pd-ambient img, .about-plant img, .quals-rock img, .stone img, .prev-plant img { will-change: transform; }
+.svc-leaves i { will-change: transform; }
 </style>
 </head>
 <body>
@@ -2348,19 +2449,19 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 <section class="hero" id="top" aria-label="Lisa Garden, giardiniere a Vignolo">
   <div class="hero-bg">
     <picture>
-      <source type="image/avif" srcset="assets/img/hero-640.avif 640w, assets/img/hero-960.avif 960w, assets/img/hero-1200.avif 1200w" sizes="100vw">
-      <source type="image/webp" srcset="assets/img/hero-640.webp 640w, assets/img/hero-960.webp 960w, assets/img/hero-1200.webp 1200w" sizes="100vw">
+      <source type="image/avif" srcset="assets/img/hero-640.avif 640w, assets/img/hero-960.avif 960w, assets/img/hero-1200.avif 1200w, assets/img/hero-1600.avif 1600w" sizes="100vw">
+      <source type="image/webp" srcset="assets/img/hero-640.webp 640w, assets/img/hero-960.webp 960w, assets/img/hero-1200.webp 1200w, assets/img/hero-1600.webp 1600w" sizes="100vw">
       <img src="assets/img/hero-1200.jpg" width="1200" height="1600" fetchpriority="high" decoding="async" alt="Giardino di montagna curato da Lisa Garden: prato nuovo, vialetto in pietra e montagne sullo sfondo">
     </picture>
   </div>
   <div class="hero-plants" aria-hidden="true">
       <div class="hp hp-edera"><picture><source type="image/avif" srcset="assets/img/pianta-edera-360.avif 360w, assets/img/pianta-edera-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-edera-360.webp" srcset="assets/img/pianta-edera-360.webp 360w, assets/img/pianta-edera-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
       <div class="hp hp-bouga"><picture><source type="image/avif" srcset="assets/img/pianta-buganvillea-360.avif 360w, assets/img/pianta-buganvillea-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-buganvillea-360.webp" srcset="assets/img/pianta-buganvillea-360.webp 360w, assets/img/pianta-buganvillea-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
-      <div class="hp hp-felce"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACw="><source type="image/avif" srcset="assets/img/pianta-felce-360.avif 360w, assets/img/pianta-felce-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-felce-360.webp" srcset="assets/img/pianta-felce-360.webp 360w, assets/img/pianta-felce-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
+      <div class="hp hp-felce"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><source type="image/avif" srcset="assets/img/pianta-felce-360.avif 360w, assets/img/pianta-felce-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-felce-360.webp" srcset="assets/img/pianta-felce-360.webp 360w, assets/img/pianta-felce-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
       <div class="hp hp-foglie"><picture><source type="image/avif" srcset="assets/img/pianta-foglie-larghe-360.avif 360w, assets/img/pianta-foglie-larghe-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-foglie-larghe-360.webp" srcset="assets/img/pianta-foglie-larghe-360.webp 360w, assets/img/pianta-foglie-larghe-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
-      <div class="hp hp-ortensia"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACw="><source type="image/avif" srcset="assets/img/pianta-ortensia-360.avif 360w, assets/img/pianta-ortensia-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-ortensia-360.webp" srcset="assets/img/pianta-ortensia-360.webp 360w, assets/img/pianta-ortensia-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
-      <div class="hp hp-roccia"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACw="><source type="image/avif" srcset="assets/img/pianta-roccia-muschio-360.avif 360w, assets/img/pianta-roccia-muschio-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-roccia-muschio-360.webp" srcset="assets/img/pianta-roccia-muschio-360.webp 360w, assets/img/pianta-roccia-muschio-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
-      <div class="hp hp-pietra"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACw="><source type="image/avif" srcset="assets/img/pianta-pietra-fiori-360.avif 360w, assets/img/pianta-pietra-fiori-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-pietra-fiori-360.webp" srcset="assets/img/pianta-pietra-fiori-360.webp 360w, assets/img/pianta-pietra-fiori-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
+      <div class="hp hp-ortensia"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><source type="image/avif" srcset="assets/img/pianta-ortensia-360.avif 360w, assets/img/pianta-ortensia-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-ortensia-360.webp" srcset="assets/img/pianta-ortensia-360.webp 360w, assets/img/pianta-ortensia-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
+      <div class="hp hp-roccia"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><source type="image/avif" srcset="assets/img/pianta-roccia-muschio-360.avif 360w, assets/img/pianta-roccia-muschio-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-roccia-muschio-360.webp" srcset="assets/img/pianta-roccia-muschio-360.webp 360w, assets/img/pianta-roccia-muschio-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
+      <div class="hp hp-pietra"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><source type="image/avif" srcset="assets/img/pianta-pietra-fiori-360.avif 360w, assets/img/pianta-pietra-fiori-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-pietra-fiori-360.webp" srcset="assets/img/pianta-pietra-fiori-360.webp 360w, assets/img/pianta-pietra-fiori-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
   </div>
   <div class="hero-shade" aria-hidden="true"></div>
   <div class="hero-veil" aria-hidden="true"></div>
@@ -2541,6 +2642,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 
 <!-- PRIMA E DOPO -->
 <section class="prima-dopo is-dark" id="prima-dopo" aria-labelledby="pdTitleMain">
+  <div class="pd-ambient" aria-hidden="true"><img id="pdAmbA" class="is-on" src="assets/img/pd-vialetto-finito-480.webp" alt="" loading="lazy" decoding="async"><img id="pdAmbB" alt="" loading="lazy" decoding="async"></div>
   <div class="container">
     <div class="sec-head reveal">
       <h2 class="section-title split" id="pdTitleMain">Prima e dopo</h2>
@@ -2611,13 +2713,24 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         </div>
         <div class="pd-actions">
           <button type="button" class="pd-play" id="pdPlay"><span class="pd-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg></span><span id="pdPlayLabel">Guarda la trasformazione</span></button>
-          <span class="pd-hint">Trascina il cursore per confrontare</span>
+          <span class="pd-hint"><span class="pd-hint-hand" aria-hidden="true"></span>Trascina il cursore per confrontare</span>
         </div>
       </div>
       <div class="pd-info" aria-live="polite">
+        <div class="pd-nav">
+          <button type="button" class="pd-arrow" id="pdPrev" aria-label="Lavoro precedente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <span class="pd-count" id="pdCount">1 / 7</span>
+          <button type="button" class="pd-arrow" id="pdNext" aria-label="Lavoro successivo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+          <span class="pd-dots" id="pdDots" aria-hidden="true"></span>
+        </div>
         <p class="pd-kind" id="pdKind">Giardino privato</p>
         <h3 class="pd-title" id="pdTitle">Aiuola lungo il vialetto</h3>
         <p class="pd-desc" id="pdDesc">Dalle erbe spontanee alla ghiaia decorativa: infestanti tolte, terreno livellato, bordure scure e ghiaia in quattro colori disegnata a curve, con corteccia attorno alle piante che c'erano già.</p>
+        <button type="button" class="pd-upnext" id="pdUpNext" hidden>
+          <span class="pd-upnext-img"><img id="pdUpImg" src="assets/img/pd-corten-thumb.webp" width="112" height="140" alt=""></span>
+          <span class="pd-upnext-text"><span class="pd-upnext-kicker">Guarda anche</span><span class="pd-upnext-title" id="pdUpTitle">Ghiaia e vasche in corten</span></span>
+          <span class="pd-upnext-ring" aria-hidden="true"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16"/><circle class="ring-fill" cx="18" cy="18" r="16" pathLength="100"/></svg><svg class="ring-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+        </button>
       </div>
     </div>
   </div>
@@ -2833,7 +2946,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         <div class="zone-group">
           <h3>Comuni vicini <span>su richiesta</span></h3>
           <ul class="zone-list">
-            <li>Cervasca</li><li>Bernezzo</li><li>Caraglio</li><li>Valgrana</li><li>Roccasparvera</li><li>Gaiola</li><li>Moiola</li><li>Roccavione</li><li>Robilante</li><li>Peveragno</li><li>Beinette</li><li>Centallo</li><li>Busca</li>
+            <li style="--z:1">Cervasca</li><li style="--z:2">Bernezzo</li><li style="--z:3">Caraglio</li><li style="--z:4">Valgrana</li><li style="--z:5">Roccasparvera</li><li style="--z:6">Gaiola</li><li style="--z:7">Moiola</li><li style="--z:8">Roccavione</li><li style="--z:9">Robilante</li><li style="--z:10">Peveragno</li><li style="--z:11">Beinette</li><li style="--z:12">Centallo</li><li style="--z:13">Busca</li>
           </ul>
           <p class="zone-note">La disponibilità dipende dal periodo e dal tipo di intervento: scrivici e ti rispondiamo.</p>
         </div>
@@ -3116,6 +3229,11 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-in'); inView.unobserve(e.target); } });
   }, { threshold: 0.35 });
   document.querySelectorAll('.split').forEach(function(el) { inView.observe(el); });
+  // texture (foglie, terra) scaricate solo quando la sezione si avvicina
+  var nearIO = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-near'); nearIO.unobserve(e.target); } });
+  }, { rootMargin: '700px 0px' });
+  document.querySelectorAll('.tex-hedge, .tex-grass, .quals').forEach(function(el) { nearIO.observe(el); });
   // carta strappata: si strappa quando il bordo entra nello schermo
   var tearIO = new IntersectionObserver(function(entries) {
     entries.forEach(function(e) {
@@ -3206,7 +3324,8 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     var ctx = cv.getContext('2d');
     var mask = document.createElement('canvas'), mctx = mask.getContext('2d');
     var grass = new Image();
-    grass.src = document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0 ? 'assets/img/texture-prato.webp' : 'assets/img/texture-prato.jpg';
+    function loadGrass() { if (!grass.src) grass.src = document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0 ? 'assets/img/texture-prato.webp' : 'assets/img/texture-prato.jpg'; }
+    new IntersectionObserver(function(e, o) { if (e[0].isIntersecting) { loadGrass(); o.disconnect(); } }, { rootMargin: '600px 0px' }).observe(panel);
     var W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     var tufts = [], running = false, visible = false, lastX = -999, lastY = -999;
     function size() {
@@ -3358,6 +3477,34 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     }
     window.addEventListener('scroll', function() { if (!on || tick) return; tick = true; requestAnimationFrame(run); }, { passive: true });
     new IntersectionObserver(function(e) { on = e[0].isIntersecting; if (on) run(); }).observe(grid);
+  })();
+
+
+  // ── Ritratto che scorre piano; pulsanti "magnetici" col mouse ──
+  (function() {
+    if (prefersReduced) return;
+    var fr = document.querySelector('.about-portrait .about-frame img');
+    if (fr) {
+      var t = false;
+      window.addEventListener('scroll', function() {
+        if (t) return; t = true;
+        requestAnimationFrame(function() {
+          t = false;
+          var r = fr.parentNode.getBoundingClientRect();
+          if (r.bottom < 0 || r.top > innerHeight) return;
+          fr.style.setProperty('--ap', ((r.top + r.height / 2 - innerHeight / 2) * -0.06).toFixed(1) + 'px');
+        });
+      }, { passive: true });
+    }
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    document.querySelectorAll('.hero-cta, .prev-next, .nav-cta-link').forEach(function(btn) {
+      btn.addEventListener('pointermove', function(e) {
+        var r = btn.getBoundingClientRect();
+        btn.style.setProperty('--mgx', ((e.clientX - r.left - r.width / 2) * 0.18).toFixed(1) + 'px');
+        btn.style.setProperty('--mgy', ((e.clientY - r.top - r.height / 2) * 0.25).toFixed(1) + 'px');
+      });
+      btn.addEventListener('pointerleave', function() { btn.style.setProperty('--mgx', '0px'); btn.style.setProperty('--mgy', '0px'); });
+    });
   })();
 
   // ── Servizi: un servizio aperto alla volta, la foto grande lo segue ──
@@ -3741,6 +3888,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     animToken++;
   }
   function play() {
+    if (typeof hideUpNext === 'function') hideUpNext();
     if (playing) { stopPlay(); showPair(cmp, proj.stages.length - 1); renderTimeline(cmp); animateTo(0.5, 500); return; }
     setPlaying(true);
     var p0 = proj, last = proj.stages.length - 1, i = 0;
@@ -3753,7 +3901,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         cmp = 0; showPair(0, last); setFraction(0); renderTimeline(0);
         wait(900).then(function() {
           if (!alive()) return;
-          animateTo(0.5, 1000).then(function() { if (alive()) setPlaying(false); });
+          animateTo(0.5, 1000).then(function() { if (alive()) { setPlaying(false); markSeen(); offerNext(true); } });
         });
         return;
       }
@@ -3771,6 +3919,75 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     next();
   }
   playBtn.addEventListener('click', play);
+  // ── Prima e dopo: frecce, puntini, "guarda anche" con avvio automatico ──
+  var pdPrev = document.getElementById('pdPrev'), pdNext = document.getElementById('pdNext');
+  var pdCount = document.getElementById('pdCount'), pdDots = document.getElementById('pdDots');
+  var upNext = document.getElementById('pdUpNext'), upImg = document.getElementById('pdUpImg'), upTitle = document.getElementById('pdUpTitle');
+  var ambA = document.getElementById('pdAmbA'), ambB = document.getElementById('pdAmbB');
+  var pdInfo = document.querySelector('.pd-info');
+  var seen = {}; var upTimer = null, playTimer = null, swapTimer = null; var pdVisible = false;
+  pdDots.innerHTML = PROJECTS.map(function() { return '<i></i>'; }).join('');
+  function idx() { return PROJECTS.indexOf(proj); }
+  function nextProj() { return PROJECTS[(idx() + 1) % PROJECTS.length]; }
+  function markSeen() {
+    seen[proj.id] = true;
+    picks.forEach(function(b) { b.classList.toggle('is-seen', !!seen[b.dataset.project] && b.dataset.project !== proj.id); });
+  }
+  function refreshNav() {
+    var i = idx();
+    pdCount.textContent = (i + 1) + ' / ' + PROJECTS.length;
+    picks.forEach(function(b) { b.classList.toggle('is-seen', !!seen[b.dataset.project] && b.dataset.project !== proj.id); });
+    Array.prototype.forEach.call(pdDots.children, function(d, k) { d.classList.toggle('is-on', k === i); d.classList.toggle('is-seen', !!seen[PROJECTS[k].id]); });
+    var cur = ambA.classList.contains('is-on') ? ambA : ambB, other = cur === ambA ? ambB : ambA;
+    var src = 'assets/img/pd-' + proj.id + '-' + proj.stages[proj.stages.length - 1].key + '-480.webp';
+    if (cur.getAttribute('src') !== src) { other.removeAttribute('loading'); other.src = src; other.classList.add('is-on'); cur.classList.remove('is-on'); }
+    // tieni visibile il lavoro scelto nella riga dei lavori (telefono)
+    var pk = document.querySelector('.pd-pick[data-project="' + proj.id + '"]');
+    if (pk && pk.parentNode.scrollWidth > pk.parentNode.clientWidth) pk.parentNode.scrollTo({ left: pk.offsetLeft - 24, behavior: prefersReduced ? 'auto' : 'smooth' });
+  }
+  function hideUpNext() { clearTimeout(upTimer); clearTimeout(playTimer); upNext.hidden = true; upNext.classList.remove('is-counting'); }
+  function offerNext(countdown) {
+    var n = nextProj();
+    upImg.src = 'assets/img/pd-' + n.id + '-thumb.webp';
+    upTitle.textContent = n.title;
+    upNext.dataset.project = n.id;
+    upNext.setAttribute('aria-label', 'Guarda anche: ' + n.title);
+    upNext.hidden = false; upNext.classList.remove('is-counting');
+    clearTimeout(upTimer);
+    if (countdown && !prefersReduced && pdVisible) {
+      void upNext.offsetWidth; upNext.classList.add('is-counting');
+      upTimer = setTimeout(function() { if (pdVisible) goTo(n.id, true); }, 7000);
+    }
+  }
+  function goTo(id, andPlay) {
+    hideUpNext();
+    pdInfo.classList.add('is-swapping');
+    clearTimeout(swapTimer);
+    swapTimer = setTimeout(function() {
+      selectProject(id);
+      pdInfo.classList.remove('is-swapping');
+      if (andPlay) playTimer = setTimeout(function() { if (!playing) play(); }, 1100);
+    }, 220);
+  }
+  upNext.addEventListener('click', function() { goTo(upNext.dataset.project, true); });
+  pdPrev.addEventListener('click', function() { goTo(PROJECTS[(idx() - 1 + PROJECTS.length) % PROJECTS.length].id, false); });
+  pdNext.addEventListener('click', function() { goTo(nextProj().id, false); });
+  // qualsiasi gesto sul confronto ferma il conto alla rovescia
+  slider.addEventListener('pointerdown', function() { slider.classList.add('was-touched'); });
+  // qualsiasi tocco nel componente (tranne sulla scheda stessa) ferma l'avvio automatico
+  document.getElementById('pd').addEventListener('pointerdown', function(e) {
+    clearTimeout(playTimer);
+    if (!e.target.closest('#pdUpNext, #pdPrev, #pdNext')) { clearTimeout(swapTimer); pdInfo.classList.remove('is-swapping'); }
+    if (upNext.classList.contains('is-counting') && !e.target.closest('#pdUpNext')) offerNext(false);
+  }, true);
+  slider.addEventListener('keydown', function() { slider.classList.add('was-touched'); });
+  new IntersectionObserver(function(e) { pdVisible = e[0].isIntersecting; if (!pdVisible && upNext.classList.contains('is-counting')) offerNext(false); }, { threshold: 0.25 }).observe(slider);
+  // dopo un trascinamento ampio, suggerisci il lavoro successivo (senza avvio automatico)
+  var dragMin = 1, dragMax = 0;
+  slider.addEventListener('pointermove', function() { dragMin = Math.min(dragMin, frac); dragMax = Math.max(dragMax, frac); });
+  slider.addEventListener('pointerup', function() { if (dragMax - dragMin > 0.55) { markSeen(); offerNext(false); } dragMin = 1; dragMax = 0; });
+  refreshNav();
+
 
   // Cambio lavoro
   function selectProject(id) {
@@ -3780,6 +3997,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     proj = p;
     picks.forEach(function(b) { b.setAttribute('aria-pressed', b.dataset.project === id ? 'true' : 'false'); });
     pdKind.textContent = p.kind; pdTitle.textContent = p.title; pdDesc.textContent = p.desc;
+    if (typeof refreshNav === 'function') { hideUpNext(); refreshNav(); }
     slider.classList.add('is-loading');
     buildLayers();
     cmp = 0;
@@ -3792,7 +4010,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     });
   }
   picks.forEach(function(b) {
-    b.addEventListener('click', function() { selectProject(b.dataset.project); });
+    b.addEventListener('click', function() { hideUpNext(); selectProject(b.dataset.project); });
   });
   timeline.addEventListener('click', function(e) {
     var b = e.target.closest('.pd-step');
