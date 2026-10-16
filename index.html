@@ -235,6 +235,13 @@
 <style>
 /* ── Self-hosted variable fonts (woff2, latin) ── */
 @font-face {
+  font-family: 'Urbanist';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('assets/fonts/urbanist-latin-wght-normal.woff2') format('woff2');
+}
+@font-face {
   font-family: 'Inter';
   font-style: normal;
   font-weight: 100 900;
@@ -1314,7 +1321,7 @@ a.prev-contact:hover { background: rgba(255,255,255,0.06); border-color: rgba(25
 /* ── ZONE ── */
 .zone-groups { display: grid; gap: 0; }
 @media (min-width: 900px) {
-  .zone-groups { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.1fr) minmax(0, 1.1fr); column-gap: clamp(2rem, 4vw, 3.5rem); }
+  .zone-groups { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(2rem, 4vw, 3.5rem); }
   .zone-more { grid-column: 1 / -1; justify-self: start; }
 }
 .zone-group { padding: 1.5rem 0; border-top: 1px solid var(--line); }
@@ -1925,6 +1932,244 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   .hero-copy > * { opacity: 1 !important; translate: none !important; animation: none !important; }
   .hero-bg img { transform: scale(1.04) !important; }
 }
+
+/* ════════════════════════════════════════════════════════════
+   TEMA "BOSCO": titoli geometrici, fondi verde bosco con
+   profondità, vetro smerigliato, forme organiche, piante vere.
+   ════════════════════════════════════════════════════════════ */
+:root {
+  --font-head: 'Urbanist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --forest-0: #0c1610;
+  --forest-1: #122019;
+  --leaf-light: #a9d18e;
+  --glass-dark: linear-gradient(150deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03));
+  --glass-line: rgba(255,255,255,0.13);
+  --blob: 62% 38% 54% 46% / 44% 52% 48% 56%;
+}
+/* titoli: Urbanist pieno e serrato; il logo resta in Fraunces */
+.hero h1, .section-title, .quals-title, .svc-name, .steps-title, .step h4, .pd-title, .cred-title,
+.zone-group h3, .prev-aside-title, .prev-success h3, .prev-question, .hero-card-title {
+  font-family: var(--font-head);
+  font-variation-settings: normal;
+}
+.section-title { font-weight: 650; letter-spacing: -0.035em; line-height: 0.98; font-size: clamp(2.5rem, 1.5rem + 4.2vw, 4.4rem); }
+.sec-head { max-width: 46rem; }
+.section-sub { font-size: var(--fz-md); }
+
+/* fondo scuro con profondità: luce verde in alto, ombra in basso */
+.is-dark {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(70rem 36rem at 88% -8%, rgba(98, 160, 74, 0.20), transparent 62%),
+    radial-gradient(50rem 30rem at -10% 105%, rgba(143, 174, 132, 0.12), transparent 60%),
+    linear-gradient(180deg, var(--forest-1), var(--forest-0));
+  overflow: hidden;
+}
+.is-dark .section-title { color: #f4f7f0; }
+
+/* ── HERO ── */
+.hero h1 { font-weight: 700; letter-spacing: -0.045em; line-height: 0.95; font-size: clamp(3rem, 1.6rem + 6vw, 5.8rem); }
+.hero h1 .thin { font-style: normal; font-weight: 300; font-size: 1em; color: var(--leaf-light); letter-spacing: -0.04em; }
+.hero-content { display: flex; align-items: flex-end; justify-content: space-between; gap: 3rem; }
+.hero-card { display: none; }
+@media (min-width: 1000px) {
+  .hero-card {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    column-gap: 1rem;
+    align-items: center;
+    flex: 0 0 300px;
+    padding: 0.8rem 1.2rem 0.8rem 0.8rem;
+    background: var(--glass-dark), rgba(10, 20, 13, 0.35);
+    border: 1px solid var(--glass-line);
+    border-radius: 26px;
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    color: #fff;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+    transition: transform 0.6s var(--ease-out), border-color 0.4s;
+    animation: heroCardIn 1.1s var(--ease-out) 1.6s both;
+  }
+  .hero-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.3); }
+  .hero-card-media { grid-row: 1 / span 3; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; }
+  .hero-card-media img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-card-kicker { font-size: 0.72rem; color: rgba(255,255,255,0.65); }
+  .hero-card-title { font-size: 1.15rem; font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; }
+  .hero-card-cta { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.3rem; font-size: 0.82rem; font-weight: 600; color: var(--leaf-light); }
+  .hero-card-cta svg { width: 14px; height: 14px; transition: translate 0.35s var(--ease-out); }
+  .hero-card:hover .hero-card-cta svg { translate: 3px 0; }
+}
+@keyframes heroCardIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+/* ── CHI SIAMO ── */
+.about-portrait { position: relative; max-width: 440px; isolation: isolate; }
+.about-frame { border-radius: var(--blob); box-shadow: 0 40px 80px rgba(20, 40, 24, 0.18); }
+.about-plant {
+  position: absolute; z-index: -1;
+  width: 118%; right: -32%; bottom: -16%;
+  pointer-events: none;
+  filter: drop-shadow(0 20px 30px rgba(20,40,24,0.18));
+}
+.about-plant img { width: 100%; height: auto; }
+.about-portrait figcaption {
+  position: absolute; left: -1rem; bottom: 9%;
+  display: grid; gap: 0.1rem;
+  padding: 0.75rem 1.1rem;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(255,255,255,0.8);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-md);
+  font-size: 0.8rem;
+}
+.about-portrait figcaption strong { font-family: var(--font-head); font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; }
+.about-portrait figcaption span { color: var(--text-muted); }
+@media (max-width: 899px) { .about-portrait { margin: 0 auto 1rem; width: 82%; } .about-plant { right: -24%; width: 100%; } }
+.about-lead { font-size: clamp(1.15rem, 1rem + 0.5vw, 1.4rem); line-height: 1.55; }
+.about-note {
+  font-family: var(--font-head);
+  font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.75rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  color: var(--green-deep);
+  margin-top: 2rem;
+}
+.about-works { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 1.5rem; margin-top: 2.2rem; }
+.about-pills { list-style: none; display: flex; gap: 0.5rem; }
+.about-pills li { width: 58px; aspect-ratio: 3 / 5; border-radius: 999px; overflow: hidden; box-shadow: var(--shadow-sm); transition: transform 0.5s var(--ease-out); }
+.about-pills li:nth-child(even) { transform: translateY(10px); }
+.about-pills img { width: 100%; height: 100%; object-fit: cover; }
+.about-works:hover .about-pills li { transform: translateY(-4px); }
+.about-works-link, .zone-more { display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 600; font-size: 0.95rem; color: var(--green); border-bottom: 1px solid rgba(53,106,57,0.35); padding: 0.3rem 0; }
+.about-works-link svg { width: 16px; height: 16px; transition: translate 0.35s var(--ease-out); }
+.about-works-link:hover svg { translate: 3px 0; }
+
+/* qualifiche: pannello bosco dentro la sezione chiara */
+.quals {
+  position: relative; isolation: isolate; overflow: hidden;
+  margin-top: clamp(4rem, 8vw, 6rem);
+  padding: clamp(2rem, 4vw, 3.25rem);
+  border: none;
+  border-radius: 32px;
+  color: #fff;
+  background:
+    radial-gradient(40rem 20rem at 100% 0%, rgba(98,160,74,0.25), transparent 60%),
+    linear-gradient(160deg, var(--forest-1), var(--forest-0));
+}
+.quals-fern { position: absolute; z-index: -1; right: -40px; top: -40px; width: 260px; opacity: 0.4; transform: rotate(200deg); pointer-events: none; }
+.quals-title { color: #fff; font-weight: 650; letter-spacing: -0.03em; font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.3rem); }
+.quals-sub { color: rgba(255,255,255,0.68); }
+.cred-list { border-top: none; display: grid; gap: 0.75rem; }
+@media (min-width: 900px) { .cred-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.cred {
+  padding: 1.4rem 1.4rem 1.5rem;
+  border: 1px solid var(--glass-line);
+  border-radius: 22px;
+  background: var(--glass-dark);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+}
+.cred > div { display: grid !important; grid-template-columns: 1fr !important; gap: 0.45rem; }
+.cred-type { color: var(--leaf-light); font-size: 0.8rem; font-weight: 600; }
+.cred-title { color: #fff; font-weight: 650; font-size: 1.25rem; letter-spacing: -0.02em; line-height: 1.2; }
+.cred-ref { color: rgba(255,255,255,0.66); }
+.cred-ref strong { color: #fff; }
+.cred.is-pending { border-style: dashed; }
+
+/* ── SERVIZI su fondo bosco ── */
+.svc-fern { position: absolute; z-index: -1; left: -8%; bottom: -6%; width: min(640px, 80vw); opacity: 0.28; transform: rotate(18deg); pointer-events: none; }
+.servizi .svc-list { border-top-color: var(--glass-line); }
+.servizi .svc-item { border-bottom-color: var(--glass-line); }
+.servizi .svc-item::before { background: var(--leaf-light); }
+.servizi .svc-toggle { color: #fff; }
+.servizi .svc-name { font-weight: 650; letter-spacing: -0.035em; font-size: clamp(1.7rem, 1.2rem + 1.8vw, 2.7rem); }
+.servizi .svc-tag { color: rgba(255,255,255,0.6); }
+.servizi .svc-icon { border-color: var(--glass-line); color: #fff; }
+.servizi .svc-item.is-open .svc-name { color: var(--leaf-light); }
+.servizi .svc-item.is-open .svc-icon { background: var(--leaf-light); border-color: var(--leaf-light); color: var(--forest-0); }
+.servizi .svc-points li { color: rgba(255,255,255,0.9); }
+.servizi .svc-points li::before { background: var(--leaf-light); }
+.servizi .svc-desc { color: rgba(255,255,255,0.65); }
+.servizi .svc-cta { color: var(--leaf-light); border-color: rgba(169,209,142,0.45); }
+.servizi .svc-cta:hover { border-color: var(--leaf-light); }
+.servizi .svc-toggle:focus-visible, .servizi .svc-cta:focus-visible { outline-color: var(--leaf-light); }
+.servizi .svc-frame { border-radius: 180px 28px 180px 28px; background: var(--forest-1); box-shadow: 0 40px 90px rgba(0,0,0,0.35); }
+.servizi .svc-thumb { border-radius: 90px 18px 90px 18px; }
+.servizi .svc-caps { color: rgba(255,255,255,0.6); }
+@media (hover: hover) and (pointer: fine) { .servizi .svc-toggle:hover .svc-icon { border-color: var(--leaf-light); } }
+
+/* come lavoriamo: quattro passi in vetro, numeri grandi */
+.steps { margin-top: clamp(4.5rem, 9vw, 7rem); }
+.steps-title { font-weight: 650; letter-spacing: -0.035em; font-size: clamp(1.9rem, 1.3rem + 2vw, 3rem); color: #fff; margin-bottom: 1.75rem; }
+.steps-list { list-style: none; display: grid; gap: 0.85rem; }
+@media (min-width: 640px) { .steps-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .steps-list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; } }
+.step {
+  position: relative;
+  display: flex; flex-direction: column;
+  padding: 1.5rem 1.4rem 1.6rem;
+  border: 1px solid var(--glass-line);
+  border-radius: 26px;
+  background: var(--glass-dark);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: border-color 0.4s, transform 0.6s var(--ease-out), background 0.4s;
+}
+.step-num {
+  font-family: var(--font-head);
+  font-size: 4.6rem;
+  font-weight: 200;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+  color: #fff;
+  padding-bottom: 2.4rem;
+}
+@media (max-width: 639px) {
+  .step { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); column-gap: 1rem; align-items: start; padding: 1.25rem; }
+  .step-num { grid-row: 1 / span 2; font-size: 3.6rem; padding: 0; }
+}
+.step h4 { font-size: 1.25rem; font-weight: 650; letter-spacing: -0.02em; color: #fff; margin-bottom: 0.4rem; }
+.step p { font-size: 0.9rem; line-height: 1.55; color: rgba(255,255,255,0.66); }
+@media (hover: hover) and (pointer: fine) {
+  .step:hover { border-color: rgba(169,209,142,0.5); transform: translateY(-4px); background: linear-gradient(150deg, rgba(169,209,142,0.14), rgba(255,255,255,0.03)); }
+}
+
+/* ── PRIMA E DOPO ── */
+.prima-dopo .pd-title { font-weight: 650; letter-spacing: -0.03em; }
+.prima-dopo .ba-slider { border-radius: 32px; }
+
+/* ── GALLERIA ── */
+.gal-item { border-radius: 26px; }
+.gal-item.is-big { border-radius: 26px 120px 26px 26px; }
+
+/* ── ZONE ── */
+.zone-group:first-child {
+  padding: 1.8rem 1.6rem;
+  border: none;
+  border-radius: 28px;
+  color: #fff;
+  background: radial-gradient(26rem 14rem at 100% 0%, rgba(98,160,74,0.28), transparent 60%), linear-gradient(160deg, var(--forest-1), var(--forest-0));
+}
+.zone-group:first-child h3 { color: var(--leaf-light); font-size: 0.95rem; font-weight: 600; letter-spacing: 0; }
+.zone-group:first-child .zone-main li { font-family: var(--font-head); font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); font-weight: 650; letter-spacing: -0.03em; line-height: 1.25; color: #fff; }
+.zone-group:first-child .zone-main li small { color: var(--leaf-light); font-family: var(--font-sans); font-size: 0.8rem; font-weight: 500; letter-spacing: 0; }
+.zone-group h3 { font-weight: 650; letter-spacing: -0.02em; font-size: 1.25rem; }
+@media (min-width: 900px) { .zone-groups { align-items: start; } .zone-group:not(:first-child) { border-top: none; padding-top: 1.8rem; } }
+
+/* ── PREVENTIVO ── */
+.prev-aside-title { font-weight: 650; letter-spacing: -0.025em; font-size: 1.6rem; }
+.prev-form { border-radius: 30px; }
+.prev-plant { position: absolute; z-index: -1; left: -70px; bottom: -40px; width: min(460px, 70vw); opacity: 0.32; pointer-events: none; transform: rotate(-8deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-card { animation: none; }
+  .about-pills li, .step, .hero-card { transition: none; }
+}
 </style>
 </head>
 <body>
@@ -1970,6 +2215,12 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         <a href="#servizi" class="hero-link">Scopri i servizi<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
       </div>
     </div>
+    <a class="hero-card" href="#prima-dopo">
+      <span class="hero-card-media"><picture><source type="image/avif" srcset="assets/img/pd-vialetto-finito-480.avif"><img src="assets/img/pd-vialetto-finito-480.webp" width="480" height="600" alt="" loading="lazy" decoding="async"></picture></span>
+      <span class="hero-card-kicker">Un lavoro recente</span>
+      <span class="hero-card-title">Aiuola lungo il vialetto</span>
+      <span class="hero-card-cta">Guarda prima e dopo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
   </div>
 </section>
 
@@ -1985,9 +2236,14 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         <p>Con il tempo quella passione è cresciuta ed è diventata competenza, esperienza e voglia di costruire un progetto professionale. Oggi Lisa Garden è la realizzazione di un desiderio coltivato fin da ragazzo: trasformare l'amore per il verde in un'attività concreta, fondata su cura, dedizione e formazione.</p>
         <p>Un percorso che tiene insieme esperienza sul campo, attenzione ai dettagli e voglia di continuare a imparare, per offrire interventi curati e soluzioni adatte alle esigenze di ogni spazio verde.</p>
         <p class="about-note">Ogni lavoro lo segue di persona il titolare, dalla prima visita alla consegna.</p>
+        <div class="about-works">
+          <ul class="about-pills"><li><picture><source type="image/avif" srcset="assets/img/gal-11-480.avif"><img src="assets/img/gal-11-480.webp" width="480" height="640" alt="Prato all'inglese con bordure in ghiaia rossa" loading="lazy" decoding="async"></picture></li><li><picture><source type="image/avif" srcset="assets/img/gal-13-480.avif"><img src="assets/img/gal-13-480.webp" width="480" height="640" alt="Giardino in ghiaia con vasche in corten" loading="lazy" decoding="async"></picture></li><li><picture><source type="image/avif" srcset="assets/img/gal-12-480.avif"><img src="assets/img/gal-12-480.webp" width="480" height="640" alt="Vasche in corten lungo il muro" loading="lazy" decoding="async"></picture></li><li><picture><source type="image/avif" srcset="assets/img/gal-2-480.avif"><img src="assets/img/gal-2-480.webp" width="480" height="640" alt="Prato lungo il muretto in pietra" loading="lazy" decoding="async"></picture></li></ul>
+          <a class="about-works-link" href="#galleria">Guarda i lavori<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
       </div>
       <div class="about-media reveal">
         <figure class="about-portrait">
+          <picture class="about-plant" aria-hidden="true"><source type="image/avif" srcset="assets/img/pianta-foglie-larghe-560.avif 560w, assets/img/pianta-foglie-larghe-900.avif 900w" sizes="(min-width: 900px) 520px, 60vw"><img src="assets/img/pianta-foglie-larghe-560.webp" srcset="assets/img/pianta-foglie-larghe-560.webp 560w, assets/img/pianta-foglie-larghe-900.webp 900w" sizes="(min-width: 900px) 520px, 90vw" alt="" loading="lazy" decoding="async"></picture>
           <div class="about-frame">
             <picture>
               <source type="image/avif" srcset="assets/img/andrea-lisa-ritratto-480.avif 480w, assets/img/andrea-lisa-ritratto-800.avif 800w" sizes="(min-width: 1080px) 400px, (min-width: 900px) 36vw, 76vw">
@@ -1995,11 +2251,12 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
               <img src="assets/img/andrea-lisa-ritratto-800.jpg" width="800" height="1000" loading="lazy" decoding="async" alt="Andrea Lisa, titolare di Lisa Garden, con la polo verde dell'azienda">
             </picture>
           </div>
-          <figcaption><strong>Andrea Lisa</strong>, titolare</figcaption>
+          <figcaption><strong>Andrea Lisa</strong><span>titolare di Lisa Garden</span></figcaption>
         </figure>
       </div>
     </div>
     <div class="quals reveal">
+      <picture class="quals-fern" aria-hidden="true"><source type="image/avif" srcset="assets/img/felce-560.avif 560w" sizes="300px"><img src="assets/img/felce-560.webp" srcset="assets/img/felce-560.webp 560w" sizes="300px" alt="" loading="lazy" decoding="async"></picture>
       <div class="quals-head">
         <h3 class="quals-title">Formazione e qualifiche</h3>
         <p class="quals-sub">Le qualifiche professionali di Andrea Lisa, con il loro riferimento.</p>
@@ -2036,12 +2293,13 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 
 
 <!-- SERVIZI -->
-<section class="servizi is-light has-divider" id="servizi" aria-labelledby="serviziTitle">
+<section class="servizi is-dark" id="servizi" aria-labelledby="serviziTitle">
   <div class="container">
     <div class="sec-head reveal">
       <h2 class="section-title" id="serviziTitle">Cosa facciamo</h2>
       <p class="section-sub">Dalla manutenzione di tutti i giorni alla realizzazione di un giardino nuovo. Ogni lavoro parte da una visita sul posto e da un preventivo su misura.</p>
     </div>
+    <picture class="svc-fern" aria-hidden="true"><source type="image/avif" srcset="assets/img/felce-560.avif 560w, assets/img/felce-900.avif 900w" sizes="(min-width: 1000px) 640px, 80vw"><img src="assets/img/felce-560.webp" srcset="assets/img/felce-560.webp 560w, assets/img/felce-900.webp 900w" sizes="(min-width: 1000px) 640px, 80vw" alt="" loading="lazy" decoding="async"></picture>
     <div class="svc-wrap">
       <ol class="svc-list reveal">
         <li class="svc-item is-open" data-i="0">
@@ -2098,6 +2356,10 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         </div>
         <p class="svc-caps"><span class="svc-cap is-on" data-i="0">Prato rasato a strisce davanti alla villa</span><span class="svc-cap" data-i="1">Bosso, lavanda e rosa ad alberello lungo il vialetto</span><span class="svc-cap" data-i="2">Ala gocciolante posata sul telo, prima della ghiaia</span><span class="svc-cap" data-i="3">Prato all'inglese con bordure in ghiaia rossa</span></p>
       </div>
+    </div>
+    <div class="steps">
+      <h3 class="steps-title reveal">Come lavoriamo</h3>
+      <ol class="steps-list"><li class="step reveal reveal-delay-0"><span class="step-num" aria-hidden="true">1</span><h4>Visita sul posto</h4><p>Andrea viene a vedere il giardino e ascolta cosa ti serve.</p></li><li class="step reveal reveal-delay-1"><span class="step-num" aria-hidden="true">2</span><h4>Preventivo su misura</h4><p>Un preventivo pensato sul tuo spazio e sul lavoro da fare.</p></li><li class="step reveal reveal-delay-2"><span class="step-num" aria-hidden="true">3</span><h4>Il lavoro</h4><p>Lo segue di persona il titolare, dall'inizio alla consegna.</p></li><li class="step reveal reveal-delay-3"><span class="step-num" aria-hidden="true">4</span><h4>Nel tempo</h4><p>Se vuoi, il giardino resta seguito con interventi periodici.</p></li></ol>
     </div>
   </div>
 </section>
@@ -2332,6 +2594,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 
 <!-- PREVENTIVO E CONTATTI -->
 <section class="preventivo is-dark" id="preventivo" aria-labelledby="prevTitle">
+  <picture class="prev-plant" aria-hidden="true"><source type="image/avif" srcset="assets/img/ortensia-560.avif 560w" sizes="(min-width: 900px) 460px, 70vw"><img src="assets/img/ortensia-560.webp" srcset="assets/img/ortensia-560.webp 560w" sizes="(min-width: 900px) 460px, 70vw" alt="" loading="lazy" decoding="async"></picture>
   <div class="container">
     <div class="sec-head reveal">
       <h2 class="section-title" id="prevTitle">Chiedi un preventivo</h2>
