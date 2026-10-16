@@ -7,10 +7,7 @@
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/hero-dopo-prato-816.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/hero-prima-erbacce-816.jpg</image:loc>
+      <image:loc>https://andrealisagarden.it/assets/img/hero-1200.jpg</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://andrealisagarden.it/assets/img/andrea-lisa-ritratto-800.jpg</image:loc>
@@ -23,9 +20,6 @@
     </image:image>
     <image:image>
       <image:loc>https://andrealisagarden.it/assets/img/pd-vialetto-finito-720.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/giardino-montagna-vialetto-pietra-1200.jpg</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://andrealisagarden.it/assets/img/gal-1-1200.jpg</image:loc>
@@ -59,6 +53,36 @@
     </image:image>
     <image:image>
       <image:loc>https://andrealisagarden.it/assets/img/gal-14-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-15-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-16-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-17-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-18-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-19-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-20-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-21-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-22-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-23-1200.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://andrealisagarden.it/assets/img/gal-24-1200.jpg</image:loc>
     </image:image>
   </url>
   <url>
