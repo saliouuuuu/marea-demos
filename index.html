@@ -952,142 +952,6 @@ section { padding: 5rem 1.5rem; }
   .pd-pick-title { white-space: normal; }
 }
 
-/* ── CASO: PRIMA / DURANTE / DOPO ── */
-.case { margin-top: 0; }
-.case-head {
-  display: grid;
-  gap: 0.6rem;
-  max-width: 44rem;
-  margin-bottom: 2.25rem;
-}
-.case-kind {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--sage);
-}
-.case-title {
-  font-family: var(--font-display);
-  font-size: var(--fz-xl);
-  font-weight: 450;
-  line-height: 1.12;
-  letter-spacing: -0.01em;
-  color: #fff;
-  text-wrap: balance;
-}
-.case-summary { font-size: 0.98rem; line-height: 1.65; color: rgba(255,255,255,0.68); }
-/* telefono: scorrimento orizzontale con l'anteprima della foto successiva */
-.case-steps {
-  list-style: none;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 80%;
-  gap: 1rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: 1.5rem;
-  overscroll-behavior-x: contain;
-  margin: 0 -1.5rem;
-  padding: 0 1.5rem 0.5rem;
-  scrollbar-width: none;
-}
-.case-steps::-webkit-scrollbar { display: none; }
-.case-step { scroll-snap-align: start; }
-.case-photo {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  background: #222b25;
-  cursor: zoom-in;
-}
-.case-photo img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  scale: 1.1;
-  transition: scale 1.5s var(--ease-out), filter 0.6s var(--ease);
-}
-.case-step.visible .case-photo img { scale: 1; }
-@media (hover: hover) {
-  .case-step.visible .case-photo:hover img { scale: 1.04; }
-}
-.case-photo:focus-visible { outline: 3px solid #eef3e9; outline-offset: 3px; }
-.case-tag {
-  position: absolute;
-  left: 0.75rem; top: 0.75rem;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.4rem;
-  padding: 0.38rem 0.75rem;
-  border-radius: 50px;
-  background: rgba(16, 24, 18, 0.62);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #fff;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.case-tag span { font-family: var(--font-display); font-style: italic; font-weight: 400; letter-spacing: 0; color: var(--sage); font-size: 0.85rem; text-transform: none; }
-.case-step--dopo .case-tag { background: var(--green); }
-.case-step--dopo .case-tag span { color: #dfeccf; }
-.case-cap { margin-top: 1rem; }
-.case-cap h4 {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 450;
-  color: #fff;
-  margin-bottom: 0.35rem;
-}
-.case-cap p { font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.66); max-width: 34ch; }
-/* le didascalie entrano dopo la foto */
-.case-step .case-cap { opacity: 0; translate: 0 12px; transition: opacity 0.8s var(--ease) 0.35s, translate 0.9s var(--ease-out) 0.35s; }
-.case-step.visible .case-cap { opacity: 1; translate: 0 0; }
-.case-step.reveal { transform: none; opacity: 1; }
-.case-hint { margin-top: 0.9rem; font-size: 0.78rem; color: rgba(255,255,255,0.5); }
-@media (min-width: 700px) {
-  .case-steps {
-    grid-auto-flow: row;
-    grid-auto-columns: auto;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    align-items: start;
-    column-gap: clamp(1rem, 2.4vw, 2rem);
-    overflow: visible;
-    margin: 0;
-    padding: 0;
-  }
-  .case-step--prima   { grid-column: 1 / 5;  margin-top: 3.5rem; }
-  .case-step--durante { grid-column: 5 / 8;  margin-top: 10rem; }
-  .case-step--dopo    { grid-column: 8 / 13; }
-  .case-hint { display: none; }
-  /* filo che lega le tre fasi */
-  .case-steps { position: relative; }
-  .case-steps::before {
-    content: "";
-    position: absolute;
-    left: 8%; right: 30%; top: 1.6rem;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(143,174,132,0), rgba(143,174,132,0.5) 30%, rgba(143,174,132,0.5) 70%, rgba(143,174,132,0));
-  }
-}
-.pd-more {
-  margin-top: clamp(4rem, 8vw, 6rem);
-  padding-top: 2.5rem;
-  border-top: 1px solid rgba(255,255,255,0.12);
-}
-.pd-more-title {
-  font-family: var(--font-display);
-  font-size: var(--fz-lg);
-  font-weight: 450;
-  color: #fff;
-  margin-bottom: 0.4rem;
-}
-.pd-more-sub { font-size: 0.95rem; color: rgba(255,255,255,0.62); margin-bottom: 2rem; max-width: 46ch; }
-
 /* ── CHI SIAMO ── */
 .about-grid {
   display: grid;
@@ -2412,64 +2276,13 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       </div>
       <p class="section-sub">Come cambia uno spazio verde quando ci lavoriamo: le foto sono quelle dei cantieri, scattate prima, durante e dopo.</p>
     </div>
-    <div class="case">
-      <div class="case-head reveal">
-        <span class="case-kind">Un intervento, tre momenti &middot; Giardino privato</span>
-        <h3 class="case-title">Aiuola lungo il vialetto: dalle erbe spontanee alla ghiaia decorativa.</h3>
-        <p class="case-summary">Pulizia del terreno, livellamento, bordure e ghiaia in quattro colori, con corteccia attorno alle piante che c'erano già.</p>
-      </div>
-      <ol class="case-steps">
-        <li class="case-step case-step--prima reveal">
-          <button type="button" class="case-photo" data-lb="caso" aria-label="Ingrandisci: Prima: aiuola lungo il vialetto in pietra invasa da erbe spontanee, con terreno scoperto">
-            <picture>
-              <source type="image/avif" srcset="assets/img/aiuola-vialetto-pietra-prima-infestanti-480.avif 480w, assets/img/aiuola-vialetto-pietra-prima-infestanti-800.avif 800w, assets/img/aiuola-vialetto-pietra-prima-infestanti-1200.avif 1200w" sizes="(min-width: 1080px) 340px, (min-width: 700px) 31vw, 78vw">
-              <source type="image/webp" srcset="assets/img/aiuola-vialetto-pietra-prima-infestanti-480.webp 480w, assets/img/aiuola-vialetto-pietra-prima-infestanti-800.webp 800w, assets/img/aiuola-vialetto-pietra-prima-infestanti-1200.webp 1200w" sizes="(min-width: 1080px) 340px, (min-width: 700px) 31vw, 78vw">
-              <img src="assets/img/aiuola-vialetto-pietra-prima-infestanti-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prima: aiuola lungo il vialetto in pietra invasa da erbe spontanee, con terreno scoperto">
-            </picture>
-            <span class="case-tag" aria-hidden="true"><span>01</span>Prima</span>
-          </button>
-          <div class="case-cap">
-            <h4>Lo stato di partenza</h4>
-            <p>Aiuola lungo il vialetto in pietra invasa da erbe spontanee, con terreno scoperto e bordo verso la pavimentazione non più definito.</p>
-          </div>
-        </li>
-        <li class="case-step case-step--durante reveal">
-          <button type="button" class="case-photo" data-lb="caso" aria-label="Ingrandisci: Durante: terreno ripulito, livellato e rastrellato, con il bordo verso il vialetto tracciato">
-            <picture>
-              <source type="image/avif" srcset="assets/img/aiuola-vialetto-pietra-durante-terreno-livellato-480.avif 480w, assets/img/aiuola-vialetto-pietra-durante-terreno-livellato-800.avif 800w, assets/img/aiuola-vialetto-pietra-durante-terreno-livellato-1200.avif 1200w" sizes="(min-width: 1080px) 250px, (min-width: 700px) 23vw, 78vw">
-              <source type="image/webp" srcset="assets/img/aiuola-vialetto-pietra-durante-terreno-livellato-480.webp 480w, assets/img/aiuola-vialetto-pietra-durante-terreno-livellato-800.webp 800w, assets/img/aiuola-vialetto-pietra-durante-terreno-livellato-1200.webp 1200w" sizes="(min-width: 1080px) 250px, (min-width: 700px) 23vw, 78vw">
-              <img src="assets/img/aiuola-vialetto-pietra-durante-terreno-livellato-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Durante: terreno ripulito, livellato e rastrellato, con il bordo verso il vialetto tracciato">
-            </picture>
-            <span class="case-tag" aria-hidden="true"><span>02</span>Durante</span>
-          </button>
-          <div class="case-cap">
-            <h4>Pulizia e preparazione</h4>
-            <p>Infestanti rimosse, terreno livellato e rastrellato, bordo netto verso il vialetto. Arbusti, bergenie e rose restano al loro posto.</p>
-          </div>
-        </li>
-        <li class="case-step case-step--dopo reveal">
-          <button type="button" class="case-photo" data-lb="caso" aria-label="Ingrandisci: Dopo: aiuola con ghiaia decorativa rosa, bianca, nera e verde disegnata a curve, bordure scure e corteccia attorno alle piante">
-            <picture>
-              <source type="image/avif" srcset="assets/img/aiuola-vialetto-pietra-dopo-ghiaia-colorata-480.avif 480w, assets/img/aiuola-vialetto-pietra-dopo-ghiaia-colorata-800.avif 800w, assets/img/aiuola-vialetto-pietra-dopo-ghiaia-colorata-1200.avif 1200w" sizes="(min-width: 1080px) 430px, (min-width: 700px) 39vw, 78vw">
-              <source type="image/webp" srcset="assets/img/aiuola-vialetto-pietra-dopo-ghiaia-colorata-480.webp 480w, assets/img/aiuola-vialetto-pietra-dopo-ghiaia-colorata-800.webp 800w, assets/img/aiuola-vialetto-pietra-dopo-ghiaia-colorata-1200.webp 1200w" sizes="(min-width: 1080px) 430px, (min-width: 700px) 39vw, 78vw">
-              <img src="assets/img/aiuola-vialetto-pietra-dopo-ghiaia-colorata-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Dopo: aiuola con ghiaia decorativa rosa, bianca, nera e verde disegnata a curve, bordure scure e corteccia attorno alle piante">
-            </picture>
-            <span class="case-tag" aria-hidden="true"><span>03</span>Dopo</span>
-          </button>
-          <div class="case-cap">
-            <h4>Il lavoro finito</h4>
-            <p>Ghiaia decorativa in quattro colori disegnata a curve e separata da bordure scure, corteccia attorno alle piante. Le piante esistenti restano al centro della composizione.</p>
-          </div>
-        </li>
-      </ol>
-      <p class="case-hint">Scorri per vedere le tre fasi &middot; tocca una foto per ingrandirla</p>
-    </div>
-    <div class="pd-more">
-      <h3 class="pd-more-title">Altri lavori a confronto</h3>
-      <p class="pd-more-sub">Stessa inquadratura, dal primo giorno al lavoro finito. Trascina il cursore o guarda la trasformazione.</p>
     <div class="pd" id="pd">
       <div class="pd-picker" role="group" aria-label="Scegli il lavoro">
-      <button type="button" class="pd-pick" data-project="corten" aria-pressed="true">
+      <button type="button" class="pd-pick" data-project="vialetto" aria-pressed="true">
+        <picture><source type="image/avif" srcset="assets/img/pd-vialetto-thumb.avif"><img src="assets/img/pd-vialetto-thumb.webp" width="112" height="140" loading="lazy" decoding="async" alt=""></picture>
+        <span class="pd-pick-text"><span class="pd-pick-title">Aiuola lungo il vialetto</span><span class="pd-pick-meta">3 fasi</span></span>
+      </button>
+      <button type="button" class="pd-pick" data-project="corten" aria-pressed="false">
         <picture><source type="image/avif" srcset="assets/img/pd-corten-thumb.avif"><img src="assets/img/pd-corten-thumb.webp" width="112" height="140" loading="lazy" decoding="async" alt=""></picture>
         <span class="pd-pick-text"><span class="pd-pick-title">Ghiaia e vasche in corten</span><span class="pd-pick-meta">4 fasi</span></span>
       </button>
@@ -2498,24 +2311,19 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         <div class="ba-slider" id="baSlider" tabindex="0" role="slider" aria-label="Confronto prima e dopo: trascina, oppure usa le frecce sinistra e destra" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% visibile il dopo">
           <div class="pd-layers" id="pdLayers">
       <picture class="pd-layer is-before" data-i="0">
-        <source type="image/avif" srcset="assets/img/pd-corten-scavo-480.avif 480w, assets/img/pd-corten-scavo-720.avif 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
-        <source type="image/webp" srcset="assets/img/pd-corten-scavo-480.webp 480w, assets/img/pd-corten-scavo-720.webp 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
-        <img src="assets/img/pd-corten-scavo-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Prima: terreno scavato con il mini escavatore e piante in vaso in attesa" draggable="false">
+        <source type="image/avif" srcset="assets/img/pd-vialetto-prima-480.avif 480w, assets/img/pd-vialetto-prima-720.avif 720w, assets/img/pd-vialetto-prima-960.avif 960w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <source type="image/webp" srcset="assets/img/pd-vialetto-prima-480.webp 480w, assets/img/pd-vialetto-prima-720.webp 720w, assets/img/pd-vialetto-prima-960.webp 960w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <img src="assets/img/pd-vialetto-prima-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Prima: aiuola lungo il vialetto in pietra invasa da erbe spontanee, con terreno scoperto" draggable="false">
       </picture>
       <picture class="pd-layer" data-i="1">
-        <source type="image/avif" srcset="assets/img/pd-corten-telo-480.avif 480w, assets/img/pd-corten-telo-720.avif 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
-        <source type="image/webp" srcset="assets/img/pd-corten-telo-480.webp 480w, assets/img/pd-corten-telo-720.webp 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
-        <img src="assets/img/pd-corten-telo-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Telo: telo antierba steso e piante disposte nei vasi" draggable="false">
+        <source type="image/avif" srcset="assets/img/pd-vialetto-durante-480.avif 480w, assets/img/pd-vialetto-durante-720.avif 720w, assets/img/pd-vialetto-durante-960.avif 960w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <source type="image/webp" srcset="assets/img/pd-vialetto-durante-480.webp 480w, assets/img/pd-vialetto-durante-720.webp 720w, assets/img/pd-vialetto-durante-960.webp 960w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <img src="assets/img/pd-vialetto-durante-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Durante: terreno ripulito, livellato e rastrellato, con il bordo verso il vialetto tracciato" draggable="false">
       </picture>
-      <picture class="pd-layer" data-i="2">
-        <source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif 480w, assets/img/pd-corten-ghiaia-720.avif 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
-        <source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
-        <img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Irrigazione: impianto a goccia sul telo e prima ghiaia" draggable="false">
-      </picture>
-      <picture class="pd-layer is-after" data-i="3">
-        <source type="image/avif" srcset="assets/img/pd-corten-finito-480.avif 480w, assets/img/pd-corten-finito-720.avif 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
-        <source type="image/webp" srcset="assets/img/pd-corten-finito-480.webp 480w, assets/img/pd-corten-finito-720.webp 720w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
-        <img src="assets/img/pd-corten-finito-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Dopo: aiuola in ghiaia chiara con piante e vasche in corten lungo il muro e la recinzione" draggable="false">
+      <picture class="pd-layer is-after" data-i="2">
+        <source type="image/avif" srcset="assets/img/pd-vialetto-finito-480.avif 480w, assets/img/pd-vialetto-finito-720.avif 720w, assets/img/pd-vialetto-finito-960.avif 960w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <source type="image/webp" srcset="assets/img/pd-vialetto-finito-480.webp 480w, assets/img/pd-vialetto-finito-720.webp 720w, assets/img/pd-vialetto-finito-960.webp 960w" sizes="(min-width: 900px) 470px, calc(100vw - 3rem)">
+        <img src="assets/img/pd-vialetto-finito-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Dopo: aiuola con ghiaia decorativa rosa, bianca, nera e verde disegnata a curve, bordure scure e corteccia attorno alle piante" draggable="false">
       </picture>
           </div>
       <div class="ba-divider" aria-hidden="true"></div>
@@ -2523,14 +2331,13 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
-          <span class="ba-tag ba-tag-before" id="baTagBefore">Scavo</span>
-          <span class="ba-tag ba-tag-after" id="baTagAfter">Finito</span>
+          <span class="ba-tag ba-tag-before" id="baTagBefore">Prima</span>
+          <span class="ba-tag ba-tag-after" id="baTagAfter">Dopo</span>
         </div>
         <div class="pd-timeline" id="pdTimeline" role="group" aria-label="Fasi del lavoro: scegli da quale confrontare">
-        <button type="button" class="pd-step is-current" data-i="0" aria-pressed="true"><span class="pd-step-dot" aria-hidden="true"></span>Scavo</button>
-        <button type="button" class="pd-step" data-i="1" aria-pressed="false"><span class="pd-step-dot" aria-hidden="true"></span>Telo</button>
-        <button type="button" class="pd-step" data-i="2" aria-pressed="false"><span class="pd-step-dot" aria-hidden="true"></span>Irrigazione</button>
-        <button type="button" class="pd-step" data-i="3" aria-pressed="false"><span class="pd-step-dot" aria-hidden="true"></span>Finito</button>
+        <button type="button" class="pd-step is-current" data-i="0" aria-pressed="true"><span class="pd-step-dot" aria-hidden="true"></span>Prima</button>
+        <button type="button" class="pd-step" data-i="1" aria-pressed="false"><span class="pd-step-dot" aria-hidden="true"></span>Durante</button>
+        <button type="button" class="pd-step" data-i="2" aria-pressed="false"><span class="pd-step-dot" aria-hidden="true"></span>Dopo</button>
         </div>
         <div class="pd-actions">
           <button type="button" class="pd-play" id="pdPlay"><span class="pd-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg></span><span id="pdPlayLabel">Guarda la trasformazione</span></button>
@@ -2538,11 +2345,10 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         </div>
       </div>
       <div class="pd-info" aria-live="polite">
-        <p class="pd-kind" id="pdKind">Giardino residenziale</p>
-        <h3 class="pd-title" id="pdTitle">Ghiaia e vasche in corten</h3>
-        <p class="pd-desc" id="pdDesc">Da terreno scavato a giardino in ghiaia lungo muro e recinzione: scavo con mini escavatore, telo antierba, irrigazione a goccia, ghiaia chiara e vasche in acciaio corten piantate.</p>
+        <p class="pd-kind" id="pdKind">Giardino privato</p>
+        <h3 class="pd-title" id="pdTitle">Aiuola lungo il vialetto</h3>
+        <p class="pd-desc" id="pdDesc">Dalle erbe spontanee alla ghiaia decorativa: infestanti tolte, terreno livellato, bordure scure e ghiaia in quattro colori disegnata a curve, con corteccia attorno alle piante che c'erano già.</p>
       </div>
-    </div>
     </div>
   </div>
 </section>
@@ -2954,6 +2760,34 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   // inquadratura. A sinistra del cursore la fase scelta, a destra il finito.
   var PROJECTS = [
     {
+      "id": "vialetto",
+      "title": "Aiuola lungo il vialetto",
+      "kind": "Giardino privato",
+      "desc": "Dalle erbe spontanee alla ghiaia decorativa: infestanti tolte, terreno livellato, bordure scure e ghiaia in quattro colori disegnata a curve, con corteccia attorno alle piante che c'erano già.",
+      "w": [
+        480,
+        720,
+        960
+      ],
+      "stages": [
+        {
+          "key": "prima",
+          "label": "Prima",
+          "alt": "aiuola lungo il vialetto in pietra invasa da erbe spontanee, con terreno scoperto"
+        },
+        {
+          "key": "durante",
+          "label": "Durante",
+          "alt": "terreno ripulito, livellato e rastrellato, con il bordo verso il vialetto tracciato"
+        },
+        {
+          "key": "finito",
+          "label": "Dopo",
+          "alt": "aiuola con ghiaia decorativa rosa, bianca, nera e verde disegnata a curve, bordure scure e corteccia attorno alle piante"
+        }
+      ]
+    },
+    {
       "id": "corten",
       "title": "Ghiaia e vasche in corten",
       "kind": "Giardino residenziale",
@@ -3145,7 +2979,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       return '<picture class="pd-layer" data-i="' + i + '">' +
         '<source type="image/avif" srcset="' + srcset(proj.id, st.key, 'avif') + '" sizes="' + PD_SIZES + '">' +
         '<source type="image/webp" srcset="' + srcset(proj.id, st.key, 'webp') + '" sizes="' + PD_SIZES + '">' +
-        '<img src="assets/img/pd-' + proj.id + '-' + st.key + '-720.jpg" width="720" height="900" decoding="async" alt="' + pre + st.alt + '" draggable="false">' +
+        '<img src="assets/img/pd-' + proj.id + '-' + st.key + '-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="' + pre + st.alt + '" draggable="false">' +
         '</picture>';
     }).join('');
     layers = Array.prototype.slice.call(layersBox.children);
@@ -3550,9 +3384,8 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     setTimeout(function() { lbShow(lbIndex + dir, dir); }, 160);
   }
   function openLb(trigger) {
-    // sfoglia solo le foto dello stesso gruppo (galleria o caso prima/dopo) e del filtro attivo
-    lbItems = lbAll.filter(function(el) { return !el.hidden && el.dataset.lb === trigger.dataset.lb; });
-    lb.setAttribute('aria-label', trigger.dataset.lb === 'caso' ? 'Prima, durante e dopo' : 'Galleria dei lavori');
+    // sfoglia solo le foto visibili con il filtro attivo
+    lbItems = lbAll.filter(function(el) { return !el.hidden; });
     lbShow(lbItems.indexOf(trigger));
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';

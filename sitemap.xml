@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://andrealisagarden.it/</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -13,13 +13,13 @@
       <image:loc>https://andrealisagarden.it/assets/img/andrea-lisa-ritratto-800.jpg</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/aiuola-vialetto-pietra-prima-infestanti-1200.jpg</image:loc>
+      <image:loc>https://andrealisagarden.it/assets/img/pd-vialetto-prima-720.jpg</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/aiuola-vialetto-pietra-durante-terreno-livellato-1200.jpg</image:loc>
+      <image:loc>https://andrealisagarden.it/assets/img/pd-vialetto-durante-720.jpg</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://andrealisagarden.it/assets/img/aiuola-vialetto-pietra-dopo-ghiaia-colorata-1200.jpg</image:loc>
+      <image:loc>https://andrealisagarden.it/assets/img/pd-vialetto-finito-720.jpg</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://andrealisagarden.it/assets/img/gal-10-1200.jpg</image:loc>
