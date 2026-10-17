@@ -1674,14 +1674,6 @@ textarea:focus-visible,
   gap: 0.4rem;
 }
 .prev-error[hidden] { display: none; }
-/* Honeypot anti-spam: nascosto agli utenti, visibile ai bot */
-.hp-field {
-  position: absolute !important;
-  left: -9999px;
-  top: auto;
-  width: 1px; height: 1px;
-  overflow: hidden;
-}
 .prev-error svg { width: 16px; height: 16px; flex-shrink: 0; }
 .prev-step.invalid .prev-options { animation: shake 0.3s var(--ease); }
 @keyframes shake {
@@ -2420,6 +2412,50 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 
 .hp img, .svc-amb img, .pd-ambient img, .about-plant img, .quals-rock img, .stone img, .prev-plant img { will-change: transform; }
 .svc-leaves i { will-change: transform; }
+
+/* ── Dall'hero al prima e dopo ──
+   Il prima e dopo sale come un foglio sopra la foto, che scorrendo si
+   scurisce; il confronto si avvicina mentre entra (--e, da JS). I link
+   alla sezione aprono una tendina che la scopre come il cursore del
+   confronto. */
+.prima-dopo { --e: 1; z-index: 2; margin-top: -2.25rem; border-radius: 2.25rem 2.25rem 0 0; box-shadow: 0 -30px 60px rgba(5, 12, 8, 0.45); }
+.hero-content { padding-bottom: 6.75rem; opacity: calc(1 - var(--s) * 1.3); transform: translateY(calc(var(--s) * -48px)); }
+@media (min-width: 1000px) { .hero-content { padding-bottom: 8.75rem; } }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none; background: #0b140e; opacity: calc(var(--s) * 0.65); }
+.prima-dopo .pd-stage { transform: translateY(calc((1 - var(--e)) * 80px)) scale(calc(0.88 + var(--e) * 0.12)); transform-origin: 50% 0; }
+
+.pd-wipe { --r: 100%; --lft: 0%; --l: 0%; position: fixed; inset: 0; z-index: 300; visibility: hidden; pointer-events: none; }
+.pd-wipe.is-on { visibility: visible; pointer-events: auto; }
+.pd-wipe-panel {
+  position: absolute; inset: 0;
+  display: grid; place-content: center; gap: 0.9rem;
+  padding: 1.5rem; text-align: center; color: #fff;
+  background:
+    radial-gradient(60rem 36rem at 50% 42%, rgba(98, 160, 74, 0.28), transparent 65%),
+    linear-gradient(180deg, var(--forest-1), var(--forest-0));
+  clip-path: inset(0 var(--r) 0 var(--lft));
+}
+.pd-wipe-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(2.8rem, 10vw, 6.5rem); line-height: 0.95; letter-spacing: -0.045em; }
+.pd-wipe-title span { font-weight: 300; color: #c4e3ad; }
+.pd-wipe-sub { font-size: var(--fz-md); color: rgba(255, 255, 255, 0.72); }
+.pd-wipe.is-on .pd-wipe-title, .pd-wipe.is-on .pd-wipe-sub { animation: wipeText 0.9s var(--ease-out) both; }
+.pd-wipe.is-on .pd-wipe-sub { animation-delay: 0.12s; }
+@keyframes wipeText { from { opacity: 0; translate: 0 22px; } }
+.pd-wipe-line { position: absolute; top: 0; bottom: 0; left: var(--l); width: 2px; margin-left: -1px; background: #fff; box-shadow: 0 0 18px rgba(255, 255, 255, 0.7); }
+.pd-wipe-knob {
+  position: absolute; top: 50%; left: var(--l);
+  width: 56px; height: 56px; margin: -28px 0 0 -28px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: 50%; background: rgba(255, 255, 255, 0.95); color: var(--charcoal);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4);
+}
+.pd-wipe-knob svg { width: 12px; height: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-content { opacity: 1; transform: none; }
+  .hero::after { content: none; }
+  .prima-dopo .pd-stage { transform: none; }
+}
 </style>
 </head>
 <body>
@@ -2431,9 +2467,9 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   <div class="nav-inner">
     <a class="nav-logo" href="#main">Lisa <span>Garden</span></a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#chi-siamo">Chi siamo</a></li>
-      <li><a href="#servizi">Servizi</a></li>
       <li><a href="#prima-dopo">Lavori</a></li>
+      <li><a href="#servizi">Servizi</a></li>
+      <li><a href="#chi-siamo">Chi siamo</a></li>
       <li><a href="#zone">Zone</a></li>
       <li><a href="#preventivo" class="nav-cta-link">Preventivo</a></li>
     </ul>
@@ -2471,171 +2507,8 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       <p class="hero-sub">Lisa Garden è la ditta di Andrea Lisa: manutenzione del verde, potature, impianti di irrigazione e nuove aree verdi a Cuneo e in provincia. Un solo referente, dalla prima visita alla consegna del lavoro.</p>
       <div class="hero-actions">
         <a href="#preventivo" class="hero-cta">Richiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <a href="#servizi" class="hero-link">Scopri i servizi<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+        <a href="#prima-dopo" class="hero-link">Guarda prima e dopo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- CHI SIAMO -->
-<section class="about is-light" id="chi-siamo" aria-labelledby="aboutTitle">
-  <div class="tear" aria-hidden="true"><svg viewBox="0 0 1440 56" preserveAspectRatio="none" focusable="false"><path class="tear-fiber" d="M0 26.0 L0 26.3 L21.2 21.4 L32.0 20.7 L41.8 17.5 L61.2 17.1 L68.5 22.3 L78.2 26.5 L85.1 30.1 L100.6 29.9 L122.3 33.4 L133.6 33.1 L140.6 34.2 L153.1 29.7 L169.2 32.9 L176.6 35.3 L193.5 31.9 L211.2 23.6 L217.5 28.0 L237.9 28.3 L259.4 29.9 L279.5 30.6 L292.5 34.8 L307.6 34.4 L327.7 38.6 L346.2 36.7 L367.3 36.4 L376.3 38.0 L391.4 32.6 L399.4 34.2 L415.0 30.9 L429.3 29.5 L447.0 30.1 L453.7 30.2 L460.6 25.0 L470.1 32.0 L488.7 31.2 L499.6 36.8 L507.0 35.6 L514.4 30.8 L535.7 28.7 L543.3 25.9 L563.8 28.9 L570.9 27.2 L592.4 26.0 L605.6 28.4 L626.5 32.6 L637.1 35.3 L651.7 29.9 L659.6 27.5 L668.7 24.8 L687.5 18.3 L701.7 26.7 L721.0 26.2 L727.1 25.4 L744.3 27.5 L762.4 25.6 L776.3 30.6 L785.7 27.3 L803.1 27.8 L816.6 22.7 L837.6 19.4 L855.3 20.3 L873.5 21.5 L887.4 28.8 L907.3 32.5 L923.2 25.5 L930.4 32.7 L940.6 30.7 L954.1 29.0 L974.3 29.8 L982.6 37.9 L990.3 40.8 L997.8 47.8 L1016.3 48.2 L1028.8 48.5 L1038.5 47.7 L1047.3 43.2 L1054.6 39.6 L1060.6 37.1 L1069.0 35.2 L1085.6 39.2 L1097.6 39.0 L1110.2 41.4 L1118.2 41.8 L1132.3 38.4 L1147.1 39.6 L1157.0 40.1 L1170.4 43.2 L1187.0 48.9 L1200.6 48.7 L1207.0 48.9 L1223.9 44.3 L1231.4 39.9 L1242.2 44.9 L1250.8 49.5 L1261.6 48.5 L1283.2 47.5 L1301.1 47.8 L1312.5 47.8 L1329.2 49.1 L1344.7 44.4 L1364.3 43.2 L1385.1 34.7 L1400.6 30.7 L1407.3 32.3 L1414.3 35.6 L1423.0 34.7 L1439.7 40.8 L1440 38.8 L1440 56 L0 56 Z"/><path class="tear-paper" d="M0 29.0 L0 29.0 L21.2 24.8 L32.0 23.6 L41.8 20.9 L61.2 20.7 L68.5 25.6 L78.2 29.6 L85.1 31.9 L100.6 33.4 L122.3 36.7 L133.6 36.1 L140.6 38.0 L153.1 32.3 L169.2 36.0 L176.6 39.0 L193.5 33.5 L211.2 28.0 L217.5 32.2 L237.9 32.2 L259.4 33.6 L279.5 32.8 L292.5 38.8 L307.6 38.4 L327.7 41.9 L346.2 40.0 L367.3 40.8 L376.3 42.1 L391.4 37.0 L399.4 38.5 L415.0 32.8 L429.3 31.1 L447.0 33.8 L453.7 34.6 L460.6 28.5 L470.1 34.0 L488.7 35.6 L499.6 39.3 L507.0 39.3 L514.4 33.0 L535.7 30.5 L543.3 29.6 L563.8 31.8 L570.9 30.8 L592.4 29.4 L605.6 31.1 L626.5 35.7 L637.1 37.5 L651.7 33.8 L659.6 30.0 L668.7 27.3 L687.5 22.5 L701.7 29.4 L721.0 28.7 L727.1 29.3 L744.3 30.8 L762.4 29.9 L776.3 32.5 L785.7 31.2 L803.1 30.5 L816.6 25.2 L837.6 22.5 L855.3 22.5 L873.5 25.3 L887.4 31.5 L907.3 34.1 L923.2 29.7 L930.4 34.7 L940.6 34.0 L954.1 31.4 L974.3 33.4 L982.6 39.5 L990.3 43.3 L997.8 50.0 L1016.3 51.0 L1028.8 51.5 L1038.5 51.5 L1047.3 46.4 L1054.6 42.1 L1060.6 40.0 L1069.0 38.7 L1085.6 42.1 L1097.6 42.2 L1110.2 44.2 L1118.2 44.8 L1132.3 41.1 L1147.1 43.4 L1157.0 44.6 L1170.4 45.7 L1187.0 51.5 L1200.6 51.1 L1207.0 51.5 L1223.9 46.3 L1231.4 43.9 L1242.2 49.2 L1250.8 51.5 L1261.6 50.0 L1283.2 51.5 L1301.1 49.6 L1312.5 50.7 L1329.2 51.5 L1344.7 46.3 L1364.3 45.3 L1385.1 39.1 L1400.6 33.3 L1407.3 36.6 L1414.3 39.7 L1423.0 38.7 L1439.7 42.4 L1440 42.4 L1440 56 L0 56 Z"/></svg></div>
-  <div class="container">
-    <div class="sec-head reveal">
-      <h2 class="section-title split tex-hedge" id="aboutTitle">Andrea Lisa, giardiniere a Vignolo</h2>
-    </div>
-    <div class="about-grid">
-      <div class="about-body reveal">
-        <p class="about-lead">Lisa Garden nasce ufficialmente nel gennaio 2026, ma le sue radici sono più lontane: anni di giardinaggio fatto per piacere, quando il verde era una passione e non ancora un lavoro.</p>
-        <p>Con il tempo quella passione è cresciuta ed è diventata competenza, esperienza e voglia di costruire un progetto professionale. Oggi Lisa Garden è la realizzazione di un desiderio coltivato fin da ragazzo: trasformare l'amore per il verde in un'attività concreta, fondata su cura, dedizione e formazione.</p>
-        <p>Un percorso che tiene insieme esperienza sul campo, attenzione ai dettagli e voglia di continuare a imparare, per offrire interventi curati e soluzioni adatte alle esigenze di ogni spazio verde.</p>
-        <p class="about-note">Ogni lavoro lo segue di persona il titolare, dalla prima visita alla consegna.</p>
-        <div class="about-works">
-          <ul class="about-pills"><li><picture><source type="image/avif" srcset="assets/img/gal-11-480.avif"><img src="assets/img/gal-11-480.webp" width="480" height="640" alt="Prato all'inglese con bordure in ghiaia rossa" loading="lazy" decoding="async"></picture></li><li><picture><source type="image/avif" srcset="assets/img/gal-13-480.avif"><img src="assets/img/gal-13-480.webp" width="480" height="640" alt="Giardino in ghiaia con vasche in corten" loading="lazy" decoding="async"></picture></li><li><picture><source type="image/avif" srcset="assets/img/gal-12-480.avif"><img src="assets/img/gal-12-480.webp" width="480" height="640" alt="Vasche in corten lungo il muro" loading="lazy" decoding="async"></picture></li><li><picture><source type="image/avif" srcset="assets/img/gal-2-480.avif"><img src="assets/img/gal-2-480.webp" width="480" height="640" alt="Prato lungo il muretto in pietra" loading="lazy" decoding="async"></picture></li></ul>
-          <a class="about-works-link" href="#galleria">Guarda i lavori<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        </div>
-      </div>
-      <div class="about-media reveal">
-        <figure class="about-portrait">
-          <picture class="about-plant" aria-hidden="true"><source type="image/avif" srcset="assets/img/pianta-foglie-larghe-560.avif 560w, assets/img/pianta-foglie-larghe-900.avif 900w" sizes="(min-width: 900px) 520px, 60vw"><img src="assets/img/pianta-foglie-larghe-560.webp" srcset="assets/img/pianta-foglie-larghe-560.webp 560w, assets/img/pianta-foglie-larghe-900.webp 900w" sizes="(min-width: 900px) 520px, 90vw" alt="" loading="lazy" decoding="async"></picture>
-          <div class="about-frame">
-            <picture>
-              <source type="image/avif" srcset="assets/img/andrea-lisa-ritratto-480.avif 480w, assets/img/andrea-lisa-ritratto-800.avif 800w" sizes="(min-width: 1080px) 400px, (min-width: 900px) 36vw, 76vw">
-              <source type="image/webp" srcset="assets/img/andrea-lisa-ritratto-480.webp 480w, assets/img/andrea-lisa-ritratto-800.webp 800w" sizes="(min-width: 1080px) 400px, (min-width: 900px) 36vw, 76vw">
-              <img src="assets/img/andrea-lisa-ritratto-800.jpg" width="800" height="1000" loading="lazy" decoding="async" alt="Andrea Lisa, titolare di Lisa Garden, con la polo verde dell'azienda">
-            </picture>
-          </div>
-          <figcaption><strong>Andrea Lisa</strong><span>titolare di Lisa Garden</span></figcaption>
-        </figure>
-      </div>
-    </div>
-    <div class="quals reveal" id="quals">
-      <canvas class="quals-moss" id="qualsMoss" aria-hidden="true"></canvas>
-      <div class="quals-veil" aria-hidden="true"></div>
-      <picture class="quals-rock" data-depth="22" aria-hidden="true"><source type="image/avif" srcset="assets/img/pianta-roccia-muschio-360.avif"><img src="assets/img/pianta-roccia-muschio-360.webp" width="360" height="221" alt="" loading="lazy" decoding="async"></picture>
-      <p class="quals-hint" aria-hidden="true"><span class="hint-fine">Passa il mouse: dalla terra al prato</span><span class="hint-touch">Tocca: dalla terra al prato</span></p>
-      <div class="quals-head">
-        <h3 class="quals-title split tex-grass">Formazione e qualifiche</h3>
-        <p class="quals-sub">Qualifiche e formazione di Andrea Lisa, con il loro riferimento.</p>
-      </div>
-      <ul class="cred-list">
-        <li class="cred">
-          <div>
-            <span class="cred-type">Qualifica professionale</span>
-            <h4 class="cred-title">Responsabile tecnico per la manutenzione delle aree verdi</h4>
-            <p class="cred-ref"><strong>DGR 39-8764/2019</strong> &middot; risulta dalla visura camerale della ditta</p>
-          </div>
-        </li>
-        <li class="cred">
-          <div>
-            <span class="cred-type">Attestato di formazione</span>
-            <h4 class="cred-title">Utilizzatore professionale di prodotti fitosanitari</h4>
-            <p class="cred-ref"><strong>Corso di 20 ore, maggio 2026</strong> &middot; Falchi &amp; Partners, agenzia formativa accreditata dalla Regione Umbria &middot; D.Lgs. 150/2012</p>
-          </div>
-        </li>
-        <li class="cred cred--skills">
-          <div>
-            <span class="cred-type">In sintesi</span>
-            <h4 class="cred-title">Abilitazioni e competenze tecniche</h4>
-            <ul class="cred-badges" aria-label="Abilitazioni e competenze">
-              <li>Manutenzione aree verdi</li>
-              <li>Prodotti fitosanitari</li>
-              <li>Mini escavatore</li>
-              <li>Trinciaerba</li>
-              <li>Irrigazione a goccia</li>
-              <li>Recinzioni in castagno</li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-
-
-<!-- SERVIZI -->
-<section class="servizi is-dark" id="servizi" aria-labelledby="serviziTitle">
-  <div class="svc-ambient" aria-hidden="true"><picture class="svc-amb is-on" data-i="0"><source type="image/avif" srcset="assets/img/gal-20-480.avif"><img src="assets/img/gal-20-480.webp" alt="" loading="lazy" decoding="async"></picture><picture class="svc-amb" data-i="1"><source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif"><img src="assets/img/pd-corten-ghiaia-480.webp" alt="" loading="lazy" decoding="async"></picture><picture class="svc-amb" data-i="2"><source type="image/avif" srcset="assets/img/gal-11-480.avif"><img src="assets/img/gal-11-480.webp" alt="" loading="lazy" decoding="async"></picture><picture class="svc-amb" data-i="3"><source type="image/avif" srcset="assets/img/gal-15-480.avif"><img src="assets/img/gal-15-480.webp" alt="" loading="lazy" decoding="async"></picture><picture class="svc-amb" data-i="4"><source type="image/avif" srcset="assets/img/gal-24-480.avif"><img src="assets/img/gal-24-480.webp" alt="" loading="lazy" decoding="async"></picture></div>
-  <div class="svc-leaves" aria-hidden="true"><i style="--l:6%;--d:0.0s;--t:14.0s;--s:1.00;--r:30deg"></i><i style="--l:18%;--d:-5.0s;--t:17.0s;--s:0.70;--r:-40deg"></i><i style="--l:31%;--d:-9.0s;--t:13.0s;--s:0.90;--r:60deg"></i><i style="--l:47%;--d:-2.0s;--t:19.0s;--s:0.60;--r:-20deg"></i><i style="--l:58%;--d:-11.0s;--t:15.0s;--s:1.10;--r:45deg"></i><i style="--l:71%;--d:-6.0s;--t:18.0s;--s:0.80;--r:-60deg"></i><i style="--l:83%;--d:-3.0s;--t:16.0s;--s:0.95;--r:20deg"></i><i style="--l:93%;--d:-13.0s;--t:20.0s;--s:0.65;--r:-35deg"></i></div>
-  <div class="container">
-    <div class="sec-head reveal">
-      <h2 class="section-title split" id="serviziTitle">Cosa facciamo</h2>
-      <p class="section-sub">Dalla cura di tutti i giorni alla realizzazione di un giardino nuovo, fino a recinzioni in castagno e trinciatura. Ogni lavoro parte da una visita sul posto e da un preventivo su misura.</p>
-    </div>
-    <picture class="svc-fern" aria-hidden="true"><source type="image/avif" srcset="assets/img/felce-560.avif 560w, assets/img/felce-900.avif 900w" sizes="(min-width: 1000px) 640px, 80vw"><img src="assets/img/felce-560.webp" srcset="assets/img/felce-560.webp 560w, assets/img/felce-900.webp 900w" sizes="(min-width: 1000px) 640px, 80vw" alt="" loading="lazy" decoding="async"></picture>
-    <div class="svc-wrap">
-      <ol class="svc-list reveal">
-        <li class="svc-item is-open" data-i="0">
-          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn0" aria-expanded="true" aria-controls="svcPanel0"><span class="svc-dot" aria-hidden="true"><img src="assets/img/gal-20-480.webp" alt="" loading="lazy" decoding="async"></span><span class="svc-name">Cura e gestione del verde, piante e siepi</span><span class="svc-tag">Prato, aiuole, siepi e piante in ordine, tutto l'anno.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
-          <div class="svc-panel" id="svcPanel0" role="region" aria-labelledby="svcBtn0">
-            <div class="svc-panel-in">
-              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/gal-20-480.avif 480w, assets/img/gal-20-800.avif 800w, assets/img/gal-20-1200.avif 1200w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/gal-20-480.webp 480w, assets/img/gal-20-800.webp 800w, assets/img/gal-20-1200.webp 1200w" sizes="calc(100vw - 3rem)"><img src="assets/img/gal-20-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato tagliato a strisce accanto a una casa, con il tosaerba di Lisa Garden in primo piano"></picture>
-              <ul class="svc-points"><li>Taglio del prato</li><li>Pulizia di aiuole e vialetti</li><li>Rimozione delle erbe infestanti</li><li>Raccolta del verde tagliato</li><li>Potatura di siepi e arbusti</li><li>Cura periodica delle piante</li></ul>
-              <p class="svc-desc">Interventi periodici o singoli, per chi non ha tempo di seguire il giardino o vuole tenerlo curato con continuità. Per il diserbo Andrea ha seguito il corso per utilizzatori professionali di prodotti fitosanitari.</p>
-              <a href="#preventivo" class="svc-cta" data-servizio="Cura e gestione del verde">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            </div>
-          </div>
-        </li>
-        <li class="svc-item is-open" data-i="1">
-          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn1" aria-expanded="true" aria-controls="svcPanel1"><span class="svc-dot" aria-hidden="true"><img src="assets/img/pd-corten-ghiaia-480.webp" alt="" loading="lazy" decoding="async"></span><span class="svc-name">Sistemi di irrigazione</span><span class="svc-tag">L'acqua giusta per ogni zona del giardino.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
-          <div class="svc-panel" id="svcPanel1" role="region" aria-labelledby="svcBtn1">
-            <div class="svc-panel-in">
-              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif 480w, assets/img/pd-corten-ghiaia-720.avif 720w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="calc(100vw - 3rem)"><img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Linea di irrigazione a goccia posata sul telo antierba in un'aiuola con ghiaia chiara"></picture>
-              <ul class="svc-points"><li>Progettazione su misura</li><li>Posa dell'impianto</li><li>Irrigazione a goccia per aiuole e vasche</li><li>Manutenzione degli impianti</li></ul>
-              <p class="svc-desc">Per ridurre le annaffiature a mano e dare a prato e piante l'acqua di cui hanno bisogno.</p>
-              <a href="#preventivo" class="svc-cta" data-servizio="Impianto irrigazione">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            </div>
-          </div>
-        </li>
-        <li class="svc-item is-open" data-i="2">
-          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn2" aria-expanded="true" aria-controls="svcPanel2"><span class="svc-dot" aria-hidden="true"><img src="assets/img/gal-11-480.webp" alt="" loading="lazy" decoding="async"></span><span class="svc-name">Progettazione e realizzazione giardini e aree verdi</span><span class="svc-tag">Dal terreno nudo al giardino finito.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
-          <div class="svc-panel" id="svcPanel2" role="region" aria-labelledby="svcBtn2">
-            <div class="svc-panel-in">
-              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/gal-11-480.avif 480w, assets/img/gal-11-800.avif 800w, assets/img/gal-11-1200.avif 1200w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/gal-11-480.webp 480w, assets/img/gal-11-800.webp 800w, assets/img/gal-11-1200.webp 1200w" sizes="calc(100vw - 3rem)"><img src="assets/img/gal-11-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure in ghiaia rossa e piante, con le colline sullo sfondo"></picture>
-              <ul class="svc-points"><li>Progetto su misura</li><li>Prati a semina o in rotoli</li><li>Aiuole e bordure</li><li>Pacciamatura con corteccia o ghiaia decorativa</li></ul>
-              <p class="svc-desc">Ogni spazio viene progettato su misura per valorizzare l'ambiente e rispondere alle esigenze del cliente.</p>
-              <a href="#preventivo" class="svc-cta" data-servizio="Progettazione e realizzazione giardini">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            </div>
-          </div>
-        </li>
-        <li class="svc-item is-open" data-i="3">
-          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn3" aria-expanded="true" aria-controls="svcPanel3"><span class="svc-dot" aria-hidden="true"><img src="assets/img/gal-15-480.webp" alt="" loading="lazy" decoding="async"></span><span class="svc-name">Recinzioni e staccionate in castagno</span><span class="svc-tag">Pali di castagno per delimitare prati, orti e proprietà.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
-          <div class="svc-panel" id="svcPanel3" role="region" aria-labelledby="svcBtn3">
-            <div class="svc-panel-in">
-              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/gal-15-480.avif 480w, assets/img/gal-15-800.avif 800w, assets/img/gal-15-1200.avif 1200w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/gal-15-480.webp 480w, assets/img/gal-15-800.webp 800w, assets/img/gal-15-1200.webp 1200w" sizes="calc(100vw - 3rem)"><img src="assets/img/gal-15-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Pali di castagno allineati lungo uno scavo, con il mini escavatore e il filo di tracciamento"></picture>
-              <ul class="svc-points"><li>Pali in legno di castagno</li><li>Scavo e posa con mini escavatore</li><li>Tracciamento della linea</li><li>Staccionate su misura</li></ul>
-              <p class="svc-desc">Una recinzione in legno naturale che si inserisce bene nel verde, anche su terreni ampi.</p>
-              <a href="#preventivo" class="svc-cta" data-servizio="Recinzione in castagno">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            </div>
-          </div>
-        </li>
-        <li class="svc-item is-open" data-i="4">
-          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn4" aria-expanded="true" aria-controls="svcPanel4"><span class="svc-dot" aria-hidden="true"><img src="assets/img/gal-24-480.webp" alt="" loading="lazy" decoding="async"></span><span class="svc-name">Trinciatura erba e sterpaglie</span><span class="svc-tag">Erba alta e terreni incolti riportati in ordine.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
-          <div class="svc-panel" id="svcPanel4" role="region" aria-labelledby="svcBtn4">
-            <div class="svc-panel-in">
-              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/gal-24-480.avif 480w, assets/img/gal-24-800.avif 800w, assets/img/gal-24-1200.avif 1200w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/gal-24-480.webp 480w, assets/img/gal-24-800.webp 800w, assets/img/gal-24-1200.webp 1200w" sizes="calc(100vw - 3rem)"><img src="assets/img/gal-24-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Trattorino trinciaerba verde in un prato di erba alta davanti a una casa"></picture>
-              <ul class="svc-points"><li>Trinciatura con trattorino trinciaerba</li><li>Erba alta e sterpaglie</li><li>Terreni incolti e bordi</li><li>Prima della preparazione del terreno</li></ul>
-              <p class="svc-desc">Per prati abbandonati, terreni da recuperare o aree da tenere pulite durante la stagione.</p>
-              <a href="#preventivo" class="svc-cta" data-servizio="Trinciatura erba e sterpaglie">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            </div>
-          </div>
-        </li>
-      </ol>
-      <div class="svc-stage reveal reveal-delay-1" aria-hidden="true">
-        <div class="svc-frame">
-          <picture class="svc-shot is-on" data-i="0"><source type="image/avif" srcset="assets/img/gal-20-480.avif 480w, assets/img/gal-20-800.avif 800w, assets/img/gal-20-1200.avif 1200w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/gal-20-480.webp 480w, assets/img/gal-20-800.webp 800w, assets/img/gal-20-1200.webp 1200w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/gal-20-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato tagliato a strisce accanto a una casa, con il tosaerba di Lisa Garden in primo piano"></picture>
-          <picture class="svc-shot" data-i="1"><source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif 480w, assets/img/pd-corten-ghiaia-720.avif 720w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Linea di irrigazione a goccia posata sul telo antierba in un'aiuola con ghiaia chiara"></picture>
-          <picture class="svc-shot" data-i="2"><source type="image/avif" srcset="assets/img/gal-11-480.avif 480w, assets/img/gal-11-800.avif 800w, assets/img/gal-11-1200.avif 1200w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/gal-11-480.webp 480w, assets/img/gal-11-800.webp 800w, assets/img/gal-11-1200.webp 1200w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/gal-11-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure in ghiaia rossa e piante, con le colline sullo sfondo"></picture>
-          <picture class="svc-shot" data-i="3"><source type="image/avif" srcset="assets/img/gal-15-480.avif 480w, assets/img/gal-15-800.avif 800w, assets/img/gal-15-1200.avif 1200w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/gal-15-480.webp 480w, assets/img/gal-15-800.webp 800w, assets/img/gal-15-1200.webp 1200w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/gal-15-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Pali di castagno allineati lungo uno scavo, con il mini escavatore e il filo di tracciamento"></picture>
-          <picture class="svc-shot" data-i="4"><source type="image/avif" srcset="assets/img/gal-24-480.avif 480w, assets/img/gal-24-800.avif 800w, assets/img/gal-24-1200.avif 1200w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/gal-24-480.webp 480w, assets/img/gal-24-800.webp 800w, assets/img/gal-24-1200.webp 1200w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/gal-24-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Trattorino trinciaerba verde in un prato di erba alta davanti a una casa"></picture>
-        </div>
-        <p class="svc-caps"><span class="svc-cap is-on" data-i="0">Prato tagliato a strisce, con il tosaerba di Lisa Garden</span><span class="svc-cap" data-i="1">Ala gocciolante posata sul telo, prima della ghiaia</span><span class="svc-cap" data-i="2">Prato all'inglese con bordure in ghiaia rossa</span><span class="svc-cap" data-i="3">Posa dei pali in castagno con il mini escavatore</span><span class="svc-cap" data-i="4">Trinciaerba al lavoro nell'erba alta</span></p>
-      </div>
-    </div>
-    <div class="steps">
-      <h3 class="steps-title reveal split">Come lavoriamo</h3>
-      <ol class="steps-list" id="stepsList"><li class="step reveal reveal-delay-0"><svg class="step-sprout" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path class="sp-stem" d="M30 58 C30 46 29 36 31 24"/><path class="sp-leaf sp-l1" d="M30.5 40 C22 40 15 34 13 25 C22 25 29 31 30.5 40 Z"/><path class="sp-leaf sp-l2" d="M30.5 32 C38 31 45 25 47 16 C38 16 32 23 30.5 32 Z"/><path class="sp-leaf sp-l3" d="M31 24 C27 18 27 10 31 3 C35 10 35 18 31 24 Z"/></svg><span class="step-num" aria-hidden="true">1</span><h4>Visita sul posto</h4><p>Andrea viene a vedere il giardino e ascolta cosa ti serve.</p></li><li class="step reveal reveal-delay-1"><svg class="step-sprout" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path class="sp-stem" d="M30 58 C30 46 29 36 31 24"/><path class="sp-leaf sp-l1" d="M30.5 40 C22 40 15 34 13 25 C22 25 29 31 30.5 40 Z"/><path class="sp-leaf sp-l2" d="M30.5 32 C38 31 45 25 47 16 C38 16 32 23 30.5 32 Z"/><path class="sp-leaf sp-l3" d="M31 24 C27 18 27 10 31 3 C35 10 35 18 31 24 Z"/></svg><span class="step-num" aria-hidden="true">2</span><h4>Preventivo su misura</h4><p>Un preventivo pensato sul tuo spazio e sul lavoro da fare.</p></li><li class="step reveal reveal-delay-2"><svg class="step-sprout" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path class="sp-stem" d="M30 58 C30 46 29 36 31 24"/><path class="sp-leaf sp-l1" d="M30.5 40 C22 40 15 34 13 25 C22 25 29 31 30.5 40 Z"/><path class="sp-leaf sp-l2" d="M30.5 32 C38 31 45 25 47 16 C38 16 32 23 30.5 32 Z"/><path class="sp-leaf sp-l3" d="M31 24 C27 18 27 10 31 3 C35 10 35 18 31 24 Z"/></svg><span class="step-num" aria-hidden="true">3</span><h4>Il lavoro</h4><p>Lo segue di persona il titolare, dall'inizio alla consegna.</p></li><li class="step reveal reveal-delay-3"><svg class="step-sprout" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path class="sp-stem" d="M30 58 C30 46 29 36 31 24"/><path class="sp-leaf sp-l1" d="M30.5 40 C22 40 15 34 13 25 C22 25 29 31 30.5 40 Z"/><path class="sp-leaf sp-l2" d="M30.5 32 C38 31 45 25 47 16 C38 16 32 23 30.5 32 Z"/><path class="sp-leaf sp-l3" d="M31 24 C27 18 27 10 31 3 C35 10 35 18 31 24 Z"/></svg><span class="step-num" aria-hidden="true">4</span><h4>Nel tempo</h4><p>Se vuoi, il giardino resta seguito con interventi periodici.</p></li></ol>
     </div>
   </div>
 </section>
@@ -2735,7 +2608,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     </div>
   </div>
 </section>
-
 
 <!-- GALLERIA -->
 <section class="galleria is-light" id="galleria" aria-labelledby="galTitle">
@@ -2920,6 +2792,167 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   </div>
 </section>
 
+<!-- SERVIZI -->
+<section class="servizi is-dark" id="servizi" aria-labelledby="serviziTitle">
+  <div class="svc-ambient" aria-hidden="true"><picture class="svc-amb is-on" data-i="0"><source type="image/avif" srcset="assets/img/gal-20-480.avif"><img src="assets/img/gal-20-480.webp" alt="" loading="lazy" decoding="async"></picture><picture class="svc-amb" data-i="1"><source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif"><img src="assets/img/pd-corten-ghiaia-480.webp" alt="" loading="lazy" decoding="async"></picture><picture class="svc-amb" data-i="2"><source type="image/avif" srcset="assets/img/gal-11-480.avif"><img src="assets/img/gal-11-480.webp" alt="" loading="lazy" decoding="async"></picture><picture class="svc-amb" data-i="3"><source type="image/avif" srcset="assets/img/gal-15-480.avif"><img src="assets/img/gal-15-480.webp" alt="" loading="lazy" decoding="async"></picture><picture class="svc-amb" data-i="4"><source type="image/avif" srcset="assets/img/gal-24-480.avif"><img src="assets/img/gal-24-480.webp" alt="" loading="lazy" decoding="async"></picture></div>
+  <div class="svc-leaves" aria-hidden="true"><i style="--l:6%;--d:0.0s;--t:14.0s;--s:1.00;--r:30deg"></i><i style="--l:18%;--d:-5.0s;--t:17.0s;--s:0.70;--r:-40deg"></i><i style="--l:31%;--d:-9.0s;--t:13.0s;--s:0.90;--r:60deg"></i><i style="--l:47%;--d:-2.0s;--t:19.0s;--s:0.60;--r:-20deg"></i><i style="--l:58%;--d:-11.0s;--t:15.0s;--s:1.10;--r:45deg"></i><i style="--l:71%;--d:-6.0s;--t:18.0s;--s:0.80;--r:-60deg"></i><i style="--l:83%;--d:-3.0s;--t:16.0s;--s:0.95;--r:20deg"></i><i style="--l:93%;--d:-13.0s;--t:20.0s;--s:0.65;--r:-35deg"></i></div>
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2 class="section-title split" id="serviziTitle">Cosa facciamo</h2>
+      <p class="section-sub">Dalla cura di tutti i giorni alla realizzazione di un giardino nuovo, fino a recinzioni in castagno e trinciatura. Ogni lavoro parte da una visita sul posto e da un preventivo su misura.</p>
+    </div>
+    <picture class="svc-fern" aria-hidden="true"><source type="image/avif" srcset="assets/img/felce-560.avif 560w, assets/img/felce-900.avif 900w" sizes="(min-width: 1000px) 640px, 80vw"><img src="assets/img/felce-560.webp" srcset="assets/img/felce-560.webp 560w, assets/img/felce-900.webp 900w" sizes="(min-width: 1000px) 640px, 80vw" alt="" loading="lazy" decoding="async"></picture>
+    <div class="svc-wrap">
+      <ol class="svc-list reveal">
+        <li class="svc-item is-open" data-i="0">
+          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn0" aria-expanded="true" aria-controls="svcPanel0"><span class="svc-dot" aria-hidden="true"><img src="assets/img/gal-20-480.webp" alt="" loading="lazy" decoding="async"></span><span class="svc-name">Cura e gestione del verde, piante e siepi</span><span class="svc-tag">Prato, aiuole, siepi e piante in ordine, tutto l'anno.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
+          <div class="svc-panel" id="svcPanel0" role="region" aria-labelledby="svcBtn0">
+            <div class="svc-panel-in">
+              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/gal-20-480.avif 480w, assets/img/gal-20-800.avif 800w, assets/img/gal-20-1200.avif 1200w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/gal-20-480.webp 480w, assets/img/gal-20-800.webp 800w, assets/img/gal-20-1200.webp 1200w" sizes="calc(100vw - 3rem)"><img src="assets/img/gal-20-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato tagliato a strisce accanto a una casa, con il tosaerba di Lisa Garden in primo piano"></picture>
+              <ul class="svc-points"><li>Taglio del prato</li><li>Pulizia di aiuole e vialetti</li><li>Rimozione delle erbe infestanti</li><li>Raccolta del verde tagliato</li><li>Potatura di siepi e arbusti</li><li>Cura periodica delle piante</li></ul>
+              <p class="svc-desc">Interventi periodici o singoli, per chi non ha tempo di seguire il giardino o vuole tenerlo curato con continuità. Per il diserbo Andrea ha seguito il corso per utilizzatori professionali di prodotti fitosanitari.</p>
+              <a href="#preventivo" class="svc-cta" data-servizio="Cura e gestione del verde">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </li>
+        <li class="svc-item is-open" data-i="1">
+          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn1" aria-expanded="true" aria-controls="svcPanel1"><span class="svc-dot" aria-hidden="true"><img src="assets/img/pd-corten-ghiaia-480.webp" alt="" loading="lazy" decoding="async"></span><span class="svc-name">Sistemi di irrigazione</span><span class="svc-tag">L'acqua giusta per ogni zona del giardino.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
+          <div class="svc-panel" id="svcPanel1" role="region" aria-labelledby="svcBtn1">
+            <div class="svc-panel-in">
+              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif 480w, assets/img/pd-corten-ghiaia-720.avif 720w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="calc(100vw - 3rem)"><img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Linea di irrigazione a goccia posata sul telo antierba in un'aiuola con ghiaia chiara"></picture>
+              <ul class="svc-points"><li>Progettazione su misura</li><li>Posa dell'impianto</li><li>Irrigazione a goccia per aiuole e vasche</li><li>Manutenzione degli impianti</li></ul>
+              <p class="svc-desc">Per ridurre le annaffiature a mano e dare a prato e piante l'acqua di cui hanno bisogno.</p>
+              <a href="#preventivo" class="svc-cta" data-servizio="Impianto irrigazione">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </li>
+        <li class="svc-item is-open" data-i="2">
+          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn2" aria-expanded="true" aria-controls="svcPanel2"><span class="svc-dot" aria-hidden="true"><img src="assets/img/gal-11-480.webp" alt="" loading="lazy" decoding="async"></span><span class="svc-name">Progettazione e realizzazione giardini e aree verdi</span><span class="svc-tag">Dal terreno nudo al giardino finito.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
+          <div class="svc-panel" id="svcPanel2" role="region" aria-labelledby="svcBtn2">
+            <div class="svc-panel-in">
+              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/gal-11-480.avif 480w, assets/img/gal-11-800.avif 800w, assets/img/gal-11-1200.avif 1200w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/gal-11-480.webp 480w, assets/img/gal-11-800.webp 800w, assets/img/gal-11-1200.webp 1200w" sizes="calc(100vw - 3rem)"><img src="assets/img/gal-11-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure in ghiaia rossa e piante, con le colline sullo sfondo"></picture>
+              <ul class="svc-points"><li>Progetto su misura</li><li>Prati a semina o in rotoli</li><li>Aiuole e bordure</li><li>Pacciamatura con corteccia o ghiaia decorativa</li></ul>
+              <p class="svc-desc">Ogni spazio viene progettato su misura per valorizzare l'ambiente e rispondere alle esigenze del cliente.</p>
+              <a href="#preventivo" class="svc-cta" data-servizio="Progettazione e realizzazione giardini">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </li>
+        <li class="svc-item is-open" data-i="3">
+          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn3" aria-expanded="true" aria-controls="svcPanel3"><span class="svc-dot" aria-hidden="true"><img src="assets/img/gal-15-480.webp" alt="" loading="lazy" decoding="async"></span><span class="svc-name">Recinzioni e staccionate in castagno</span><span class="svc-tag">Pali di castagno per delimitare prati, orti e proprietà.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
+          <div class="svc-panel" id="svcPanel3" role="region" aria-labelledby="svcBtn3">
+            <div class="svc-panel-in">
+              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/gal-15-480.avif 480w, assets/img/gal-15-800.avif 800w, assets/img/gal-15-1200.avif 1200w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/gal-15-480.webp 480w, assets/img/gal-15-800.webp 800w, assets/img/gal-15-1200.webp 1200w" sizes="calc(100vw - 3rem)"><img src="assets/img/gal-15-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Pali di castagno allineati lungo uno scavo, con il mini escavatore e il filo di tracciamento"></picture>
+              <ul class="svc-points"><li>Pali in legno di castagno</li><li>Scavo e posa con mini escavatore</li><li>Tracciamento della linea</li><li>Staccionate su misura</li></ul>
+              <p class="svc-desc">Una recinzione in legno naturale che si inserisce bene nel verde, anche su terreni ampi.</p>
+              <a href="#preventivo" class="svc-cta" data-servizio="Recinzione in castagno">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </li>
+        <li class="svc-item is-open" data-i="4">
+          <h3 class="svc-head"><button type="button" class="svc-toggle" id="svcBtn4" aria-expanded="true" aria-controls="svcPanel4"><span class="svc-dot" aria-hidden="true"><img src="assets/img/gal-24-480.webp" alt="" loading="lazy" decoding="async"></span><span class="svc-name">Trinciatura erba e sterpaglie</span><span class="svc-tag">Erba alta e terreni incolti riportati in ordine.</span><span class="svc-icon" aria-hidden="true"></span></button></h3>
+          <div class="svc-panel" id="svcPanel4" role="region" aria-labelledby="svcBtn4">
+            <div class="svc-panel-in">
+              <picture class="svc-thumb"><source type="image/avif" srcset="assets/img/gal-24-480.avif 480w, assets/img/gal-24-800.avif 800w, assets/img/gal-24-1200.avif 1200w" sizes="calc(100vw - 3rem)"><source type="image/webp" srcset="assets/img/gal-24-480.webp 480w, assets/img/gal-24-800.webp 800w, assets/img/gal-24-1200.webp 1200w" sizes="calc(100vw - 3rem)"><img src="assets/img/gal-24-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Trattorino trinciaerba verde in un prato di erba alta davanti a una casa"></picture>
+              <ul class="svc-points"><li>Trinciatura con trattorino trinciaerba</li><li>Erba alta e sterpaglie</li><li>Terreni incolti e bordi</li><li>Prima della preparazione del terreno</li></ul>
+              <p class="svc-desc">Per prati abbandonati, terreni da recuperare o aree da tenere pulite durante la stagione.</p>
+              <a href="#preventivo" class="svc-cta" data-servizio="Trinciatura erba e sterpaglie">Chiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </li>
+      </ol>
+      <div class="svc-stage reveal reveal-delay-1" aria-hidden="true">
+        <div class="svc-frame">
+          <picture class="svc-shot is-on" data-i="0"><source type="image/avif" srcset="assets/img/gal-20-480.avif 480w, assets/img/gal-20-800.avif 800w, assets/img/gal-20-1200.avif 1200w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/gal-20-480.webp 480w, assets/img/gal-20-800.webp 800w, assets/img/gal-20-1200.webp 1200w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/gal-20-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato tagliato a strisce accanto a una casa, con il tosaerba di Lisa Garden in primo piano"></picture>
+          <picture class="svc-shot" data-i="1"><source type="image/avif" srcset="assets/img/pd-corten-ghiaia-480.avif 480w, assets/img/pd-corten-ghiaia-720.avif 720w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/pd-corten-ghiaia-480.webp 480w, assets/img/pd-corten-ghiaia-720.webp 720w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/pd-corten-ghiaia-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Linea di irrigazione a goccia posata sul telo antierba in un'aiuola con ghiaia chiara"></picture>
+          <picture class="svc-shot" data-i="2"><source type="image/avif" srcset="assets/img/gal-11-480.avif 480w, assets/img/gal-11-800.avif 800w, assets/img/gal-11-1200.avif 1200w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/gal-11-480.webp 480w, assets/img/gal-11-800.webp 800w, assets/img/gal-11-1200.webp 1200w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/gal-11-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Prato all'inglese con bordure in ghiaia rossa e piante, con le colline sullo sfondo"></picture>
+          <picture class="svc-shot" data-i="3"><source type="image/avif" srcset="assets/img/gal-15-480.avif 480w, assets/img/gal-15-800.avif 800w, assets/img/gal-15-1200.avif 1200w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/gal-15-480.webp 480w, assets/img/gal-15-800.webp 800w, assets/img/gal-15-1200.webp 1200w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/gal-15-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Pali di castagno allineati lungo uno scavo, con il mini escavatore e il filo di tracciamento"></picture>
+          <picture class="svc-shot" data-i="4"><source type="image/avif" srcset="assets/img/gal-24-480.avif 480w, assets/img/gal-24-800.avif 800w, assets/img/gal-24-1200.avif 1200w" sizes="(min-width: 1200px) 480px, 40vw"><source type="image/webp" srcset="assets/img/gal-24-480.webp 480w, assets/img/gal-24-800.webp 800w, assets/img/gal-24-1200.webp 1200w" sizes="(min-width: 1200px) 480px, 40vw"><img src="assets/img/gal-24-1200.jpg" width="1200" height="1600" loading="lazy" decoding="async" alt="Trattorino trinciaerba verde in un prato di erba alta davanti a una casa"></picture>
+        </div>
+        <p class="svc-caps"><span class="svc-cap is-on" data-i="0">Prato tagliato a strisce, con il tosaerba di Lisa Garden</span><span class="svc-cap" data-i="1">Ala gocciolante posata sul telo, prima della ghiaia</span><span class="svc-cap" data-i="2">Prato all'inglese con bordure in ghiaia rossa</span><span class="svc-cap" data-i="3">Posa dei pali in castagno con il mini escavatore</span><span class="svc-cap" data-i="4">Trinciaerba al lavoro nell'erba alta</span></p>
+      </div>
+    </div>
+    <div class="steps">
+      <h3 class="steps-title reveal split">Come lavoriamo</h3>
+      <ol class="steps-list" id="stepsList"><li class="step reveal reveal-delay-0"><svg class="step-sprout" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path class="sp-stem" d="M30 58 C30 46 29 36 31 24"/><path class="sp-leaf sp-l1" d="M30.5 40 C22 40 15 34 13 25 C22 25 29 31 30.5 40 Z"/><path class="sp-leaf sp-l2" d="M30.5 32 C38 31 45 25 47 16 C38 16 32 23 30.5 32 Z"/><path class="sp-leaf sp-l3" d="M31 24 C27 18 27 10 31 3 C35 10 35 18 31 24 Z"/></svg><span class="step-num" aria-hidden="true">1</span><h4>Visita sul posto</h4><p>Andrea viene a vedere il giardino e ascolta cosa ti serve.</p></li><li class="step reveal reveal-delay-1"><svg class="step-sprout" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path class="sp-stem" d="M30 58 C30 46 29 36 31 24"/><path class="sp-leaf sp-l1" d="M30.5 40 C22 40 15 34 13 25 C22 25 29 31 30.5 40 Z"/><path class="sp-leaf sp-l2" d="M30.5 32 C38 31 45 25 47 16 C38 16 32 23 30.5 32 Z"/><path class="sp-leaf sp-l3" d="M31 24 C27 18 27 10 31 3 C35 10 35 18 31 24 Z"/></svg><span class="step-num" aria-hidden="true">2</span><h4>Preventivo su misura</h4><p>Un preventivo pensato sul tuo spazio e sul lavoro da fare.</p></li><li class="step reveal reveal-delay-2"><svg class="step-sprout" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path class="sp-stem" d="M30 58 C30 46 29 36 31 24"/><path class="sp-leaf sp-l1" d="M30.5 40 C22 40 15 34 13 25 C22 25 29 31 30.5 40 Z"/><path class="sp-leaf sp-l2" d="M30.5 32 C38 31 45 25 47 16 C38 16 32 23 30.5 32 Z"/><path class="sp-leaf sp-l3" d="M31 24 C27 18 27 10 31 3 C35 10 35 18 31 24 Z"/></svg><span class="step-num" aria-hidden="true">3</span><h4>Il lavoro</h4><p>Lo segue di persona il titolare, dall'inizio alla consegna.</p></li><li class="step reveal reveal-delay-3"><svg class="step-sprout" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path class="sp-stem" d="M30 58 C30 46 29 36 31 24"/><path class="sp-leaf sp-l1" d="M30.5 40 C22 40 15 34 13 25 C22 25 29 31 30.5 40 Z"/><path class="sp-leaf sp-l2" d="M30.5 32 C38 31 45 25 47 16 C38 16 32 23 30.5 32 Z"/><path class="sp-leaf sp-l3" d="M31 24 C27 18 27 10 31 3 C35 10 35 18 31 24 Z"/></svg><span class="step-num" aria-hidden="true">4</span><h4>Nel tempo</h4><p>Se vuoi, il giardino resta seguito con interventi periodici.</p></li></ol>
+    </div>
+  </div>
+</section>
+
+<!-- CHI SIAMO -->
+<section class="about is-light" id="chi-siamo" aria-labelledby="aboutTitle">
+  <div class="tear" aria-hidden="true"><svg viewBox="0 0 1440 56" preserveAspectRatio="none" focusable="false"><path class="tear-fiber" d="M0 26.0 L0 26.3 L21.2 21.4 L32.0 20.7 L41.8 17.5 L61.2 17.1 L68.5 22.3 L78.2 26.5 L85.1 30.1 L100.6 29.9 L122.3 33.4 L133.6 33.1 L140.6 34.2 L153.1 29.7 L169.2 32.9 L176.6 35.3 L193.5 31.9 L211.2 23.6 L217.5 28.0 L237.9 28.3 L259.4 29.9 L279.5 30.6 L292.5 34.8 L307.6 34.4 L327.7 38.6 L346.2 36.7 L367.3 36.4 L376.3 38.0 L391.4 32.6 L399.4 34.2 L415.0 30.9 L429.3 29.5 L447.0 30.1 L453.7 30.2 L460.6 25.0 L470.1 32.0 L488.7 31.2 L499.6 36.8 L507.0 35.6 L514.4 30.8 L535.7 28.7 L543.3 25.9 L563.8 28.9 L570.9 27.2 L592.4 26.0 L605.6 28.4 L626.5 32.6 L637.1 35.3 L651.7 29.9 L659.6 27.5 L668.7 24.8 L687.5 18.3 L701.7 26.7 L721.0 26.2 L727.1 25.4 L744.3 27.5 L762.4 25.6 L776.3 30.6 L785.7 27.3 L803.1 27.8 L816.6 22.7 L837.6 19.4 L855.3 20.3 L873.5 21.5 L887.4 28.8 L907.3 32.5 L923.2 25.5 L930.4 32.7 L940.6 30.7 L954.1 29.0 L974.3 29.8 L982.6 37.9 L990.3 40.8 L997.8 47.8 L1016.3 48.2 L1028.8 48.5 L1038.5 47.7 L1047.3 43.2 L1054.6 39.6 L1060.6 37.1 L1069.0 35.2 L1085.6 39.2 L1097.6 39.0 L1110.2 41.4 L1118.2 41.8 L1132.3 38.4 L1147.1 39.6 L1157.0 40.1 L1170.4 43.2 L1187.0 48.9 L1200.6 48.7 L1207.0 48.9 L1223.9 44.3 L1231.4 39.9 L1242.2 44.9 L1250.8 49.5 L1261.6 48.5 L1283.2 47.5 L1301.1 47.8 L1312.5 47.8 L1329.2 49.1 L1344.7 44.4 L1364.3 43.2 L1385.1 34.7 L1400.6 30.7 L1407.3 32.3 L1414.3 35.6 L1423.0 34.7 L1439.7 40.8 L1440 38.8 L1440 56 L0 56 Z"/><path class="tear-paper" d="M0 29.0 L0 29.0 L21.2 24.8 L32.0 23.6 L41.8 20.9 L61.2 20.7 L68.5 25.6 L78.2 29.6 L85.1 31.9 L100.6 33.4 L122.3 36.7 L133.6 36.1 L140.6 38.0 L153.1 32.3 L169.2 36.0 L176.6 39.0 L193.5 33.5 L211.2 28.0 L217.5 32.2 L237.9 32.2 L259.4 33.6 L279.5 32.8 L292.5 38.8 L307.6 38.4 L327.7 41.9 L346.2 40.0 L367.3 40.8 L376.3 42.1 L391.4 37.0 L399.4 38.5 L415.0 32.8 L429.3 31.1 L447.0 33.8 L453.7 34.6 L460.6 28.5 L470.1 34.0 L488.7 35.6 L499.6 39.3 L507.0 39.3 L514.4 33.0 L535.7 30.5 L543.3 29.6 L563.8 31.8 L570.9 30.8 L592.4 29.4 L605.6 31.1 L626.5 35.7 L637.1 37.5 L651.7 33.8 L659.6 30.0 L668.7 27.3 L687.5 22.5 L701.7 29.4 L721.0 28.7 L727.1 29.3 L744.3 30.8 L762.4 29.9 L776.3 32.5 L785.7 31.2 L803.1 30.5 L816.6 25.2 L837.6 22.5 L855.3 22.5 L873.5 25.3 L887.4 31.5 L907.3 34.1 L923.2 29.7 L930.4 34.7 L940.6 34.0 L954.1 31.4 L974.3 33.4 L982.6 39.5 L990.3 43.3 L997.8 50.0 L1016.3 51.0 L1028.8 51.5 L1038.5 51.5 L1047.3 46.4 L1054.6 42.1 L1060.6 40.0 L1069.0 38.7 L1085.6 42.1 L1097.6 42.2 L1110.2 44.2 L1118.2 44.8 L1132.3 41.1 L1147.1 43.4 L1157.0 44.6 L1170.4 45.7 L1187.0 51.5 L1200.6 51.1 L1207.0 51.5 L1223.9 46.3 L1231.4 43.9 L1242.2 49.2 L1250.8 51.5 L1261.6 50.0 L1283.2 51.5 L1301.1 49.6 L1312.5 50.7 L1329.2 51.5 L1344.7 46.3 L1364.3 45.3 L1385.1 39.1 L1400.6 33.3 L1407.3 36.6 L1414.3 39.7 L1423.0 38.7 L1439.7 42.4 L1440 42.4 L1440 56 L0 56 Z"/></svg></div>
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2 class="section-title split tex-hedge" id="aboutTitle">Andrea Lisa, giardiniere a Vignolo</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-body reveal">
+        <p class="about-lead">Lisa Garden nasce ufficialmente nel gennaio 2026, ma le sue radici sono più lontane: anni di giardinaggio fatto per piacere, quando il verde era una passione e non ancora un lavoro.</p>
+        <p>Con il tempo quella passione è cresciuta ed è diventata competenza, esperienza e voglia di costruire un progetto professionale. Oggi Lisa Garden è la realizzazione di un desiderio coltivato fin da ragazzo: trasformare l'amore per il verde in un'attività concreta, fondata su cura, dedizione e formazione.</p>
+        <p>Un percorso che tiene insieme esperienza sul campo, attenzione ai dettagli e voglia di continuare a imparare, per offrire interventi curati e soluzioni adatte alle esigenze di ogni spazio verde.</p>
+        <p class="about-note">Ogni lavoro lo segue di persona il titolare, dalla prima visita alla consegna.</p>
+        <div class="about-works">
+          <ul class="about-pills"><li><picture><source type="image/avif" srcset="assets/img/gal-11-480.avif"><img src="assets/img/gal-11-480.webp" width="480" height="640" alt="Prato all'inglese con bordure in ghiaia rossa" loading="lazy" decoding="async"></picture></li><li><picture><source type="image/avif" srcset="assets/img/gal-13-480.avif"><img src="assets/img/gal-13-480.webp" width="480" height="640" alt="Giardino in ghiaia con vasche in corten" loading="lazy" decoding="async"></picture></li><li><picture><source type="image/avif" srcset="assets/img/gal-12-480.avif"><img src="assets/img/gal-12-480.webp" width="480" height="640" alt="Vasche in corten lungo il muro" loading="lazy" decoding="async"></picture></li><li><picture><source type="image/avif" srcset="assets/img/gal-2-480.avif"><img src="assets/img/gal-2-480.webp" width="480" height="640" alt="Prato lungo il muretto in pietra" loading="lazy" decoding="async"></picture></li></ul>
+          <a class="about-works-link" href="#preventivo">Richiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+      <div class="about-media reveal">
+        <figure class="about-portrait">
+          <picture class="about-plant" aria-hidden="true"><source type="image/avif" srcset="assets/img/pianta-foglie-larghe-560.avif 560w, assets/img/pianta-foglie-larghe-900.avif 900w" sizes="(min-width: 900px) 520px, 60vw"><img src="assets/img/pianta-foglie-larghe-560.webp" srcset="assets/img/pianta-foglie-larghe-560.webp 560w, assets/img/pianta-foglie-larghe-900.webp 900w" sizes="(min-width: 900px) 520px, 90vw" alt="" loading="lazy" decoding="async"></picture>
+          <div class="about-frame">
+            <picture>
+              <source type="image/avif" srcset="assets/img/andrea-lisa-ritratto-480.avif 480w, assets/img/andrea-lisa-ritratto-800.avif 800w" sizes="(min-width: 1080px) 400px, (min-width: 900px) 36vw, 76vw">
+              <source type="image/webp" srcset="assets/img/andrea-lisa-ritratto-480.webp 480w, assets/img/andrea-lisa-ritratto-800.webp 800w" sizes="(min-width: 1080px) 400px, (min-width: 900px) 36vw, 76vw">
+              <img src="assets/img/andrea-lisa-ritratto-800.jpg" width="800" height="1000" loading="lazy" decoding="async" alt="Andrea Lisa, titolare di Lisa Garden, con la polo verde dell'azienda">
+            </picture>
+          </div>
+          <figcaption><strong>Andrea Lisa</strong><span>titolare di Lisa Garden</span></figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="quals reveal" id="quals">
+      <canvas class="quals-moss" id="qualsMoss" aria-hidden="true"></canvas>
+      <div class="quals-veil" aria-hidden="true"></div>
+      <picture class="quals-rock" data-depth="22" aria-hidden="true"><source type="image/avif" srcset="assets/img/pianta-roccia-muschio-360.avif"><img src="assets/img/pianta-roccia-muschio-360.webp" width="360" height="221" alt="" loading="lazy" decoding="async"></picture>
+      <p class="quals-hint" aria-hidden="true"><span class="hint-fine">Passa il mouse: dalla terra al prato</span><span class="hint-touch">Tocca: dalla terra al prato</span></p>
+      <div class="quals-head">
+        <h3 class="quals-title split tex-grass">Formazione e qualifiche</h3>
+        <p class="quals-sub">Qualifiche e formazione di Andrea Lisa, con il loro riferimento.</p>
+      </div>
+      <ul class="cred-list">
+        <li class="cred">
+          <div>
+            <span class="cred-type">Qualifica professionale</span>
+            <h4 class="cred-title">Responsabile tecnico per la manutenzione delle aree verdi</h4>
+            <p class="cred-ref"><strong>DGR 39-8764/2019</strong> &middot; risulta dalla visura camerale della ditta</p>
+          </div>
+        </li>
+        <li class="cred">
+          <div>
+            <span class="cred-type">Attestato di formazione</span>
+            <h4 class="cred-title">Utilizzatore professionale di prodotti fitosanitari</h4>
+            <p class="cred-ref"><strong>Corso di 20 ore, maggio 2026</strong> &middot; Falchi &amp; Partners, agenzia formativa accreditata dalla Regione Umbria &middot; D.Lgs. 150/2012</p>
+          </div>
+        </li>
+        <li class="cred cred--skills">
+          <div>
+            <span class="cred-type">In sintesi</span>
+            <h4 class="cred-title">Abilitazioni e competenze tecniche</h4>
+            <ul class="cred-badges" aria-label="Abilitazioni e competenze">
+              <li>Manutenzione aree verdi</li>
+              <li>Prodotti fitosanitari</li>
+              <li>Mini escavatore</li>
+              <li>Trinciaerba</li>
+              <li>Irrigazione a goccia</li>
+              <li>Recinzioni in castagno</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <!-- ZONE -->
 <section class="zone is-light has-divider" id="zone" aria-labelledby="zoneTitle">
   <div class="container">
@@ -3021,8 +3054,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         <textarea class="prev-textarea" id="prevNotes" rows="4" maxlength="600" placeholder="Descrivi brevemente il lavoro, oppure lascia vuoto..."></textarea>
         <p class="prev-privacy">Inviando la richiesta, i dati inseriti vengono usati solo per risponderti. Leggi l'<a href="privacy.html" target="_blank" rel="noopener">informativa privacy</a>.</p>
       </div>
-
-      <p class="hp-field" aria-hidden="true"><label>Lascia vuoto questo campo <input type="text" id="prevBotField" name="bot-field" tabindex="-1" autocomplete="off"></label></p>
       <p class="prev-error" id="prevError" role="alert" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg><span id="prevErrorText">Seleziona un'opzione per continuare.</span></p>
       <div class="prev-nav">
         <button type="button" class="prev-back hidden" id="prevBack">&#8592; Indietro</button>
@@ -3053,10 +3084,10 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     <div>
       <h4>Navigazione</h4>
       <ul class="footer-links">
-        <li><a href="#chi-siamo">Chi siamo</a></li>
-        <li><a href="#servizi">Servizi</a></li>
         <li><a href="#prima-dopo">Prima e dopo</a></li>
-        <li><a href="#galleria">Lavori</a></li>
+        <li><a href="#galleria">Galleria</a></li>
+        <li><a href="#servizi">Servizi</a></li>
+        <li><a href="#chi-siamo">Chi siamo</a></li>
         <li><a href="#zone">Zone</a></li>
         <li><a href="#preventivo">Preventivo</a></li>
       </ul>
@@ -3086,6 +3117,14 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   </div>
   <div class="footer-bottom">&copy; 2026 Lisa Garden di Andrea Lisa &mdash; Vignolo (CN)</div>
 </footer>
+<div class="pd-wipe" id="pdWipe" aria-hidden="true">
+  <div class="pd-wipe-panel">
+    <p class="pd-wipe-title">Prima <span>e dopo</span></p>
+    <p class="pd-wipe-sub">Le foto dei cantieri, fase per fase</p>
+  </div>
+  <div class="pd-wipe-line"></div>
+  <div class="pd-wipe-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+</div>
 
 <!-- WHATSAPP FLOAT -->
 <a href="https://wa.me/393209517477?text=Buongiorno%2C%20vorrei%20richiedere%20un%20preventivo." class="wa-float" aria-label="WhatsApp">
@@ -3196,6 +3235,86 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     update();
   })();
 
+
+
+  // ── Dall'hero al prima e dopo ──
+  // Il confronto si avvicina mentre la sezione entra; se si smette di
+  // scorrere a metà strada dall'hero, la pagina accompagna fino alla
+  // sezione; i link alla sezione aprono la tendina «prima e dopo».
+  var pdWipe = null;
+  (function() {
+    var sec = document.getElementById('prima-dopo');
+    var hero = document.querySelector('.hero');
+    var wipe = document.getElementById('pdWipe');
+    if (!sec || !hero || prefersReduced) return;
+    var root = document.documentElement;
+    function ease(k) { return k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; }
+    function tween(ms, fn) {
+      return new Promise(function(res) {
+        var t0 = performance.now();
+        (function f(now) {
+          var k = Math.min(1, (now - t0) / ms);
+          fn(ease(k));
+          if (k < 1) requestAnimationFrame(f); else res();
+        })(t0);
+      });
+    }
+    function targetY() { return Math.round(sec.getBoundingClientRect().top + window.scrollY); }
+    function jump(y) { root.style.scrollBehavior = 'auto'; window.scrollTo(0, y); root.style.scrollBehavior = ''; }
+
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var vh = window.innerHeight;
+      var e = Math.min(1, Math.max(0, (vh - sec.getBoundingClientRect().top) / (vh * 0.85)));
+      sec.style.setProperty('--e', e.toFixed(3));
+    }
+
+    // accompagnamento: solo scendendo, a scorrimento fermo, dita sollevate
+    var glide = 0, lastY = window.scrollY, down = false, idle = 0, touching = false;
+    function stopGlide() { if (glide) { cancelAnimationFrame(glide); glide = 0; root.style.scrollBehavior = ''; } }
+    function glideTo(y) {
+      var y0 = window.scrollY, ms = Math.min(950, 450 + Math.abs(y - y0) * 0.6), t0 = performance.now();
+      root.style.scrollBehavior = 'auto';
+      glide = requestAnimationFrame(function f(now) {
+        var k = Math.min(1, (now - t0) / ms);
+        window.scrollTo(0, y0 + (y - y0) * ease(k));
+        if (k < 1) glide = requestAnimationFrame(f); else { glide = 0; root.style.scrollBehavior = ''; }
+      });
+    }
+    function check() {
+      if (touching || glide || !down || (wipe && wipe.classList.contains('is-on'))) return;
+      var y = window.scrollY, t = targetY();
+      if (y > hero.offsetHeight * 0.12 && y < t - 8) glideTo(t);
+    }
+    window.addEventListener('scroll', function() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      if (glide) return;
+      var y = window.scrollY;
+      if (y !== lastY) down = y > lastY;
+      lastY = y;
+      clearTimeout(idle); idle = setTimeout(check, 160);
+    }, { passive: true });
+    ['wheel', 'keydown', 'pointerdown'].forEach(function(ev) { window.addEventListener(ev, stopGlide, { passive: true }); });
+    window.addEventListener('touchstart', function() { touching = true; stopGlide(); }, { passive: true });
+    window.addEventListener('touchend', function() { touching = false; clearTimeout(idle); idle = setTimeout(check, 160); }, { passive: true });
+    update();
+
+    // tendina: copre lo schermo come il cursore del confronto, porta alla
+    // sezione e la scopre; poi il confronto parte da solo
+    if (!wipe) return;
+    function set(l, r, line) { wipe.style.setProperty('--lft', l + '%'); wipe.style.setProperty('--r', r + '%'); wipe.style.setProperty('--l', line + '%'); }
+    pdWipe = function() {
+      if (wipe.classList.contains('is-on')) return;
+      stopGlide();
+      set(0, 100, 0);
+      wipe.classList.add('is-on');
+      tween(560, function(e) { set(0, 100 - 100 * e, 100 * e); })
+        .then(function() { jump(targetY()); return new Promise(function(r) { setTimeout(r, 380); }); })
+        .then(function() { return tween(640, function(e) { set(100 * e, 0, 100 * e); }); })
+        .then(function() { wipe.classList.remove('is-on'); set(0, 100, 0); });
+    };
+  })();
 
   // ════ ANIMAZIONI "VIVE" ════
   // titoli: divide in parole (il testo resta lo stesso per i lettori di schermo)
@@ -4082,10 +4201,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   var prevErrorText = document.getElementById('prevErrorText');
   var prevStatus = document.getElementById('prevStatus');
   var WA_NUMBER = '393209517477';
-  // Chiave Web3Forms (servizio gratuito che inoltra le richieste per email).
-  // DA COMPLETARE: incollare qui la chiave creata su web3forms.com con l'email di Lisa Garden.
-  // Finché è vuota, la richiesta parte solo su WhatsApp.
-  var FORM_KEY = '';
   var WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
   function hideError() { prevError.hidden = true; }
   function showError(msg) {
@@ -4159,11 +4274,9 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     }
     return html + '</div>';
   }
-  function showSuccess(waUrl, ok) {
-    var title = ok ? 'Richiesta inviata!' : 'Ti apriamo WhatsApp';
-    var msg = ok
-      ? 'Abbiamo ricevuto la tua richiesta: ti ricontattiamo a breve con un preventivo su misura. Nel frattempo si è aperto WhatsApp per scriverci subito.'
-      : 'Si è aperto WhatsApp con la tua richiesta già compilata: inviala e ti rispondiamo al più presto. Se la finestra non si è aperta, usa il pulsante qui sotto.';
+  function showSuccess(waUrl) {
+    var title = 'Ti apriamo WhatsApp';
+    var msg = 'Si è aperto WhatsApp con la tua richiesta già compilata: inviala e ti rispondiamo al più presto. Se la finestra non si è aperta, usa il pulsante qui sotto.';
     prevForm.innerHTML =
       '<div class="prev-success" role="status">' +
         '<div class="prev-success-icon">' + leafBurst() + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>' +
@@ -4171,25 +4284,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
         '<p>' + msg + '</p>' +
         '<a class="prev-success-wa" href="' + waUrl + '" target="_blank" rel="noopener">' + WA_ICON + 'Apri WhatsApp</a>' +
       '</div>';
-  }
-  function submitByEmail() {
-    var notes = document.getElementById('prevNotes').value.trim();
-    var bot = document.getElementById('prevBotField');
-    if (!FORM_KEY) return Promise.reject(new Error('nessuna chiave'));
-    if (bot && bot.value) return Promise.resolve(); // compilato da un programma automatico: non inviare
-    return fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        access_key: FORM_KEY,
-        subject: 'Nuova richiesta di preventivo dal sito',
-        from_name: 'Sito Lisa Garden',
-        Servizio: answers.step1 || '',
-        Dimensione: answers.step2 || '',
-        Zona: answers.step3 || '',
-        Note: notes
-      })
-    }).then(function(r) { return r.json(); }).then(function(d) { if (!d || !d.success) throw new Error('invio non riuscito'); });
   }
   nextBtn.addEventListener('click', function() {
     if (submitting) return;
@@ -4201,10 +4295,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
     var waUrl = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(buildMessage());
     // Apri WhatsApp subito (gesto utente: evita il blocco popup)
     window.open(waUrl, '_blank', 'noopener');
-    // Manda la richiesta anche per email al titolare (Web3Forms)
-    submitByEmail()
-      .then(function() { showSuccess(waUrl, true); })
-      .catch(function() { showSuccess(waUrl, false); });
+    showSuccess(waUrl);
   });
 
   backBtn.addEventListener('click', function() {
@@ -4374,7 +4465,8 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
       var t = document.querySelector(a.getAttribute('href'));
       if (!t) return;
       e.preventDefault();
-      t.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth' });
+      if (t.id === 'prima-dopo' && pdWipe && Math.abs(t.getBoundingClientRect().top) > 40) pdWipe();
+      else t.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth' });
       if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '-1');
       t.focus({ preventScroll: true });
     });
