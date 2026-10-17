@@ -1,5 +1,5 @@
 [build]
-  publish = "."
+  publish = "public"
 
 # ── Un solo indirizzo: i vecchi .netlify.app portano al dominio ──
 # Senza queste regole il sito risponde anche da andrealisagarden.netlify.app
