@@ -564,6 +564,43 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   .hero-sub { font-size: 0.98rem; margin-bottom: 1.5rem; }
 }
 @media (max-height: 700px) and (max-width: 999px) { .hero-sub { display: none; } }
+
+/* Firma "Lisa Garden" sopra il titolo: riprende il logo (pennello, "Lisa" bianco e
+   "Garden" verde, leggermente in salita), ma velata, così riempie il cielo vuoto
+   senza competere con il titolo. Si "dipinge" da sinistra a destra all'apertura
+   e scorrendo resta un po' indietro rispetto al testo. */
+.hero-copy > .hero-mark {
+  display: block; width: max-content; max-width: 100%;
+  margin: 0 0 clamp(1.2rem, 4vh, 2.6rem) -0.05em;
+  font-family: 'Kaushan Script', 'Brush Script MT', 'Segoe Script', cursive;
+  line-height: 0.9; rotate: -5deg; transform-origin: left bottom;
+  translate: 0 calc(var(--s) * 56px);
+  animation: none;
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.22);
+  pointer-events: none; user-select: none;
+}
+.hero-mark .hm-lisa, .hero-mark .hm-garden { display: block; }
+.hero-mark .hm-lisa { font-size: clamp(4.2rem, 2.4rem + 7.4vw, 7rem); color: rgba(255, 255, 255, 0.6); }
+.hero-mark .hm-garden { font-size: clamp(3.1rem, 1.8rem + 5.6vw, 5.3rem); color: rgba(169, 209, 142, 0.68); margin: -0.22em 0 0 1.05em; }
+.hero-mark .hm-di {
+  display: flex; align-items: center; gap: 0.7em; margin: 0.6em 0 0 2.2em;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: clamp(0.62rem, 0.55rem + 0.3vw, 0.8rem);
+  font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(255, 255, 255, 0.62); text-shadow: none;
+}
+.hero-mark .hm-di::before { content: ""; width: 2.4em; height: 1px; background: currentColor; }
+.hero-mark .hm-lisa, .hero-mark .hm-garden, .hero-mark .hm-di {
+  clip-path: inset(-0.3em 100% -0.3em -0.3em);
+  animation: markPaint 1.15s cubic-bezier(.6, 0, .25, 1) forwards;
+}
+.hero-mark .hm-lisa { animation-delay: calc(0.05s + var(--shift, 0s)); }
+.hero-mark .hm-garden { animation-delay: calc(0.4s + var(--shift, 0s)); }
+.hero-mark .hm-di { animation-delay: calc(0.85s + var(--shift, 0s)); animation-duration: 0.8s; }
+@keyframes markPaint { to { clip-path: inset(-0.3em -0.3em -0.3em -0.3em); } }
+@media (max-height: 640px) { .hero-copy > .hero-mark { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-mark .hm-lisa, .hero-mark .hm-garden, .hero-mark .hm-di { animation: none; clip-path: none; }
+  .hero-copy > .hero-mark { translate: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .hero-bg img, .hp picture, .hp img, .hero-veil, .hero-dot::after { animation: none; }
   .hero-veil { display: none; }
@@ -2525,6 +2562,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-content">
     <div class="hero-copy">
+      <p class="hero-mark" aria-hidden="true"><span class="hm-lisa">Lisa</span><span class="hm-garden">Garden</span><span class="hm-di">di Andrea Lisa</span></p>
       <h1>Il tuo giardino,<span class="thin"><span class="hero-underline-wrap">curato davvero.<svg class="hero-underline" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M3 11 C 70 3, 160 2, 297 8"/></svg><span class="hero-clips" aria-hidden="true"><i style="--x:5.9%;--y:58.7%;--d:1.28s;--tx:-0.61em;--ty:-0.46em;--r:221deg;--t:1.01s;--w:0.053em;--h:0.226em"></i><i style="--x:5.9%;--y:58.7%;--d:1.32s;--tx:-0.64em;--ty:-0.27em;--r:195deg;--t:0.82s;--w:0.065em;--h:0.219em"></i><i style="--x:12.3%;--y:48.2%;--d:1.34s;--tx:0.2em;--ty:-0.47em;--r:-252deg;--t:1.01s;--w:0.051em;--h:0.172em"></i><i style="--x:18.8%;--y:40.1%;--d:1.38s;--tx:-0.63em;--ty:-0.42em;--r:219deg;--t:1.01s;--w:0.059em;--h:0.215em"></i><i style="--x:18.8%;--y:40.1%;--d:1.42s;--tx:-0.66em;--ty:-0.34em;--r:213deg;--t:0.94s;--w:0.067em;--h:0.176em"></i><i style="--x:25.2%;--y:34.1%;--d:1.41s;--tx:-0.72em;--ty:-0.35em;--r:-153deg;--t:0.99s;--w:0.057em;--h:0.229em"></i><i style="--x:31.6%;--y:29.9%;--d:1.43s;--tx:-0.83em;--ty:-0.44em;--r:-178deg;--t:1.03s;--w:0.051em;--h:0.196em"></i><i style="--x:31.6%;--y:29.9%;--d:1.47s;--tx:-0.53em;--ty:-0.37em;--r:-280deg;--t:0.87s;--w:0.052em;--h:0.193em"></i><i style="--x:38.1%;--y:27.3%;--d:1.46s;--tx:-0.72em;--ty:-0.25em;--r:-267deg;--t:0.8s;--w:0.058em;--h:0.204em"></i><i style="--x:44.5%;--y:26.1%;--d:1.48s;--tx:-0.4em;--ty:-0.35em;--r:-215deg;--t:0.9s;--w:0.057em;--h:0.239em"></i><i style="--x:44.5%;--y:26.1%;--d:1.52s;--tx:0.18em;--ty:-0.47em;--r:320deg;--t:0.8s;--w:0.053em;--h:0.24em"></i><i style="--x:51.0%;--y:26.0%;--d:1.5s;--tx:-0.62em;--ty:-0.23em;--r:-178deg;--t:0.86s;--w:0.064em;--h:0.193em"></i><i style="--x:57.4%;--y:26.9%;--d:1.53s;--tx:-0.34em;--ty:-0.24em;--r:-143deg;--t:0.89s;--w:0.061em;--h:0.179em"></i><i style="--x:57.4%;--y:26.9%;--d:1.57s;--tx:-0.76em;--ty:-0.26em;--r:173deg;--t:0.84s;--w:0.066em;--h:0.227em"></i><i style="--x:63.9%;--y:28.7%;--d:1.56s;--tx:-0.4em;--ty:-0.41em;--r:-264deg;--t:0.9s;--w:0.059em;--h:0.175em"></i><i style="--x:70.3%;--y:31.3%;--d:1.59s;--tx:0.08em;--ty:-0.35em;--r:183deg;--t:0.98s;--w:0.055em;--h:0.228em"></i><i style="--x:70.3%;--y:31.3%;--d:1.63s;--tx:-0.46em;--ty:-0.27em;--r:-163deg;--t:0.92s;--w:0.062em;--h:0.213em"></i><i style="--x:76.8%;--y:34.5%;--d:1.64s;--tx:0.09em;--ty:-0.46em;--r:-152deg;--t:0.9s;--w:0.054em;--h:0.173em"></i><i style="--x:83.2%;--y:38.4%;--d:1.69s;--tx:-0.59em;--ty:-0.47em;--r:-205deg;--t:1.02s;--w:0.068em;--h:0.216em"></i><i style="--x:83.2%;--y:38.4%;--d:1.73s;--tx:-0.62em;--ty:-0.26em;--r:-306deg;--t:0.92s;--w:0.056em;--h:0.192em"></i><i style="--x:89.6%;--y:42.8%;--d:1.77s;--tx:0.14em;--ty:-0.24em;--r:-271deg;--t:0.88s;--w:0.068em;--h:0.175em"></i><i style="--x:96.1%;--y:47.6%;--d:1.91s;--tx:-0.71em;--ty:-0.45em;--r:-283deg;--t:1.03s;--w:0.056em;--h:0.218em"></i><i style="--x:96.1%;--y:47.6%;--d:1.95s;--tx:-0.78em;--ty:-0.33em;--r:-295deg;--t:0.94s;--w:0.061em;--h:0.197em"></i></span></span></span></h1>
       <p class="hero-sub">Lisa Garden è la ditta di Andrea Lisa: manutenzione del verde, potature, impianti di irrigazione e nuove aree verdi a Cuneo e in provincia. Un solo referente, dalla prima visita alla consegna del lavoro.</p>
       <div class="hero-actions">
