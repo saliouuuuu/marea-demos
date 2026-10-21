@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#356a39">
+<title>Galleria | Lisa Garden</title>
+<link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<header class="top">
+  <h1>Galleria dei lavori</h1>
+  <button type="button" class="btn btn-ghost" id="logout" hidden>Esci</button>
+</header>
+
+<main>
+  <p id="stato" class="stato" role="status" aria-live="polite"></p>
+
+  <section id="vista-accesso" class="card" hidden>
+    <h2>Accedi</h2>
+    <form id="accesso" autocomplete="on">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <button type="submit" class="btn btn-main" id="entra">Entra</button>
+    </form>
+  </section>
+
+  <section id="vista-gestione" hidden>
+    <div class="card">
+      <h2>Aggiungi foto</h2>
+      <p class="aiuto">Scegli una o più foto dal telefono o dal computer. Le foto nuove compaiono in cima alla galleria.</p>
+      <input id="file" type="file" accept="image/*" multiple hidden>
+      <button type="button" class="btn btn-main" id="scegli">Scegli le foto</button>
+      <ul id="coda" class="coda" hidden></ul>
+      <div id="coda-azioni" class="riga" hidden>
+        <button type="button" class="btn btn-main" id="carica">Carica le foto</button>
+        <button type="button" class="btn btn-ghost" id="svuota">Annulla</button>
+      </div>
+      <progress id="avanzamento" max="100" value="0" hidden></progress>
+    </div>
+
+    <div class="card">
+      <h2>Foto in galleria <span id="conteggio" class="conteggio"></span></h2>
+      <p class="aiuto">Usa le frecce per cambiare l'ordine. La prima foto è la prima che si vede sul sito.</p>
+      <ol id="elenco" class="elenco"></ol>
+      <p id="vuoto" class="aiuto" hidden>Non ci sono foto nel database: il sito mostra le foto già presenti nella pagina.</p>
+    </div>
+  </section>
+
+  <section id="vista-negato" class="card" hidden>
+    <h2>Accesso non consentito</h2>
+    <p>Questo utente non può gestire la galleria.</p>
+  </section>
+
+  <section id="vista-spenta" class="card" hidden>
+    <h2>Galleria non ancora collegata</h2>
+    <p>Mancano i dati del progetto Supabase. Vedi supabase/README.md.</p>
+  </section>
+</main>
+
+<script src="vendor/supabase.2.118.0.js"></script>
+<script src="../gallery/config.js"></script>
+<script src="image-tools.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

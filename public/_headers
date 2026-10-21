@@ -1,18 +1,31 @@
-# Cloudflare Pages: intestazioni HTTP (stesse regole che erano in netlify.toml)
+# Cloudflare: intestazioni HTTP (stesse regole di netlify.toml)
+# Nessuno script inline: la CSP accetta solo file serviti da questo dominio.
 
 /*
-  X-Frame-Options: SAMEORIGIN
+  X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
-  Strict-Transport-Security: max-age=31536000
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
+  Content-Security-Policy: default-src 'none'; img-src 'self' data: https://PROGETTO.supabase.co; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self' https://PROGETTO.supabase.co; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  X-Permitted-Cross-Domain-Policies: none
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
+
+# Galleria dal database: file senza hash nel nome, sempre riconvalidati
+/gallery/*
+  Cache-Control: no-cache
+
+# Pannello del cliente: mai indicizzato, sempre riconvalidato
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-cache
 
 # Gli indirizzi di prova *.pages.dev non devono finire su Google
 https://:project.pages.dev/*
