@@ -19,7 +19,7 @@ Finché `public/gallery/config.js` è vuoto, tutto resta spento e il sito è ide
    select id from auth.users where email = 'email-di-lisa@esempio.it';
    ```
    Le regole di sicurezza scrivono solo se l'utente è in `public.admins`: anche chi riuscisse a registrarsi non potrebbe toccare nulla.
-6. **Collega il sito** (sul tuo computer, nella cartella del repository):
+6. **Collega il sito** (lo faccio io, basta mandarmi URL e chiave anon):
    ```
    supabase/configure.sh https://xxxx.supabase.co CHIAVE_ANON
    ```
@@ -32,7 +32,7 @@ Finché `public/gallery/config.js` è vuoto, tutto resta spento e il sito è ide
 
 ## Come lo usa Lisa
 
-- Apre `https://andrealisagarden.it/admin/` ed entra con email e password.
+- Dal sito preme **Area riservata** in fondo alla pagina (o apre `https://andrealisagarden.it/admin/`) ed entra con email e password.
 - **Aggiungi foto**: sceglie una o più foto dal telefono; vengono ridotte e ripulite nel browser (anche dalla posizione GPS). Può aggiungere una didascalia e il tipo di lavoro. Le foto nuove vanno in cima.
 - **Frecce su e giù** per l'ordine (su computer anche trascinamento). **Elimina** chiede conferma.
 - Se elimina tutte le foto, il sito torna a mostrare quelle scritte nella pagina.
