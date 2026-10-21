@@ -1164,8 +1164,8 @@
   var lbClose = document.getElementById('lbClose');
   var lbPrev = document.getElementById('lbPrev');
   var lbNext = document.getElementById('lbNext');
-  var lbAll = Array.prototype.slice.call(document.querySelectorAll('[data-lb]'));
-  var lbItems = lbAll;
+  var lbAll = [];
+  var lbItems = [];
   var lbIndex = 0;
   var lbLastFocus = null;
   function lbShow(i, dir) {
@@ -1200,7 +1200,8 @@
     setTimeout(function() { lbShow(lbIndex + dir, dir); }, 160);
   }
   function openLb(trigger) {
-    // sfoglia solo le foto visibili con il filtro attivo
+    // sfoglia solo le foto visibili con il filtro attivo (l'elenco può cambiare: arriva dal database)
+    lbAll = Array.prototype.slice.call(document.querySelectorAll('[data-lb]'));
     lbItems = lbAll.filter(function(el) { return !el.hidden; });
     lbShow(lbItems.indexOf(trigger));
     lb.classList.add('active');
@@ -1213,21 +1214,26 @@
     document.body.style.overflow = '';
     if (lbLastFocus) { lbLastFocus.focus(); lbLastFocus = null; }
   }
-  lbAll.forEach(function(el) {
-    el.addEventListener('click', function() { openLb(el); });
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest && e.target.closest('[data-lb]');
+    if (el) openLb(el);
   });
 
   // ── Galleria: filtri per tipo di lavoro, con passaggio animato ──
   var galFilters = document.querySelectorAll('.gal-filter');
-  var galItems = Array.prototype.slice.call(document.querySelectorAll('.gal-item'));
+  var galItems = [];
   var galWide = window.matchMedia('(min-width: 900px)');
   var galCat = 'tutti';
   var GAL_FIRST = 8, galAll = false;
   var galMore = document.getElementById('galMore');
-  galItems.forEach(function(el, i) {
-    el.style.viewTransitionName = 'gal-' + i;
-    el.dataset.shape = el.classList.contains('is-big') ? 'big' : el.classList.contains('is-tall') ? 'tall' : '';
-  });
+  function galPrepare() {
+    galItems = Array.prototype.slice.call(document.querySelectorAll('.gal-item'));
+    galItems.forEach(function(el, i) {
+      el.style.viewTransitionName = 'gal-' + i;
+      el.dataset.shape = el.classList.contains('is-big') ? 'big' : el.classList.contains('is-tall') ? 'tall' : '';
+    });
+  }
+  galPrepare();
   // Con un filtro attivo le forme si ricalcolano per riempire le righe senza buchi
   function shapesFor(n) {
     var out = [];
@@ -1264,6 +1270,14 @@
   }
   if (galWide.addEventListener) galWide.addEventListener('change', function() { applyFilter(galCat); });
   applyFilter('tutti');
+  // L'elenco dal database (gallery/live.js) può arrivare prima o dopo questo punto
+  function galRefresh() {
+    galPrepare();
+    if (galCat !== 'tutti' && !document.querySelector('.gal-filter[data-filter="' + galCat + '"]:not([hidden])')) galCat = 'tutti';
+    applyFilter(galCat);
+  }
+  document.addEventListener('gallery:updated', galRefresh);
+  if (window.__galleryDone) galRefresh();
   if (galMore) galMore.addEventListener('click', function() {
     galAll = true;
     var first = galItems.filter(function(el) { return el.hidden; })[0];
