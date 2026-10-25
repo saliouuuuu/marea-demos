@@ -12,20 +12,46 @@
   reveals.forEach(function(el) { observer.observe(el); });
 
   // ── Animazioni ambientali solo nelle sezioni sullo schermo ──
+  // Il margine di -2px: una sezione che tocca appena il bordo dello schermo (come "Chi siamo" sotto
+  // l'hero) conta come fuori. Altrimenti le sue animazioni restano accese fuori vista e il browser
+  // le aggiorna sul thread principale, ricalcolando lo stile di tutta la pagina a ogni giro.
   var ambientObserver = new IntersectionObserver(function(entries) {
     entries.forEach(function(e) { e.target.classList.toggle('is-offscreen', !e.isIntersecting); });
-  });
+  }, { rootMargin: '-2px 0px' });
   document.querySelectorAll('main > section').forEach(function(sec) { ambientObserver.observe(sec); });
 
+  // ── Un solo giro per fotogramma durante lo scorrimento ──
+  // Ogni effetto legato allo scorrimento registra una lettura (misure) e una scrittura (stili).
+  // Prima si leggono tutte le misure, poi si scrive: così il browser ricalcola la pagina una volta
+  // sola per fotogramma invece di una volta per effetto.
+  var scrollJobs = [], scrollQueued = false;
+  function onScrollFrame(read, write) { scrollJobs.push([read, write]); }
+  function runScrollFrame() {
+    scrollQueued = false;
+    var y = window.scrollY, vh = window.innerHeight;
+    var vals = scrollJobs.map(function(j) { return j[0](y, vh); });
+    scrollJobs.forEach(function(j, k) { j[1](vals[k], y, vh); });
+  }
+  function queueScrollFrame() { if (!scrollQueued) { scrollQueued = true; requestAnimationFrame(runScrollFrame); } }
+  window.addEventListener('scroll', queueScrollFrame, { passive: true });
+  window.addEventListener('resize', queueScrollFrame, { passive: true });
+  // dove il browser sa legare le animazioni allo scorrimento (CSS animation-timeline), i movimenti
+  // di hero, galleria e ritratto li fa il CSS sul compositore e qui non si calcolano
+  var cssScrollFx = !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: scroll()'));
+  if (cssScrollFx) document.documentElement.classList.add('sfx');
+
   // ── Nav scroll ──
+  // sopra l'hero scuro la barra resta trasparente; diventa chiara quando si esce
   var nav = document.getElementById('nav');
-  window.addEventListener('scroll', function() {
-    // sopra l'hero scuro la barra resta trasparente; diventa chiara quando si esce
-    var heroEl = document.querySelector('.hero');
-    var heroEnd = heroEl ? heroEl.offsetTop + heroEl.offsetHeight - 60 : 50;
-    nav.classList.toggle('scrolled', window.scrollY > heroEnd);
-    nav.classList.toggle('over-hero', window.scrollY > 50 && window.scrollY <= heroEnd);
-  }, { passive: true });
+  var heroEl = document.querySelector('.hero'), heroEnd = 50;
+  function measureHero() { heroEnd = heroEl ? heroEl.offsetTop + heroEl.offsetHeight - 60 : 50; queueScrollFrame(); }
+  measureHero();
+  window.addEventListener('resize', measureHero);
+  window.addEventListener('load', measureHero);
+  onScrollFrame(function() { return 0; }, function(_, y) {
+    nav.classList.toggle('scrolled', y > heroEnd);
+    nav.classList.toggle('over-hero', y > 50 && y <= heroEnd);
+  });
 
   // ── Menu mobile ──
   var navToggle = document.getElementById('navToggle');
@@ -71,18 +97,10 @@
   // ── Hero: scorrendo, le piante si allargano verso i bordi ──
   (function() {
     var hero = document.querySelector('.hero');
-    if (!hero || prefersReduced) return;
-    var ticking = false;
-    function update() {
-      ticking = false;
-      var h = hero.offsetHeight || window.innerHeight;
-      var p = Math.min(1, Math.max(0, window.scrollY / h));
-      hero.style.setProperty('--s', p.toFixed(3));
-    }
-    window.addEventListener('scroll', function() {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }, { passive: true });
-    update();
+    if (!hero || prefersReduced || cssScrollFx) return;
+    var last = -1;
+    onScrollFrame(function(y) { return Math.min(1, Math.max(0, y / (hero.offsetHeight || window.innerHeight))); },
+      function(p) { if (p > 1 && last >= 1) return; var v = p.toFixed(3); if (v !== last) { last = v; hero.style.setProperty('--s', v); } });
   })();
 
 
@@ -114,35 +132,30 @@
     function introY() { return Math.round(intro.getBoundingClientRect().top + window.scrollY); }
     function jump(y) { root.style.scrollBehavior = 'auto'; window.scrollTo(0, y); root.style.scrollBehavior = ''; }
 
-    var ticking = false;
-    function update() {
-      ticking = false;
-      var vh = window.innerHeight;
-      var e = Math.min(1, Math.max(0, (vh - sec.getBoundingClientRect().top) / (vh * 0.85)));
-      sec.style.setProperty('--e', e.toFixed(3));
-    }
+    // dove il browser lo sa fare, l'avvicinamento lo fa il CSS legato allo scorrimento (.sfx):
+    // qui solo il ripiego, e la variabile va sul palco, non su tutta la sezione
+    var stage = sec.querySelector('.pd-stage'), lastE = '';
+    if (!cssScrollFx && stage) onScrollFrame(function(y, vh) { var t = sec.getBoundingClientRect().top; return Math.min(1, Math.max(0, (vh - t) / (vh * 0.85))); },
+      function(e) { var v = e.toFixed(3); if (v !== lastE) { lastE = v; stage.style.setProperty('--e', v); } });
 
-    // accompagnamento: solo scendendo, a scorrimento fermo, dita sollevate
+    // accompagnamento: solo scendendo, a scorrimento fermo, dita sollevate.
+    // Lo scorrimento morbido è quello del browser (gira fuori dal JavaScript, non scatta);
+    // un nuovo gesto lo interrompe da solo.
     var glide = 0, lastY = window.scrollY, down = false, idle = 0, touching = false;
-    function stopGlide() { if (glide) { cancelAnimationFrame(glide); glide = 0; root.style.scrollBehavior = ''; } }
+    function stopGlide() { if (glide) { clearTimeout(glide); glide = 0; } }
     function glideTo(y) {
-      var y0 = window.scrollY, ms = Math.min(950, 450 + Math.abs(y - y0) * 0.6), t0 = performance.now();
-      root.style.scrollBehavior = 'auto';
-      glide = requestAnimationFrame(function f(now) {
-        var k = Math.min(1, (now - t0) / ms);
-        window.scrollTo(0, y0 + (y - y0) * ease(k));
-        if (k < 1) glide = requestAnimationFrame(f); else { glide = 0; root.style.scrollBehavior = ''; }
-      });
+      glide = setTimeout(function() { glide = 0; }, 1200);
+      window.scrollTo({ top: y, behavior: 'smooth' });
     }
+    window.addEventListener('scrollend', function() { if (glide) stopGlide(); });
     function check() {
       if (touching || glide || !down || (wipe && wipe.classList.contains('is-on'))) return;
       var y = window.scrollY, t = introY();
       if (y > hero.offsetHeight * 0.12 && y < t - 8) glideTo(t);
     }
     window.addEventListener('scroll', function() {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-      if (glide) return;
       var y = window.scrollY;
+      if (glide) { lastY = y; return; }
       if (y !== lastY) down = y > lastY;
       lastY = y;
       clearTimeout(idle); idle = setTimeout(check, 160);
@@ -150,7 +163,6 @@
     ['wheel', 'keydown', 'pointerdown'].forEach(function(ev) { window.addEventListener(ev, stopGlide, { passive: true }); });
     window.addEventListener('touchstart', function() { touching = true; stopGlide(); }, { passive: true });
     window.addEventListener('touchend', function() { touching = false; clearTimeout(idle); idle = setTimeout(check, 160); }, { passive: true });
-    update();
 
     // tendina: copre lo schermo come il cursore del confronto, porta alla
     // sezione e la scopre; poi il confronto parte da solo
@@ -213,23 +225,6 @@
     if (!left.length) { window.removeEventListener('scroll', onTear); return; }
     left.forEach(function(t) { var r = t.getBoundingClientRect(); if (r.top < innerHeight * 0.92 && r.bottom > 0) t.classList.add('is-in'); });
   }, { passive: true });
-
-  // foglie dei titoli che scorrono piano con la pagina
-  var texTitles = document.querySelectorAll('.tex-hedge, .tex-grass');
-  if (texTitles.length && !prefersReduced) {
-    var texTick = false;
-    window.addEventListener('scroll', function() {
-      if (texTick) return; texTick = true;
-      requestAnimationFrame(function() {
-        texTick = false;
-        texTitles.forEach(function(t) {
-          var r = t.getBoundingClientRect();
-          if (r.bottom < 0 || r.top > innerHeight) return;
-          t.style.setProperty('--tx', Math.round((r.top - innerHeight / 2) * 0.25) + 'px');
-        });
-      });
-    }, { passive: true });
-  }
 
   var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
@@ -330,23 +325,39 @@
       });
       mctx.restore();
     }
-    function compose() {
+    // ricompone il prato solo nel rettangolo che è cambiato (in pixel del canvas)
+    function compose(x, y, w, h) {
+      if (x === undefined) { x = 0; y = 0; w = cv.width; h = cv.height; }
+      ctx.save();
+      ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
       ctx.globalCompositeOperation = 'source-over';
-      ctx.clearRect(0, 0, cv.width, cv.height);
+      ctx.clearRect(x, y, w, h);
       if (grass.complete && grass.naturalWidth) {
         var sc = Math.max(cv.width / grass.naturalWidth, cv.height / grass.naturalHeight);
         var gw = grass.naturalWidth * sc, gh = grass.naturalHeight * sc;
         ctx.drawImage(grass, (cv.width - gw) / 2, (cv.height - gh) / 2, gw, gh);
-      } else { ctx.fillStyle = '#4f7f35'; ctx.fillRect(0, 0, cv.width, cv.height); }
+      } else { ctx.fillStyle = '#4f7f35'; ctx.fillRect(x, y, w, h); }
       ctx.globalCompositeOperation = 'destination-in';
       ctx.drawImage(mask, 0, 0);
+      ctx.restore();
     }
     function redrawAll() { mctx.clearRect(0, 0, mask.width, mask.height); tufts.forEach(drawTuft); compose(); }
+    // i cespi crescono soltanto: a ogni fotogramma si disegnano sopra solo quelli che stanno crescendo,
+    // senza cancellare e ridisegnare tutto il prato
     function tick() {
-      var growing = false;
-      tufts.forEach(function(t) { if (t.t < 1) { t.t = Math.min(1, t.t + 0.035); growing = true; } });
-      mctx.clearRect(0, 0, mask.width, mask.height); tufts.forEach(drawTuft); compose();
-      if (growing && visible) requestAnimationFrame(tick); else running = false;
+      var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      tufts.forEach(function(t) {
+        if (t.t >= 1) return;
+        t.t = Math.min(1, t.t + 0.035);
+        drawTuft(t);
+        var m = t.R * 2.3;
+        x0 = Math.min(x0, t.x - m); y0 = Math.min(y0, t.y - m); x1 = Math.max(x1, t.x + m); y1 = Math.max(y1, t.y + m);
+      });
+      if (x1 > x0) {
+        var px = Math.max(0, Math.floor(x0 * dpr)), py = Math.max(0, Math.floor(y0 * dpr));
+        compose(px, py, Math.min(cv.width, Math.ceil(x1 * dpr)) - px, Math.min(cv.height, Math.ceil(y1 * dpr)) - py);
+      }
+      if (x1 > x0 && visible) requestAnimationFrame(tick); else running = false;
     }
     function local(e) { var r = panel.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
     panel.addEventListener('pointermove', function(e) {
@@ -355,11 +366,15 @@
       if (Math.hypot(p[0] - lastX, p[1] - lastY) < 26) return;
       lastX = p[0]; lastY = p[1]; add(p[0], p[1], false);
     });
-    panel.addEventListener('pointerdown', function(e) {
+    function burst(e) {
       var p = local(e);
       add(p[0], p[1], true);
       for (var k = 0; k < 5; k++) add(p[0] + (Math.random() - 0.5) * 120, p[1] + (Math.random() - 0.5) * 90, false);
-    });
+    }
+    // col mouse cresce alla pressione; col dito solo con un tocco vero (click), non quando si appoggia il dito per scorrere
+    var lastPointer = 'mouse';
+    panel.addEventListener('pointerdown', function(e) { lastPointer = e.pointerType || 'mouse'; if (lastPointer === 'mouse') burst(e); });
+    panel.addEventListener('click', function(e) { if (lastPointer !== 'mouse') burst(e); });
     grass.onload = function() { if (W) compose(); };
     window.addEventListener('resize', function() { if (W) size(); });
     var seeded = false;
@@ -404,8 +419,15 @@
       var frac = Math.min(1, Math.max(0, (mid - (r0.top + r0.height / 2)) / ((r1.top + r1.height / 2) - (r0.top + r0.height / 2))));
       setActive(best, frac);
     }
-    var tick = false;
-    window.addEventListener('scroll', function() { if (!inViewNow || tick) return; tick = true; requestAnimationFrame(function() { tick = false; onScroll(); }); }, { passive: true });
+    onScrollFrame(function(y, vh) {
+      if (!inViewNow || wide.matches) return null;
+      return steps.map(function(st) { var r = st.getBoundingClientRect(); return r.top + r.height / 2; });
+    }, function(c, y, vh) {
+      if (!c) return;
+      var mid = vh * 0.55, best = 0, bd = 1e9;
+      c.forEach(function(v, j) { var d = Math.abs(v - mid); if (d < bd) { bd = d; best = j; } });
+      setActive(best, Math.min(1, Math.max(0, (mid - c[0]) / (c[c.length - 1] - c[0]))));
+    });
     new IntersectionObserver(function(entries) {
       entries.forEach(function(e) {
         inViewNow = e.isIntersecting;
@@ -428,18 +450,21 @@
     if (prefersReduced) return;
     var grid = document.getElementById('galGrid');
     if (!grid) return;
-    var on = false, tick = false;
-    function run() {
-      tick = false;
+    if (cssScrollFx) return;
+    var on = false;
+    onScrollFrame(function(y, vh) {
+      if (!on) return null;
+      var out = [];
       grid.querySelectorAll('.gal-item.visible:not([hidden])').forEach(function(it) {
         var r = it.getBoundingClientRect();
-        if (r.bottom < -50 || r.top > innerHeight + 50) return;
-        var p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
-        it.querySelector('img').style.setProperty('--py', (p * -9).toFixed(2) + '%');
+        if (r.bottom < -50 || r.top > vh + 50) return;
+        out.push([it, (r.top + r.height / 2 - vh / 2) / vh]);
       });
-    }
-    window.addEventListener('scroll', function() { if (!on || tick) return; tick = true; requestAnimationFrame(run); }, { passive: true });
-    new IntersectionObserver(function(e) { on = e[0].isIntersecting; if (on) run(); }).observe(grid);
+      return out;
+    }, function(list) {
+      if (list) list.forEach(function(x) { x[0].querySelector('img').style.setProperty('--py', (x[1] * -9).toFixed(2) + '%'); });
+    });
+    new IntersectionObserver(function(e) { on = e[0].isIntersecting; if (on) queueScrollFrame(); }).observe(grid);
   })();
 
 
@@ -447,17 +472,11 @@
   (function() {
     if (prefersReduced) return;
     var fr = document.querySelector('.about-portrait .about-frame img');
-    if (fr) {
-      var t = false;
-      window.addEventListener('scroll', function() {
-        if (t) return; t = true;
-        requestAnimationFrame(function() {
-          t = false;
-          var r = fr.parentNode.getBoundingClientRect();
-          if (r.bottom < 0 || r.top > innerHeight) return;
-          fr.style.setProperty('--ap', ((r.top + r.height / 2 - innerHeight / 2) * -0.06).toFixed(1) + 'px');
-        });
-      }, { passive: true });
+    if (fr && !cssScrollFx) {
+      onScrollFrame(function(y, vh) {
+        var r = fr.parentNode.getBoundingClientRect();
+        return (r.bottom < 0 || r.top > vh) ? null : ((r.top + r.height / 2 - vh / 2) * -0.06).toFixed(1) + 'px';
+      }, function(v) { if (v !== null) fr.style.setProperty('--ap', v); });
     }
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     document.querySelectorAll('.hero-cta, .prev-next, .nav-cta-link').forEach(function(btn) {
@@ -902,7 +921,7 @@
     picks.forEach(function(b) { b.classList.toggle('is-seen', !!seen[b.dataset.project] && b.dataset.project !== proj.id); });
     Array.prototype.forEach.call(pdDots.children, function(d, k) { d.classList.toggle('is-on', k === i); d.classList.toggle('is-seen', !!seen[PROJECTS[k].id]); });
     var cur = ambA.classList.contains('is-on') ? ambA : ambB, other = cur === ambA ? ambB : ambA;
-    var src = 'assets/img/pd-' + proj.id + '-' + proj.stages[proj.stages.length - 1].key + '-480.webp';
+    var src = 'assets/img/amb-pd-' + proj.id + '-' + proj.stages[proj.stages.length - 1].key + '.webp';   // già sfocata
     if (cur.getAttribute('src') !== src) { other.removeAttribute('loading'); other.src = src; other.classList.add('is-on'); cur.classList.remove('is-on'); }
     // tieni visibile il lavoro scelto nella riga dei lavori (telefono)
     var pk = document.querySelector('.pd-pick[data-project="' + proj.id + '"]');
@@ -1340,16 +1359,9 @@
 
   // ── Barra di avanzamento e voce di menu della sezione in vista ──
   var progress = document.getElementById('scrollProgress');
-  var progTicking = false;
-  function updateProgress() {
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
-    progTicking = false;
-  }
-  window.addEventListener('scroll', function() {
-    if (!progTicking) { requestAnimationFrame(updateProgress); progTicking = true; }
-  }, { passive: true });
-  updateProgress();
+  onScrollFrame(function(y, vh) { var max = document.documentElement.scrollHeight - vh; return max > 0 ? Math.min(1, y / max) : 0; },
+    function(k) { progress.style.transform = 'scaleX(' + k.toFixed(4) + ')'; });
+  queueScrollFrame();
 
   var navMap = {};
   document.querySelectorAll('.nav-links a[href^="#"]').forEach(function(a) { navMap[a.getAttribute('href').slice(1)] = a; });
