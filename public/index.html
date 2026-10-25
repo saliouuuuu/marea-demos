@@ -8,7 +8,6 @@
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/fraunces-logo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/urbanist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/kaushan-script-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" type="image/avif" href="assets/img/hero-960.avif" imagesrcset="assets/img/hero-640.avif 640w, assets/img/hero-960.avif 960w, assets/img/hero-1200.avif 1200w, assets/img/hero-1600.avif 1600w" imagesizes="100vw" fetchpriority="high">
 
 <!-- Canonical / lingua -->
@@ -284,13 +283,6 @@
   src: url('assets/fonts/inter-latin-wght-normal.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Kaushan Script';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('assets/fonts/kaushan-script-latin.woff2') format('woff2'); /* corsivo a pennello, come il logo: solo titolo dell'hero */
-}
-@font-face {
   font-family: 'Fraunces';
   font-style: normal;
   font-weight: 100 900;
@@ -469,8 +461,6 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
    il giardino e ondeggiano piano. Scorrendo si allargano ancora. */
 .hero {
   --shift: 0.75s;           /* ritardo del testo e della sottolineatura */
-  --pd: 0.55s;              /* attesa in più per sottolineatura e fili d'erba: prima si dipinge il titolo */
-  --brush: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g'%3E%3Cstop offset='0' stop-opacity='1'/%3E%3Cstop offset='.55' stop-opacity='.85'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='101' height='100'/%3E%3Crect x='100' width='62' height='100' fill='url(%23g)'/%3E%3Crect x='96' y='0' width='37' height='3' rx='1.5'/%3E%3Crect x='96' y='3' width='24' height='6' rx='3'/%3E%3Crect x='96' y='9' width='86' height='7' rx='3.5'/%3E%3Crect x='96' y='16' width='92' height='3' rx='1.5'/%3E%3Crect x='96' y='19' width='45' height='5' rx='2.5'/%3E%3Crect x='96' y='24' width='73' height='2' rx='1'/%3E%3Crect x='96' y='26' width='48' height='2' rx='1'/%3E%3Crect x='96' y='28' width='72' height='5' rx='2.5'/%3E%3Crect x='96' y='33' width='90' height='7' rx='3.5'/%3E%3Crect x='96' y='40' width='92' height='3' rx='1.5'/%3E%3Crect x='96' y='43' width='92' height='5' rx='2.5'/%3E%3Crect x='96' y='48' width='46' height='2' rx='1'/%3E%3Crect x='96' y='50' width='35' height='5' rx='2.5'/%3E%3Crect x='96' y='55' width='36' height='4' rx='2'/%3E%3Crect x='96' y='58' width='91' height='2' rx='1'/%3E%3Crect x='96' y='60' width='41' height='5' rx='2.5'/%3E%3Crect x='96' y='65' width='91' height='5' rx='2.5'/%3E%3Crect x='96' y='69' width='65' height='3' rx='1.5'/%3E%3Crect x='96' y='72' width='26' height='5' rx='2.5'/%3E%3Crect x='96' y='76' width='44' height='2' rx='1'/%3E%3Crect x='96' y='78' width='86' height='6' rx='3'/%3E%3Crect x='96' y='84' width='58' height='7' rx='3.5'/%3E%3Crect x='96' y='91' width='76' height='5' rx='2.5'/%3E%3Crect x='96' y='96' width='49' height='3' rx='1.5'/%3E%3Crect x='96' y='99' width='49' height='6' rx='3'/%3E%3C/svg%3E");
   --s: 0;                   /* avanzamento dello scroll (0-1), da JS */
   position: relative;
   isolation: isolate;
@@ -530,7 +520,7 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 /* testo */
 .hero-content { position: relative; z-index: 4; width: min(1180px, calc(100% - 3rem)); margin: 0 auto; padding: 7rem 0 4.5rem; }
 @media (min-width: 1000px) { .hero-content { width: min(1180px, calc(100% - 5rem)); padding: 8rem 0 6.5rem; } }
-.hero-copy { max-width: 40rem; }
+.hero-copy { max-width: 48rem; }
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 0.6rem;
   padding: 0.45rem 0.95rem 0.45rem 0.7rem;
@@ -543,15 +533,26 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 .hero-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #a9d18e; }
 .hero-dot::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid #a9d18e; animation: heroPulse 2.4s var(--ease-out) infinite; }
 @keyframes heroPulse { from { opacity: 0.9; transform: scale(0.6); } to { opacity: 0; transform: scale(1.8); } }
+/* Titolo: Urbanist come tutti i titoli del sito. Ogni riga sale da dietro una linea; sotto la seconda si traccia un filetto. */
 .hero h1 {
-  font-family: 'Kaushan Script', 'Brush Script MT', 'Segoe Script', cursive;
-  font-size: clamp(3rem, 1.3rem + 5.8vw, 6.4rem);
-  font-weight: 400; letter-spacing: -0.01em; line-height: 1.08;
-  color: #fff; margin-bottom: 1.4rem; text-wrap: balance;
+  font-family: var(--font-head); font-weight: 700;
+  font-size: clamp(2.7rem, 1rem + 8.4vw, 5.5rem);
+  line-height: 1.02; letter-spacing: -0.04em;
+  color: #fff; margin-bottom: 2.1rem;
   text-shadow: 0 2px 30px rgba(0,0,0,0.25);
 }
-.hero h1 .thin { display: block; font-weight: 400; color: #c4e3ad; letter-spacing: -0.01em; }
-.hero-sub { font-size: var(--fz-md); color: rgba(255,255,255,0.86); line-height: 1.6; max-width: 33rem; margin-bottom: 2rem; text-wrap: pretty; }
+.hero h1 .hl { display: block; position: relative; width: max-content; }
+.hero h1 .hl + .hl { color: #c4e3ad; }
+.hero h1 .hl-m { display: block; overflow: hidden; padding: 0.06em 0.05em 0.16em; margin: -0.06em -0.05em -0.16em; }
+.hero h1 .hl-m > span { display: block; translate: 0 110%; animation: hmRise 1.15s var(--ease-out) calc(var(--d, 0s) + var(--shift, 0s)) forwards; }
+.hero h1 .hl:nth-child(1) { --d: 0.1s; }
+.hero h1 .hl:nth-child(2) { --d: 0.26s; }
+.hero h1 .hl-rule { position: absolute; left: 0.03em; right: 0; bottom: -0.15em; height: 0.055em; min-height: 2px; border-radius: 2px; background: linear-gradient(90deg, #a9d18e 0%, #a9d18e 55%, rgba(169, 209, 142, 0) 100%); transform-origin: 0 50%; scale: 0 1; animation: hmLine 1.1s cubic-bezier(.45, 0, .2, 1) calc(1.55s + var(--shift, 0s)) forwards; }
+/* i quattro lavori, in breve */
+.hero-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.8rem; list-style: none; }
+.hero-tags li { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.42rem 0.85rem; border: 1px solid rgba(255,255,255,0.26); border-radius: 999px; background: rgba(10,20,13,0.4); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.005em; color: rgba(255,255,255,0.93); }
+.hero-tags li::before { content: ""; width: 0.38rem; height: 0.38rem; border-radius: 50%; background: #a9d18e; flex: none; }
+.hero-sub { font-size: var(--fz-md); color: rgba(255,255,255,0.86); line-height: 1.6; max-width: 33rem; margin-bottom: 1.4rem; text-wrap: pretty; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.6rem; }
 .hero-cta { display: inline-flex; align-items: center; gap: 0.6rem; padding: 1rem 1.6rem 1rem 1.8rem; background: #a9d18e; color: #0c1610; border-radius: 999px; font-size: 0.98rem; font-weight: 650; letter-spacing: -0.01em; transition: transform 0.35s var(--ease-out), box-shadow 0.35s, background-color 0.35s; }
 .hero-cta svg { width: 18px; height: 18px; transition: translate 0.35s var(--ease-out); }
@@ -565,20 +566,20 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   .hero-content { padding-bottom: 2.6rem; }
   .hero-sub { font-size: 0.98rem; margin-bottom: 1.5rem; }
 }
-@media (max-height: 700px) and (max-width: 999px) { .hero-sub { display: none; } }
+@media (max-height: 700px) and (max-width: 999px) { .hero-sub, .hero-tags { display: none; } }
 
 /* Firma "Lisa Garden" sopra il titolo: stesso carattere (Fraunces) e stessa foglia dell'insegna in alto e di "Chi siamo".
    Le due parole salgono da dietro una linea, la foglia si apre, il filetto si traccia e compare "di Andrea Lisa";
    poi la foglia ondeggia appena. */
 .hero-copy > .hero-mark {
   display: block; width: max-content; max-width: 100%;
-  margin: 0 0 clamp(1.1rem, 3.6vh, 2.2rem);
+  margin: 0 0 clamp(1.3rem, 4.2vh, 2.6rem);
   font-family: var(--font-display); line-height: 1;
   translate: 0 calc(var(--s) * 56px);
   animation: none;
   pointer-events: none; user-select: none;
 }
-.hero-mark .hm-row { display: flex; align-items: center; gap: 0.3em; font-size: clamp(2.7rem, 1.5rem + 4.6vw, 5.3rem); }
+.hero-mark .hm-row { display: flex; align-items: center; gap: 0.3em; font-size: clamp(1.9rem, 1.25rem + 2.6vw, 3.2rem); }
 .hero-mark .hm-leaf {
   width: 0.78em; height: 0.78em; flex: none; overflow: visible; fill: #e0f0c8; filter: drop-shadow(0 2px 10px rgba(6, 14, 8, 0.5));
   transform-origin: 50% 100%; opacity: 0; scale: 0.6;
@@ -603,23 +604,6 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 @keyframes hmFade { to { opacity: 1; } }
 @keyframes hmLine { to { scale: 1 1; } }
 
-/* Pennello: le scritte si dipingono da sinistra a destra. La maschera ha un
-   bordo a setole (strisce di lunghezze diverse), così l'ultimo tratto sembra
-   colore steso e non una tendina. Il riquadro si allarga un po' per non
-   tagliare le code delle lettere. */
-.paint {
-  display: inline-block;
-  padding: 0.12em 0.32em 0.3em 0.14em; margin: -0.12em -0.32em -0.3em -0.14em;
-  -webkit-mask-image: var(--brush); mask-image: var(--brush);
-  -webkit-mask-size: 300% 100%; mask-size: 300% 100%;
-  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-  -webkit-mask-position: 100% 0; mask-position: 100% 0;
-  animation: brushPaint var(--pdur, 0.95s) cubic-bezier(.5, .05, .3, 1) var(--pdel, 0s) forwards;
-}
-@keyframes brushPaint { to { -webkit-mask-position: 0 0; mask-position: 0 0; } }
-.hero h1 .pl1 { --pdel: calc(0.5s + var(--shift, 0s)); }
-.hero h1 .pl2 { --pdel: calc(0.95s + var(--shift, 0s)); --pdur: 1s; }
-
 /* petali di bouganville che si staccano dai rami in alto a destra e scendono girando */
 .hero-petals { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
 .hero-petals i { position: absolute; top: -4%; left: var(--x); width: var(--z); height: calc(var(--z) * 1.08); opacity: 0; animation: petalFall var(--t) linear var(--d) infinite; }
@@ -643,7 +627,8 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 }
 @media (max-height: 640px) { .hero-copy > .hero-mark { display: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .paint { animation: none !important; -webkit-mask-image: none; mask-image: none; }
+  .hero h1 .hl-m > span { translate: none; animation: none; }
+  .hero h1 .hl-rule { scale: 1 1; animation: none; }
   .hero-mark .hm-w > span { translate: none; animation: none; }
   .hero-mark .hm-leaf { opacity: 1; scale: 1; animation: none; }
   .hero-mark .hm-di { opacity: 1; animation: none; }
@@ -1831,6 +1816,7 @@ textarea:focus-visible,
   animation: heroItemIn 0.9s var(--ease-out) forwards;
 }
 .hero-copy > .hero-eyebrow,
+.hero-copy > .hero-tags,
 .hero-copy > .hero-actions { opacity: 0; }
 .hero-copy > :nth-child(1) { animation-delay: calc(0.2s + var(--shift, 0s)); }
 .hero-copy > :nth-child(2) { animation-delay: calc(0.3s + var(--shift, 0s)); }
@@ -1876,51 +1862,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   .nav-links a.is-current::after { opacity: 1; scale: 1; }
   .nav.scrolled .nav-links a.is-current { color: var(--green); }
 }
-
-/* Hero: sottolineatura tracciata a mano sotto "curato davvero." */
-.hero-underline-wrap { position: relative; display: inline-block; white-space: nowrap; }
-.hero-underline {
-  position: absolute;
-  left: -2%; bottom: -0.16em;
-  width: 104%; height: 0.32em;
-  overflow: visible;
-  fill: none;
-  stroke: var(--sage);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: drawLine 1s cubic-bezier(.45, 0, .2, 1) calc(1.15s + var(--pd, 0s) + var(--shift, 0s)) forwards;
-}
-@keyframes drawLine { to { stroke-dashoffset: 0; } }
-/* fili d'erba che saltano via dalla punta della linea mentre "taglia":
-   ognuno parte quando la punta passa sopra il suo punto */
-.hero-clips {
-  position: absolute;
-  left: -2%; bottom: -0.16em;
-  width: 104%; height: 0.32em;
-  pointer-events: none;
-}
-.hero-clips i {
-  position: absolute;
-  left: var(--x); top: var(--y);
-  width: var(--w); height: var(--h);
-  margin: calc(var(--h) * -1) 0 0 calc(var(--w) * -0.5);
-  border-radius: 50% 50% 40% 40% / 75% 75% 25% 25%;
-  background: linear-gradient(0deg, #4f8340, #a9c79a 70%, #dcebd2);
-  transform-origin: 50% 100%;
-  opacity: 0;
-  animation: clipJump var(--t) calc(var(--d) + var(--pd, 0s) + var(--shift, 0s)) both;
-}
-.hero-clips i:nth-child(3n) { background: linear-gradient(0deg, #3f7232, #8fae84 70%, #cfe2c2); }
-.hero-clips i:nth-child(3n+1) { background: linear-gradient(0deg, #5d9149, #b9d3a9); }
-@keyframes clipJump {
-  0%   { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .4, 1); }
-  12%  { opacity: 1; }
-  48%  { transform: translate(calc(var(--tx) * 0.6), var(--ty)) rotate(calc(var(--r) * 0.55)) scale(1); animation-timing-function: cubic-bezier(.5, 0, .8, .6); }
-  100% { opacity: 0; transform: translate(var(--tx), calc(var(--ty) * 0.15)) rotate(var(--r)) scale(0.85); }
-}
-
 
 /* Galleria: icona "ingrandisci" al passaggio */
 .gal-item { position: relative; }
@@ -2023,8 +1964,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   .reveal, .pop { opacity: 1 !important; transform: none !important; }
   /* nessun movimento ambientale o parallax */
   .leaf-burst { display: none; }
-  .hero-underline { animation: none; stroke-dashoffset: 0; }
-  .hero-clips { display: none; }
   .hero-copy > * { opacity: 1 !important; translate: none !important; animation: none !important; }
   .hero-bg img { transform: scale(1.04) !important; }
 }
@@ -2048,8 +1987,6 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   font-family: var(--font-head);
   font-variation-settings: normal;
 }
-/* titolo dell'hero: corsivo a pennello come il logo */
-.hero h1 { font-family: 'Kaushan Script', 'Brush Script MT', 'Segoe Script', cursive; font-variation-settings: normal; }
 .section-title { font-weight: 650; letter-spacing: -0.035em; line-height: 0.98; font-size: clamp(2.5rem, 1.5rem + 4.2vw, 4.4rem); }
 .sec-head { max-width: 46rem; }
 .section-sub { font-size: var(--fz-md); }
@@ -2614,8 +2551,9 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
   <div class="hero-content">
     <div class="hero-copy">
       <p class="hero-mark" aria-hidden="true"><span class="hm-row"><svg class="hm-leaf" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 4C9.4 8.2 7 14.8 8.3 23.8c7.9 1.1 14.3-2.4 16.5-10.3C22.6 7.3 19.3 5.1 16 4z"/><path class="vein" d="M16 4C13.8 11.5 12.7 17.4 8.3 23.8"/></svg><span class="hm-word"><span class="hm-w"><span>Lisa</span></span><span class="hm-w"><span>Garden</span></span></span></span><span class="hm-di">di Andrea Lisa</span></p>
-      <h1><span class="paint pl1">Il tuo giardino,</span><span class="thin"><span class="hero-underline-wrap"><span class="paint pl2">curato davvero.</span><svg class="hero-underline" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M3 11 C 70 3, 160 2, 297 8"/></svg><span class="hero-clips" aria-hidden="true"><i style="--x:5.9%;--y:58.7%;--d:1.28s;--tx:-0.61em;--ty:-0.46em;--r:221deg;--t:1.01s;--w:0.053em;--h:0.226em"></i><i style="--x:5.9%;--y:58.7%;--d:1.32s;--tx:-0.64em;--ty:-0.27em;--r:195deg;--t:0.82s;--w:0.065em;--h:0.219em"></i><i style="--x:12.3%;--y:48.2%;--d:1.34s;--tx:0.2em;--ty:-0.47em;--r:-252deg;--t:1.01s;--w:0.051em;--h:0.172em"></i><i style="--x:18.8%;--y:40.1%;--d:1.38s;--tx:-0.63em;--ty:-0.42em;--r:219deg;--t:1.01s;--w:0.059em;--h:0.215em"></i><i style="--x:18.8%;--y:40.1%;--d:1.42s;--tx:-0.66em;--ty:-0.34em;--r:213deg;--t:0.94s;--w:0.067em;--h:0.176em"></i><i style="--x:25.2%;--y:34.1%;--d:1.41s;--tx:-0.72em;--ty:-0.35em;--r:-153deg;--t:0.99s;--w:0.057em;--h:0.229em"></i><i style="--x:31.6%;--y:29.9%;--d:1.43s;--tx:-0.83em;--ty:-0.44em;--r:-178deg;--t:1.03s;--w:0.051em;--h:0.196em"></i><i style="--x:31.6%;--y:29.9%;--d:1.47s;--tx:-0.53em;--ty:-0.37em;--r:-280deg;--t:0.87s;--w:0.052em;--h:0.193em"></i><i style="--x:38.1%;--y:27.3%;--d:1.46s;--tx:-0.72em;--ty:-0.25em;--r:-267deg;--t:0.8s;--w:0.058em;--h:0.204em"></i><i style="--x:44.5%;--y:26.1%;--d:1.48s;--tx:-0.4em;--ty:-0.35em;--r:-215deg;--t:0.9s;--w:0.057em;--h:0.239em"></i><i style="--x:44.5%;--y:26.1%;--d:1.52s;--tx:0.18em;--ty:-0.47em;--r:320deg;--t:0.8s;--w:0.053em;--h:0.24em"></i><i style="--x:51.0%;--y:26.0%;--d:1.5s;--tx:-0.62em;--ty:-0.23em;--r:-178deg;--t:0.86s;--w:0.064em;--h:0.193em"></i><i style="--x:57.4%;--y:26.9%;--d:1.53s;--tx:-0.34em;--ty:-0.24em;--r:-143deg;--t:0.89s;--w:0.061em;--h:0.179em"></i><i style="--x:57.4%;--y:26.9%;--d:1.57s;--tx:-0.76em;--ty:-0.26em;--r:173deg;--t:0.84s;--w:0.066em;--h:0.227em"></i><i style="--x:63.9%;--y:28.7%;--d:1.56s;--tx:-0.4em;--ty:-0.41em;--r:-264deg;--t:0.9s;--w:0.059em;--h:0.175em"></i><i style="--x:70.3%;--y:31.3%;--d:1.59s;--tx:0.08em;--ty:-0.35em;--r:183deg;--t:0.98s;--w:0.055em;--h:0.228em"></i><i style="--x:70.3%;--y:31.3%;--d:1.63s;--tx:-0.46em;--ty:-0.27em;--r:-163deg;--t:0.92s;--w:0.062em;--h:0.213em"></i><i style="--x:76.8%;--y:34.5%;--d:1.64s;--tx:0.09em;--ty:-0.46em;--r:-152deg;--t:0.9s;--w:0.054em;--h:0.173em"></i><i style="--x:83.2%;--y:38.4%;--d:1.69s;--tx:-0.59em;--ty:-0.47em;--r:-205deg;--t:1.02s;--w:0.068em;--h:0.216em"></i><i style="--x:83.2%;--y:38.4%;--d:1.73s;--tx:-0.62em;--ty:-0.26em;--r:-306deg;--t:0.92s;--w:0.056em;--h:0.192em"></i><i style="--x:89.6%;--y:42.8%;--d:1.77s;--tx:0.14em;--ty:-0.24em;--r:-271deg;--t:0.88s;--w:0.068em;--h:0.175em"></i><i style="--x:96.1%;--y:47.6%;--d:1.91s;--tx:-0.71em;--ty:-0.45em;--r:-283deg;--t:1.03s;--w:0.056em;--h:0.218em"></i><i style="--x:96.1%;--y:47.6%;--d:1.95s;--tx:-0.78em;--ty:-0.33em;--r:-295deg;--t:0.94s;--w:0.061em;--h:0.197em"></i></span></span></span></h1>
-      <p class="hero-sub">Lisa Garden è la ditta di Andrea Lisa: manutenzione del verde, potature, impianti di irrigazione e nuove aree verdi a Cuneo e in provincia. Un solo referente, dalla prima visita alla consegna del lavoro.</p>
+      <h1><span class="hl"><span class="hl-m"><span>Il tuo giardino,</span></span></span> <span class="hl"><span class="hl-m"><span>curato davvero.</span></span><i class="hl-rule" aria-hidden="true"></i></span></h1>
+      <p class="hero-sub">Un solo referente per il tuo giardino, dalla prima visita alla consegna del lavoro. A Cuneo e in provincia.</p>
+      <ul class="hero-tags" aria-label="Lavori"><li>Manutenzione del verde</li><li>Potature</li><li>Impianti di irrigazione</li><li>Nuove aree verdi</li></ul>
       <div class="hero-actions">
         <a href="#preventivo" class="hero-cta">Richiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a href="#prima-dopo" class="hero-link">Guarda prima e dopo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
