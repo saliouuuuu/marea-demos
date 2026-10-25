@@ -1,4 +1,27 @@
 (function() {
+  // ── Elementi creati dallo script: sempre con il DOM, mai come testo HTML ──
+  // La CSP del sito impone i Trusted Types: innerHTML e simili sono bloccati ovunque,
+  // così nessun testo (nemmeno uno arrivato dal database) può diventare codice nella pagina.
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function make(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function empty(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function svg(viewBox, attrs, shapes) {
+    var s = document.createElementNS(SVGNS, 'svg');
+    s.setAttribute('viewBox', viewBox); s.setAttribute('aria-hidden', 'true'); s.setAttribute('focusable', 'false');
+    Object.keys(attrs).forEach(function(k) { s.setAttribute(k, attrs[k]); });
+    shapes.forEach(function(sh) {
+      var n = document.createElementNS(SVGNS, sh[0]);
+      Object.keys(sh[1]).forEach(function(k) { n.setAttribute(k, sh[1][k]); });
+      s.appendChild(n);
+    });
+    return s;
+  }
+
   // ── Scroll reveal ──
   var reveals = document.querySelectorAll('.reveal, .pop');
   var observer = new IntersectionObserver(function(entries) {
@@ -760,14 +783,23 @@
   }
   function buildLayers() {
     var n = proj.stages.length;
-    layersBox.innerHTML = proj.stages.map(function(st, i) {
+    empty(layersBox);
+    proj.stages.forEach(function(st, i) {
       var pre = i === n - 1 ? 'Dopo: ' : (i === 0 ? 'Prima: ' : st.label + ': ');
-      return '<picture class="pd-layer" data-i="' + i + '">' +
-        '<source type="image/avif" srcset="' + srcset(proj.id, st.key, 'avif') + '" sizes="' + PD_SIZES + '">' +
-        '<source type="image/webp" srcset="' + srcset(proj.id, st.key, 'webp') + '" sizes="' + PD_SIZES + '">' +
-        '<img src="assets/img/pd-' + proj.id + '-' + st.key + '-720.jpg" width="720" height="900" loading="lazy" decoding="async" alt="' + pre + st.alt + '" draggable="false">' +
-        '</picture>';
-    }).join('');
+      var pic = make('picture', 'pd-layer');
+      pic.dataset.i = String(i);
+      ['avif', 'webp'].forEach(function(ext) {
+        var so = document.createElement('source');
+        so.type = 'image/' + ext; so.srcset = srcset(proj.id, st.key, ext); so.sizes = PD_SIZES;
+        pic.appendChild(so);
+      });
+      var img = document.createElement('img');
+      img.width = 720; img.height = 900; img.loading = 'lazy'; img.decoding = 'async';
+      img.alt = pre + st.alt; img.draggable = false;
+      img.src = 'assets/img/pd-' + proj.id + '-' + st.key + '-720.jpg';
+      pic.appendChild(img);
+      layersBox.appendChild(pic);
+    });
     layers = Array.prototype.slice.call(layersBox.children);
   }
   function ready(i) {
@@ -826,9 +858,14 @@
     if (n < 3) return;
     if (timeline.children.length !== n || timeline.dataset.project !== proj.id) {
       timeline.dataset.project = proj.id;
-      timeline.innerHTML = proj.stages.map(function(st, i) {
-        return '<button type="button" class="pd-step" data-i="' + i + '" aria-pressed="false"><span class="pd-step-dot" aria-hidden="true"></span>' + st.label + '</button>';
-      }).join('');
+      empty(timeline);
+      proj.stages.forEach(function(st, i) {
+        var b = make('button', 'pd-step');
+        b.type = 'button'; b.dataset.i = String(i); b.setAttribute('aria-pressed', 'false');
+        var dot = make('span', 'pd-step-dot'); dot.setAttribute('aria-hidden', 'true');
+        b.appendChild(dot); b.appendChild(document.createTextNode(st.label));
+        timeline.appendChild(b);
+      });
     }
     Array.prototype.forEach.call(timeline.children, function(b, i) {
       b.classList.toggle('is-current', i === current);
@@ -908,7 +945,7 @@
   var ambA = document.getElementById('pdAmbA'), ambB = document.getElementById('pdAmbB');
   var pdInfo = document.querySelector('.pd-info');
   var seen = {}; var upTimer = null, playTimer = null, swapTimer = null; var pdVisible = false;
-  pdDots.innerHTML = PROJECTS.map(function() { return '<i></i>'; }).join('');
+  PROJECTS.forEach(function() { pdDots.appendChild(document.createElement('i')); });
   function idx() { return PROJECTS.indexOf(proj); }
   function nextProj() { return PROJECTS[(idx() + 1) % PROJECTS.length]; }
   function markSeen() {
@@ -1072,7 +1109,8 @@
   var prevErrorText = document.getElementById('prevErrorText');
   var prevStatus = document.getElementById('prevStatus');
   var WA_NUMBER = '393209517477';
-  var WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
+  var WA_PATH = 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z';
+  function waIcon() { return svg('0 0 24 24', { fill: 'currentColor' }, [['path', { d: WA_PATH }]]); }
   function hideError() { prevError.hidden = true; }
   function showError(msg) {
     prevErrorText.textContent = msg || "Seleziona un'opzione per continuare.";
@@ -1096,10 +1134,10 @@
     hideError();
     if (n === totalSteps) {
       nextBtn.classList.add('wa');
-      nextBtn.innerHTML = WA_ICON + 'Invia la richiesta';
+      empty(nextBtn); nextBtn.appendChild(waIcon()); nextBtn.appendChild(document.createTextNode('Invia la richiesta'));
     } else {
       nextBtn.classList.remove('wa');
-      nextBtn.innerHTML = 'Avanti &#8594;';
+      nextBtn.textContent = 'Avanti \u2192';
     }
     if (dir) { active.setAttribute('tabindex', '-1'); active.focus(); }
   }
@@ -1132,29 +1170,38 @@
     if (notes) msg += '\nNote: ' + notes;
     return msg;
   }
-  function leafBurst() {
-    if (prefersReduced) return '';
+  function leafBurst(box) {
+    if (prefersReduced) return;
     var colors = ['var(--green)', 'var(--sage)', 'var(--green-bright)', '#d99aa6'];
-    var html = '<div class="leaf-burst" aria-hidden="true">';
+    var burst = make('div', 'leaf-burst'); burst.setAttribute('aria-hidden', 'true');
     for (var i = 0; i < 12; i++) {
       var a = (i / 12) * Math.PI * 2 + Math.random() * 0.4;
       var dist = 70 + Math.random() * 50;
-      html += '<span style="--x:' + Math.round(Math.cos(a) * dist) + 'px;--y:' + Math.round(Math.sin(a) * dist + 40) + 'px;' +
-        '--r:' + Math.round(Math.random() * 360 - 180) + 'deg;--d:' + (Math.random() * 0.15).toFixed(2) + 's;' +
-        '--c:' + colors[i % colors.length] + '"></span>';
+      var leaf = document.createElement('span');
+      leaf.style.setProperty('--x', Math.round(Math.cos(a) * dist) + 'px');
+      leaf.style.setProperty('--y', Math.round(Math.sin(a) * dist + 40) + 'px');
+      leaf.style.setProperty('--r', Math.round(Math.random() * 360 - 180) + 'deg');
+      leaf.style.setProperty('--d', (Math.random() * 0.15).toFixed(2) + 's');
+      leaf.style.setProperty('--c', colors[i % colors.length]);
+      burst.appendChild(leaf);
     }
-    return html + '</div>';
+    box.appendChild(burst);
   }
   function showSuccess(waUrl) {
-    var title = 'Ti apriamo WhatsApp';
-    var msg = 'Si è aperto WhatsApp con la tua richiesta già compilata: inviala e ti rispondiamo al più presto. Se la finestra non si è aperta, usa il pulsante qui sotto.';
-    prevForm.innerHTML =
-      '<div class="prev-success" role="status">' +
-        '<div class="prev-success-icon">' + leafBurst() + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>' +
-        '<h3>' + title + '</h3>' +
-        '<p>' + msg + '</p>' +
-        '<a class="prev-success-wa" href="' + waUrl + '" target="_blank" rel="noopener">' + WA_ICON + 'Apri WhatsApp</a>' +
-      '</div>';
+    var box = make('div', 'prev-success'); box.setAttribute('role', 'status');
+    var icon = make('div', 'prev-success-icon');
+    leafBurst(icon);
+    icon.appendChild(svg('0 0 24 24', { fill: 'none', stroke: 'currentColor', 'stroke-width': '2.5', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' },
+      [['polyline', { points: '20 6 9 17 4 12' }]]));
+    box.appendChild(icon);
+    box.appendChild(make('h3', null, 'Ti apriamo WhatsApp'));
+    box.appendChild(make('p', null, 'Si è aperto WhatsApp con la tua richiesta già compilata: inviala e ti rispondiamo al più presto. Se la finestra non si è aperta, usa il pulsante qui sotto.'));
+    var a = make('a', 'prev-success-wa');
+    a.href = waUrl; a.target = '_blank'; a.rel = 'noopener';
+    a.appendChild(waIcon()); a.appendChild(document.createTextNode('Apri WhatsApp'));
+    box.appendChild(a);
+    empty(prevForm);
+    prevForm.appendChild(box);
   }
   nextBtn.addEventListener('click', function() {
     if (submitting) return;

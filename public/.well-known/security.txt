@@ -1,0 +1,6 @@
+# Segnalazioni di sicurezza per andrealisagarden.it (RFC 9116).
+# Se trovi un problema di sicurezza nel sito, scrivici dai contatti qui sotto. Grazie.
+Contact: https://andrealisagarden.it/#contatti
+Expires: 2027-10-25T00:00:00.000Z
+Preferred-Languages: it, en
+Canonical: https://andrealisagarden.it/.well-known/security.txt

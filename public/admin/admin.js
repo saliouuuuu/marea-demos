@@ -16,7 +16,8 @@
 
   function vista(nome) {
     VISTE.forEach(function (v) { $(v).hidden = v !== nome; });
-    $('logout').hidden = nome !== 'vista-gestione' && nome !== 'vista-negato';
+    $('logout').hidden = nome !== 'vista-gestione';
+    aperta = nome === 'vista-gestione';
   }
   function stato(testo, errore) {
     var el = $('stato');
@@ -37,9 +38,16 @@
     return b;
   }
 
+  var aperta = false;        // il pannello di gestione è a schermo (c'è una sessione dell'amministratore)
   if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(cfg.url || '') || !cfg.anonKey) { vista('vista-spenta'); return; }
+
+  // La sessione vive solo in questa scheda (sessionStorage): chiudendo il browser si esce, e su un
+  // computer usato anche da altri non resta niente. Le sessioni salvate prima in localStorage si cancellano.
+  var archivio = null;
+  try { sessionStorage.setItem('lg-prova', '1'); sessionStorage.removeItem('lg-prova'); archivio = sessionStorage; } catch (e) {}
+  try { Object.keys(localStorage).forEach(function (k) { if (/^sb-.+-auth-token/.test(k)) localStorage.removeItem(k); }); } catch (e) {}
   var sb = supabase.createClient(cfg.url, cfg.anonKey, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+    auth: { persistSession: !!archivio, storage: archivio || undefined, autoRefreshToken: true, detectSessionInUrl: false }
   });
   var bucket = sb.storage.from('gallery');
   var foto = [];            // righe della tabella, in ordine
@@ -51,31 +59,115 @@
     return bucket.getPublicUrl(p.storage_path + '-800.' + p.ext).data.publicUrl;
   }
 
+  // ── tentativi sbagliati ──
+  // Dopo 5 errori di fila l'accesso da questa pagina si ferma: 30 secondi, poi 1, 2, 4 minuti… fino a 15.
+  // Il limite vero lo mette il server di Supabase (per indirizzo IP); questo ferma chi prova a indovinare dalla pagina.
+  var CHIAVE_BLOCCO = 'lg-accesso';
+  function blocco() {
+    var b;
+    try { b = JSON.parse(localStorage.getItem(CHIAVE_BLOCCO)); } catch (e) {}
+    if (!b || typeof b.n !== 'number' || Date.now() - (b.t || 0) > 3600000) b = { n: 0, fino: 0, t: 0 };   // dopo un'ora si riparte da zero
+    return b;
+  }
+  function salvaBlocco(b) { try { localStorage.setItem(CHIAVE_BLOCCO, JSON.stringify(b)); } catch (e) {} }
+  function attesa(ms) {
+    if (ms < 60000) return Math.ceil(ms / 1000) + ' secondi';
+    var m = Math.ceil(ms / 60000);
+    return m === 1 ? 'un minuto' : m + ' minuti';
+  }
+
   // ── accesso ──
   $('accesso').addEventListener('submit', function (e) {
     e.preventDefault();
+    var fermo = blocco().fino - Date.now();
+    if (fermo > 0) { stato('Troppi tentativi sbagliati. Riprova tra ' + attesa(fermo) + '.', true); return; }
     var b = $('entra');
     b.disabled = true; stato('Accesso in corso…');
     sb.auth.signInWithPassword({ email: $('email').value.trim(), password: $('password').value })
       .then(function (r) {
         $('password').value = '';
-        if (r.error) { stato('Email o password non corretti.', true); return; }
+        if (r.error) {
+          if (r.error.status === 429) { stato('Troppi tentativi in poco tempo. Aspetta qualche minuto e riprova.', true); return; }
+          if (!r.error.status || r.error.status >= 500) { stato('Non riesco a collegarmi. Controlla la connessione e riprova.', true); return; }
+          var k = blocco();
+          k.n++; k.t = Date.now();
+          if (k.n >= 5) k.fino = k.t + Math.min(15 * 60000, 30000 * Math.pow(2, k.n - 5));
+          salvaBlocco(k);
+          stato(k.fino > k.t ? 'Troppi tentativi sbagliati. Riprova tra ' + attesa(k.fino - k.t) + '.' : 'Email o password non corretti.', true);
+          return;
+        }
+        salvaBlocco({ n: 0, fino: 0, t: 0 });
         stato(''); return controllaAdmin();
       })
       .catch(function () { stato('Non riesco a collegarmi. Controlla la connessione e riprova.', true); })
       .then(function () { b.disabled = false; });
   });
-  $('logout').addEventListener('click', function () {
-    sb.auth.signOut().then(function () { foto = []; coda = []; stato(''); vista('vista-accesso'); });
-  });
+
+  // Esci: chiude la sessione di questo dispositivo e toglie dalla pagina tutto quello che si vedeva.
+  function esci(messaggio) {
+    aperta = false;
+    return sb.auth.signOut({ scope: 'local' }).catch(function () {}).then(function () {
+      foto = []; coda = []; disegna(); disegnaCoda();
+      $('nuova').value = ''; $('ripeti').value = ''; $('utente').value = ''; statoPw('');
+      vista('vista-accesso'); stato(messaggio || '', !!messaggio);
+    });
+  }
+  $('logout').addEventListener('click', function () { esci(''); });
+  $('torna').addEventListener('click', function () { stato(''); vista('vista-accesso'); });
 
   function controllaAdmin() {
     return sb.rpc('is_admin').then(function (r) {
-      if (r.error || r.data !== true) { vista('vista-negato'); return; }
-      vista('vista-gestione');
+      if (r.error || r.data !== true) {
+        // chi non è l'amministratore non resta collegato nemmeno per un attimo
+        return sb.auth.signOut({ scope: 'local' }).catch(function () {}).then(function () { vista('vista-negato'); });
+      }
+      vista('vista-gestione'); attivita();
+      sb.auth.getSession().then(function (s) { var u = s.data && s.data.session && s.data.session.user; $('utente').value = (u && u.email) || ''; });
       return carica();
     });
   }
+
+  // ── uscita automatica dopo 30 minuti senza usare il pannello ──
+  var INATTIVITA = 30 * 60000, ultimo = Date.now();
+  function attivita() { ultimo = Date.now(); }
+  ['pointerdown', 'keydown', 'wheel', 'touchstart', 'input'].forEach(function (ev) { document.addEventListener(ev, attivita, { passive: true, capture: true }); });
+  function controllaInattivita() {
+    if (!aperta) return;
+    if (occupato) { attivita(); return; }   // durante un caricamento lungo non si esce
+    if (Date.now() - ultimo >= INATTIVITA) esci('Sessione chiusa dopo 30 minuti senza attività: accedi di nuovo.');
+  }
+  setInterval(controllaInattivita, 30000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) controllaInattivita(); });
+
+  // ── cambio password ──
+  function statoPw(testo, errore) {
+    var el = $('stato-pw');
+    el.textContent = testo || '';
+    el.classList.toggle('errore', !!errore);
+  }
+  $('cambio').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var a = $('nuova').value, b = $('ripeti').value, nome = $('utente').value.toLowerCase().split('@')[0];
+    if (a.length < 12) { statoPw('Serve una password di almeno 12 caratteri.', true); return; }
+    if (a !== b) { statoPw('Le due password non coincidono.', true); return; }
+    if (/^(.)\1+$/.test(a) || (nome.length >= 4 && a.toLowerCase().indexOf(nome) >= 0)) { statoPw('Troppo facile da indovinare: scegline un\'altra.', true); return; }
+    var btn = $('salva-pw');
+    btn.disabled = true; statoPw('Salvo la nuova password…');
+    sb.auth.updateUser({ password: a }).then(function (r) {
+      if (r.error) {
+        var c = r.error.code || '';
+        if (c === 'same_password') statoPw('È uguale a quella di prima: scegline una nuova.', true);
+        else if (c === 'weak_password') statoPw('Password troppo debole: allungala o aggiungi numeri e simboli.', true);
+        else if (c === 'reauthentication_needed' || r.error.status === 401) statoPw('Per sicurezza esci, rientra e riprova.', true);
+        else statoPw('Non è stato possibile cambiare la password. Riprova.', true);
+        return;
+      }
+      $('nuova').value = ''; $('ripeti').value = '';
+      statoPw('Password cambiata. Da ora si entra con quella nuova.');
+      return sb.auth.signOut({ scope: 'others' }).catch(function () {});   // gli altri dispositivi devono rientrare
+    }).catch(function () { statoPw('Non riesco a collegarmi. Controlla la connessione e riprova.', true); })
+      .then(function () { btn.disabled = false; });
+  });
 
   // ── elenco ──
   function carica() {

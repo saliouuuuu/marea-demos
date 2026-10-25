@@ -37,8 +37,15 @@ Finché `public/gallery/config.js` è vuoto, tutto resta spento e il sito è ide
 - **Frecce su e giù** per l'ordine (su computer anche trascinamento). **Elimina** chiede conferma.
 - Se elimina tutte le foto, il sito torna a mostrare quelle scritte nella pagina.
 - Eliminare una delle 20 foto di partenza la toglie dalla galleria; il file resta nel sito ma non si vede.
+- **Password**: dal pannello sceglie una password nuova che conosce solo lei (almeno 12 caratteri, meglio una frase). Cambiandola si esce da tutti gli altri dispositivi.
+- **Si esce da soli** chiudendo il browser o dopo 30 minuti senza usare il pannello. Dopo 5 password sbagliate di fila l'accesso si ferma per 30 secondi, poi sempre più a lungo (fino a 15 minuti).
 
-Password dimenticata: la reimposti tu da Authentication → Users.
+Password dimenticata: le email di recupero di Supabase senza un server di posta proprio arrivano solo ai membri del progetto, quindi la reimposti tu dallo SQL Editor con una password provvisoria, che Lisa poi cambia dal pannello:
+```sql
+update auth.users
+set encrypted_password = extensions.crypt('PASSWORD-PROVVISORIA', extensions.gen_salt('bf'))
+where email = 'email-di-lisa@esempio.it';
+```
 
 ## Sicurezza: come è fatta
 
@@ -46,8 +53,33 @@ Password dimenticata: la reimposti tu da Authentication → Users.
 - Nello Storage il bucket `gallery` è pubblico in lettura via URL ma **non elencabile**; scrittura solo admin; il server rifiuta file oltre 3 MB e tipi diversi da WebP/JPEG.
 - Nel sito c'è solo la chiave **anon**. La `service_role` non compare in nessun file.
 - Contenuti del database inseriti nella pagina solo come testo (`textContent`), mai come HTML. L'elenco ricevuto viene comunque validato campo per campo.
-- La CSP non ammette script inline né domini diversi dal tuo e da Supabase. `/admin/` ha `noindex`.
+- La CSP non ammette script inline né domini diversi dal tuo e da Supabase, e impone i **Trusted Types**: nessuno script può scrivere HTML nella pagina (`innerHTML` e simili sono bloccati in tutto il sito), quindi un testo arrivato da fuori non può diventare codice. `/admin/` ha `noindex` e `Cache-Control: no-store` (dopo l'uscita il tasto "indietro" non rimostra l'elenco).
+- Il pannello tiene la sessione solo nella scheda (`sessionStorage`), esce da solo dopo 30 minuti di inattività, rallenta i tentativi sbagliati e scollega subito un utente che non è in `public.admins`.
 - La libreria `supabase-js` è alla versione fissa 2.118.0, ospitata sul sito (`public/admin/vendor/`), non caricata da un CDN.
+- Il Worker di Cloudflare risponde solo dal dominio: `workers_dev` e `preview_urls` sono spenti in `wrangler.jsonc`, così nessun indirizzo secondario aggira le regole del dominio.
+- `public/.well-known/security.txt` dice a chi trova un problema dove scrivere. **Va rinnovato ogni anno** (riga `Expires`); `static.sh` fallisce quando è scaduto.
+
+## Impostazioni da fare nei pannelli (una volta sola)
+
+Il codice non può impostarle da solo: vanno fatte a mano dagli account del sito.
+
+**Supabase** (progetto `kpwmjngzsgjniontminj`)
+- Authentication → Sign In / Providers → Email: *Minimum password length* **12**, *Password Requirements* **Letters and digits** (almeno), *Secure password change* attivo. Valgono per le password nuove: quella attuale di Lisa continua a funzionare finché non la cambia.
+- Authentication → Rate Limits: *sign-ups and sign-ins* a **10** ogni 5 minuti per indirizzo IP (Lisa entra di rado).
+- Authentication → URL Configuration: *Site URL* `https://andrealisagarden.it`, nessun altro indirizzo nei *Redirect URLs*.
+- Authentication → Users: deve esserci solo l'utente di Lisa; eventuali utenti di prova vanno eliminati.
+- Database → Advisors → Security Advisor: nessun avviso rosso.
+
+**Cloudflare** (zona `andrealisagarden.it`)
+- SSL/TLS → Edge Certificates: *Minimum TLS Version* **TLS 1.2**, *TLS 1.3* attivo, *Always Use HTTPS* attivo.
+- Security → Bots: *Bot Fight Mode* attivo.
+- Security → WAF → Custom rules → nuova regola "Pannello solo dall'Italia": *URI Path* **starts with** `/admin` (se l'operatore non c'è, **contains**) **and** *Country* **does not equal** Italy → azione **Block**. Se Lisa è all'estero e deve usare il pannello, va messa in pausa.
+- Workers & Pages → marea-demos → Settings → Domains & Routes: dopo il primo deploy con questo `wrangler.jsonc`, *workers.dev* e *Preview URLs* risultano spenti e `andrealisagarden.it` resta collegato.
+- DNS: record **TXT** su `@` con valore `v=spf1 -all` (dal dominio non parte posta). Il DMARC `p=reject` c'è già. Se un giorno si usa la casella IONOS per spedire, il valore diventa `v=spf1 include:_spf-eu.ionos.com -all`.
+
+**Account**
+- Verifica in due passaggi (app di autenticazione) su GitHub, Cloudflare, Netlify, Supabase e IONOS: chi entra in uno di questi account controlla il sito.
+- GitHub → Settings del repository → *Change visibility* → **Private**: oggi chiunque può leggere codice e cronologia. Netlify e Cloudflare continuano a pubblicare anche da un repository privato.
 
 ## Prove automatiche
 
