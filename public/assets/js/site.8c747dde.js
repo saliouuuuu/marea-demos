@@ -1370,24 +1370,3 @@
   document.querySelectorAll('main > section[id]').forEach(function(sec) { spyObserver.observe(sec); });
 
 })();
-
-/* Vento sulla firma dell'hero: col mouse l'erba e il rametto si piegano verso il
-   lato del puntatore; scorrendo arriva una folata che poi si calma da sola. */
-(function () {
-  var mark = document.querySelector('.hero-mark');
-  if (!mark || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var base = 0, lastY = scrollY, calm = 0;
-  function set(v) { mark.style.setProperty('--wind', v.toFixed(1) + 'deg'); }
-  addEventListener('pointermove', function (e) {
-    if (e.pointerType !== 'mouse') return;
-    base = (e.clientX / innerWidth - 0.5) * 18;
-    set(base);
-  }, { passive: true });
-  addEventListener('scroll', function () {
-    var v = scrollY - lastY; lastY = scrollY;
-    if (scrollY > innerHeight) return;
-    set(Math.max(-16, Math.min(16, base + v * 0.8)));
-    clearTimeout(calm);
-    calm = setTimeout(function () { set(base); }, 180);
-  }, { passive: true });
-})();
