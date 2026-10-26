@@ -507,6 +507,26 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 .hp-ortensia{ width: 19vw; right: 19vw; bottom: -11vh; --fx: -14vw; --fy: -38vh; --fr: -6deg;  --ox: 4vw;   --oy: 16vh; --dl: 0.22s; --sway-o: 50% 100%; --sa: 1deg; }
 .hp-roccia  { width: 15vw; right: 36vw; bottom: -6vh;  --fx: 0vw;   --fy: -34vh; --fr: 4deg;   --ox: 0vw;   --oy: 14vh; --dl: 0.26s; --sa: 0deg; }
 .hp-pietra  { width: 11vw; left: 13vw;  bottom: -7vh;  --fx: 26vw;  --fy: -36vh; --fr: 10deg;  --ox: -4vw;  --oy: 14vh; --dl: 0.3s; --sway-o: 50% 100%; --sa: 0.8deg; }
+/* fiori rosa e cespuglio con le rocce: si aprono con le altre; i fiori stanno dietro, il cespuglio davanti alle foglie */
+.hp-fiori   { z-index: 4; width: 21vw; right: 2vw; bottom: 20vh; --fx: -22vw; --fy: -24vh; --fr: -8deg; --ox: 10vw; --oy: 6vh; --dl: 0.16s; --sway-o: 50% 100%; --sa: 1.3deg; --sw: 8.5s; }
+.hp-cespuglio { width: 36vw; right: -6vw; bottom: -9vh; --fx: -26vw; --fy: -30vh; --fr: 6deg; --ox: 12vw; --oy: 12vh; --dl: 0.1s; --sway-o: 50% 100%; --sa: 0.5deg; --sw: 10s; }
+/* il colibrì: dopo l'apertura entra in volo da sinistra, si ferma davanti ai fiori della buganvillea, scende a
+   quelli rosa e se ne va a destra; poi torna. Guarda verso destra, verso i fiori. Solo transform: gira sul compositore.
+   Le tappe (--in, --b, --out) sono spostamenti dal punto di arrivo, diversi su computer e telefono. */
+.hero-colibri { position: absolute; z-index: 5; right: 18vw; top: 20vh; width: 88px; pointer-events: none;
+  --in-x: -90vw; --in-y: -12vh; --bx: 2.2vw; --by: 20.7vh; --out-x: 40vw; --out-y: -4vh;
+  animation: colibriVolo 16s cubic-bezier(.45, .05, .35, 1) 2.4s infinite both; }
+.hero-colibri span { display: block; animation: colibriAli 0.32s ease-in-out infinite alternate; }
+.hero-colibri img { display: block; width: 100%; height: auto; scale: -1 1; }
+@keyframes colibriVolo {
+  0%   { transform: translate(var(--in-x), var(--in-y)) rotate(6deg); }
+  10%  { transform: translate(0, 0) rotate(0deg); }
+  32%  { transform: translate(0.4vw, -0.6vh) rotate(-2deg); }
+  40%  { transform: translate(var(--bx), var(--by)) rotate(3deg); }
+  64%  { transform: translate(calc(var(--bx) - 0.3vw), calc(var(--by) - 0.5vh)) rotate(1deg); }
+  76%, 100% { transform: translate(var(--out-x), var(--out-y)) rotate(-4deg); }
+}
+@keyframes colibriAli { from { transform: translateY(-2px) rotate(-1.5deg); } to { transform: translateY(2px) rotate(1deg); } }
 @media (min-width: 1000px) { .hp-bouga { z-index: 5; } }
 @media (min-width: 1500px) { .hp-pietra { left: 4vw; } }   /* sugli schermi larghi il testo parte più a destra: la pietra resta fuori dalla colonna */
 @media (max-width: 999px) {
@@ -514,6 +534,9 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   .hp-bouga   { width: 44vw; right: -8vw; top: -4vh; --fx: -28vw; --fy: 34vh; --ox: 20vw; --oy: -10vh; }
   .hp-foglie  { width: 40vw; right: -12vw; bottom: -9vh; --fx: -30vw; --fy: -40vh; --ox: 16vw; --oy: 8vh; }
   .hp-felce, .hp-ortensia, .hp-roccia, .hp-pietra { display: none; }
+  .hp-fiori     { width: 44vw; right: -16vw; top: 26vh; bottom: auto; --fx: -26vw; --fy: 6vh; --ox: 18vw; --oy: 0vh; }
+  .hp-cespuglio { width: 70vw; right: -22vw; bottom: -6vh; --fx: -24vw; --fy: -34vh; --ox: 16vw; --oy: 8vh; }
+  .hero-colibri { width: 64px; right: 33vw; top: 9.6vh; --in-x: -80vw; --in-y: -6vh; --bx: 15.4vw; --by: 9.7vh; --out-x: 60vw; --out-y: -8vh; }
   /* sul telefono niente ombra sfocata sotto le piante che ondeggiano: va ricalcolata a ogni fotogramma
      dalla scheda grafica, e lì in alto sul cielo quasi non si vede */
   .hp img { filter: none; }
@@ -669,7 +692,7 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
   .hero-petals { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-bg img, .hp picture, .hp img, .hero-veil, .hero-dot::after { animation: none; }
+  .hero-bg img, .hp picture, .hp img, .hero-veil, .hero-dot::after, .hero-colibri, .hero-colibri span { animation: none; }
   .hero-veil { display: none; }
   .hp { translate: none; }
 }
@@ -2486,7 +2509,10 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
    (--e, da JS). I link alla sezione aprono una tendina che la scopre
    come il cursore del confronto. */
 .prima-dopo .pd-stage { --e: 1; }
-.hero-content { opacity: calc(1 - var(--s) * 1.3); transform: translateY(calc(var(--s) * -48px)); }
+.hero-fade { opacity: calc(1 - var(--s) * 1.3); transform: translateY(calc(var(--s) * -48px)); }
+/* il riquadro di vetro non sta dentro niente che sfuma: un antenato con opacity o filter diventa la "radice"
+   del backdrop-filter e il vetro smetterebbe di sfocare le piante dietro. Scorrendo sale e basta. */
+.hero-card { transform: translateY(calc(var(--s) * -60px)); }
 .formazione { position: relative; z-index: 2; overflow-x: clip; }
 .formazione .quals { margin-top: 0; }
 .hero::after { content: ""; position: absolute; inset: 0; z-index: 7; pointer-events: none; background: #0b140e; opacity: calc(var(--s) * 0.65); }
@@ -2520,7 +2546,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 .pd-wipe-knob svg { width: 12px; height: 12px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-content { opacity: 1; transform: none; }
+  .hero-fade, .hero-card { opacity: 1; transform: none; }
   .hero::after { content: none; }
   .prima-dopo .pd-stage { transform: none; }
 }
@@ -2542,7 +2568,10 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 @supports (animation-timeline: scroll()) {
   .sfx .hero-bg img { animation: heroZoom 2.4s cubic-bezier(.2,.7,.2,1) both, sfxHeroBg linear both; animation-timeline: auto, scroll(root); animation-range: normal, 0 100vh; }
   .sfx .hp { animation: sfxHeroPlant linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
-  .sfx .hero-content { animation: sfxHeroCopy linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+  .sfx .hero-fade { animation: sfxHeroCopy linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+  @media (min-width: 1000px) {
+    .sfx .hero-card { animation: heroCarryR 1.8s cubic-bezier(.7, 0, .15, 1) 0.6s both, sfxHeroCard linear both; animation-timeline: auto, scroll(root); animation-range: normal, 0 100vh; }
+  }
   .sfx .hero::after { animation: sfxHeroDim linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
   /* la cornice taglia la foto (overflow: hidden la rende un contenitore di scorrimento): la linea del
      tempo va presa dalla cornice rispetto alla pagina, con un nome, non dalla foto dentro la cornice */
@@ -2556,6 +2585,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 }
 @keyframes sfxHeroBg { to { transform: scale(1.06); } }
 @keyframes sfxHeroPlant { to { translate: var(--ox) var(--oy); } }
+@keyframes sfxHeroCard { to { transform: translateY(-60px); } }
 @keyframes sfxHeroCopy { 0% { opacity: 1; transform: none; } 77% { opacity: 0; } 100% { opacity: 0; transform: translateY(-48px); } }
 @keyframes sfxHeroDim { from { opacity: 0; } to { opacity: 0.65; } }
 @keyframes sfxGal { from { translate: 0 4.5%; } to { translate: 0 -4.5%; } }
@@ -2565,7 +2595,7 @@ section.is-offscreen *, section.is-offscreen *::after { animation-play-state: pa
 html:not(.sfx) .gal-item.pop.visible img, html:not(.sfx) .about-frame img { will-change: transform; }
 .prima-dopo .pd-stage { will-change: transform; }
 @media (prefers-reduced-motion: reduce) {
-  .sfx .hp, .sfx .hero-content, .sfx .hero::after, .sfx .gal-item.pop.visible img, .sfx .about-frame img, .sfx .prima-dopo .pd-stage { animation: none !important; }
+  .sfx .hp, .sfx .hero-fade, .sfx .hero-card, .sfx .hero::after, .sfx .gal-item.pop.visible img, .sfx .about-frame img, .sfx .prima-dopo .pd-stage { animation: none !important; }
   .sfx .hero-bg img { animation: none !important; }
 }
 </style>
@@ -2607,15 +2637,18 @@ html:not(.sfx) .gal-item.pop.visible img, html:not(.sfx) .about-frame img { will
       <div class="hp hp-bouga"><picture><source type="image/avif" srcset="assets/img/pianta-buganvillea-360.avif 360w, assets/img/pianta-buganvillea-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-buganvillea-360.webp" srcset="assets/img/pianta-buganvillea-360.webp 360w, assets/img/pianta-buganvillea-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
       <div class="hp hp-felce"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><source type="image/avif" srcset="assets/img/pianta-felce-360.avif 360w, assets/img/pianta-felce-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-felce-360.webp" srcset="assets/img/pianta-felce-360.webp 360w, assets/img/pianta-felce-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
       <div class="hp hp-foglie"><picture><source type="image/avif" srcset="assets/img/pianta-foglie-larghe-360.avif 360w, assets/img/pianta-foglie-larghe-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-foglie-larghe-360.webp" srcset="assets/img/pianta-foglie-larghe-360.webp 360w, assets/img/pianta-foglie-larghe-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
+      <div class="hp hp-fiori"><picture><source type="image/avif" srcset="assets/img/pianta-fiori-rosa-360.avif 360w, assets/img/pianta-fiori-rosa-640.avif 640w, assets/img/pianta-fiori-rosa-960.avif 960w" sizes="(min-width: 1000px) 21vw, 44vw"><img src="assets/img/pianta-fiori-rosa-360.webp" srcset="assets/img/pianta-fiori-rosa-360.webp 360w, assets/img/pianta-fiori-rosa-640.webp 640w, assets/img/pianta-fiori-rosa-960.webp 960w" sizes="(min-width: 1000px) 21vw, 44vw" alt="" decoding="async" fetchpriority="low"></picture></div>
+      <div class="hp hp-cespuglio"><picture><source type="image/avif" srcset="assets/img/pianta-cespuglio-rocce-360.avif 360w, assets/img/pianta-cespuglio-rocce-640.avif 640w, assets/img/pianta-cespuglio-rocce-960.avif 960w" sizes="(min-width: 1000px) 36vw, 70vw"><img src="assets/img/pianta-cespuglio-rocce-360.webp" srcset="assets/img/pianta-cespuglio-rocce-360.webp 360w, assets/img/pianta-cespuglio-rocce-640.webp 640w, assets/img/pianta-cespuglio-rocce-960.webp 960w" sizes="(min-width: 1000px) 36vw, 70vw" alt="" decoding="async" fetchpriority="low"></picture></div>
       <div class="hp hp-ortensia"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><source type="image/avif" srcset="assets/img/pianta-ortensia-360.avif 360w, assets/img/pianta-ortensia-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-ortensia-360.webp" srcset="assets/img/pianta-ortensia-360.webp 360w, assets/img/pianta-ortensia-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
       <div class="hp hp-roccia"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><source type="image/avif" srcset="assets/img/pianta-roccia-muschio-360.avif 360w, assets/img/pianta-roccia-muschio-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-roccia-muschio-360.webp" srcset="assets/img/pianta-roccia-muschio-360.webp 360w, assets/img/pianta-roccia-muschio-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
       <div class="hp hp-pietra"><picture><source media="(max-width: 999px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><source type="image/avif" srcset="assets/img/pianta-pietra-fiori-360.avif 360w, assets/img/pianta-pietra-fiori-640.avif 640w" sizes="(min-width: 1000px) 24vw, 46vw"><img src="assets/img/pianta-pietra-fiori-360.webp" srcset="assets/img/pianta-pietra-fiori-360.webp 360w, assets/img/pianta-pietra-fiori-640.webp 640w" sizes="(min-width: 1000px) 24vw, 46vw" alt="" decoding="async" fetchpriority="low"></picture></div>
+      <div class="hero-colibri"><span><picture><source type="image/avif" srcset="assets/img/colibri-120.avif 120w, assets/img/colibri-187.avif 187w" sizes="(min-width: 1000px) 88px, 64px"><img src="assets/img/colibri-120.webp" srcset="assets/img/colibri-120.webp 120w, assets/img/colibri-187.webp 187w" sizes="(min-width: 1000px) 88px, 64px" width="187" height="201" alt="" decoding="async" fetchpriority="low"></picture></span></div>
   </div>
   <div class="hero-shade" aria-hidden="true"></div>
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-petals" aria-hidden="true"><i style="--x:83%;--dx:-39vw;--t:13.8s;--d:-14.1s;--z:12.4px;--sp:4.0s"><b></b></i><i style="--x:50%;--dx:-31vw;--t:14.7s;--d:-9.7s;--z:13.4px;--sp:2.4s"><b></b></i><i style="--x:74%;--dx:-25vw;--t:12.3s;--d:-8.6s;--z:8.1px;--sp:2.6s"><b></b></i><i style="--x:64%;--dx:-44vw;--t:13.6s;--d:-2.4s;--z:12.8px;--sp:2.5s"><b></b></i><i style="--x:83%;--dx:-22vw;--t:9.0s;--d:-13.1s;--z:9.3px;--sp:2.6s"><b></b></i><i style="--x:103%;--dx:-42vw;--t:10.7s;--d:-14.4s;--z:11.2px;--sp:3.6s"><b></b></i><i style="--x:59%;--dx:-44vw;--t:13.1s;--d:-14.5s;--z:13.4px;--sp:2.8s"><b></b></i><i style="--x:68%;--dx:-23vw;--t:9.9s;--d:-1.0s;--z:9.8px;--sp:3.4s"><b></b></i><i style="--x:48%;--dx:-37vw;--t:11.0s;--d:-4.6s;--z:12.9px;--sp:3.2s"><b></b></i><i style="--x:66%;--dx:-31vw;--t:13.2s;--d:-0.9s;--z:13.9px;--sp:2.2s"><b></b></i><i style="--x:90%;--dx:-42vw;--t:9.1s;--d:-11.8s;--z:10.2px;--sp:3.4s"><b></b></i></div>
   <div class="hero-content">
-    <div class="hero-copy">
+    <div class="hero-fade"><div class="hero-copy">
       <p class="hero-brand" aria-hidden="true"><span class="hb-mark"><svg class="hb-leaf" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 4C9.4 8.2 7 14.8 8.3 23.8c7.9 1.1 14.3-2.4 16.5-10.3C22.6 7.3 19.3 5.1 16 4z"/><path class="vein" d="M16 4C13.8 11.5 12.7 17.4 8.3 23.8"/></svg><span class="hb-w"><span>Lisa</span></span> <span class="hb-w"><span>Garden</span></span></span><span class="hb-by">di Andrea Lisa</span></p>
       <h1 class="hero-title"><span class="ht-line"><span class="w"><span style="--i:0">Il</span></span> <span class="w"><span style="--i:1">tuo</span></span> <span class="w"><span style="--i:2">giardino,</span></span></span> <span class="ht-line tex-grass"><span class="w"><span style="--i:3">curato</span></span> <span class="w"><span style="--i:4">davvero</span></span><span class="ht-leaf" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M16 4C9.4 8.2 7 14.8 8.3 23.8c7.9 1.1 14.3-2.4 16.5-10.3C22.6 7.3 19.3 5.1 16 4z"/><path class="vein" d="M16 4C13.8 11.5 12.7 17.4 8.3 23.8"/></svg></span></span></h1>
       <p class="hero-sub"><span>Prati rasati,</span> <span>siepi in forma,</span> <span>l'acqua dove serve.</span> <span class="hs-line">Manutenzione e nuovi giardini a Cuneo e in provincia.</span></p>
@@ -2623,6 +2656,7 @@ html:not(.sfx) .gal-item.pop.visible img, html:not(.sfx) .about-frame img { will
         <a href="#preventivo" class="hero-cta">Richiedi un preventivo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a href="#prima-dopo" class="hero-link">Guarda prima e dopo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
       </div>
+    </div>
     </div>
     <aside class="hero-card" aria-labelledby="heroCardT"><h2 id="heroCardT">Cuneo e provincia</h2><ul><li>Manutenzione del verde</li><li>Potature</li><li>Impianti di irrigazione</li><li>Nuove aree verdi</li></ul></aside>
   </div>
