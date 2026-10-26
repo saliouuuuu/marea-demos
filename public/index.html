@@ -509,7 +509,11 @@ button { font: inherit; border: none; cursor: pointer; background: none; }
 .hp-pietra  { width: 11vw; left: 13vw;  bottom: -7vh;  --fx: 26vw;  --fy: -36vh; --fr: 10deg;  --ox: -4vw;  --oy: 14vh; --dl: 0.3s; --sway-o: 50% 100%; --sa: 0.8deg; }
 /* fiori rosa e cespuglio con le rocce: si aprono con le altre; i fiori stanno dietro, il cespuglio davanti alle foglie */
 .hp-fiori   { z-index: 4; width: 21vw; right: 2vw; bottom: 20vh; --fx: -22vw; --fy: -24vh; --fr: -8deg; --ox: 10vw; --oy: 6vh; --dl: 0.16s; --sway-o: 50% 100%; --sa: 1.3deg; --sw: 8.5s; }
-.hp-cespuglio { width: 36vw; right: -6vw; bottom: -9vh; --fx: -26vw; --fy: -30vh; --fr: 6deg; --ox: 12vw; --oy: 12vh; --dl: 0.1s; --sway-o: 50% 100%; --sa: 0.5deg; --sw: 10s; }
+.hp-cespuglio { width: 36vw; right: -6vw; bottom: -9vh; --fx: -26vw; --fy: -30vh; --fr: 6deg; --ox: 12vw; --oy: 12vh; --dl: 0.1s; }
+/* le due immagini nuove hanno già le loro ombre: niente drop-shadow (costoso su livelli così grandi);
+   le rocce non ondeggiano */
+.hp-fiori img, .hp-cespuglio img { filter: none; }
+.hp-cespuglio img { animation: none; }
 /* il colibrì: dopo l'apertura entra in volo da sinistra, si ferma davanti ai fiori della buganvillea, scende a
    quelli rosa e se ne va a destra; poi torna. Guarda verso destra, verso i fiori. Solo transform: gira sul compositore.
    Le tappe (--in, --b, --out) sono spostamenti dal punto di arrivo, diversi su computer e telefono. */
