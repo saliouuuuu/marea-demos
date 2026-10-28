@@ -794,7 +794,10 @@
         pic.appendChild(so);
       });
       var img = document.createElement('img');
-      img.width = 720; img.height = 900; img.loading = 'lazy'; img.decoding = 'async';
+      // la prima e l'ultima fase si caricano subito: selectProject() aspetta proprio quelle due e parte con il
+      // cursore tutto a destra, dove l'ultima è tagliata via (clip-path) e Chrome non carica le immagini
+      // "lazy" che non si vedono: il confronto restava fermo e sbiadito. Le fasi di mezzo restano lazy.
+      img.width = 720; img.height = 900; img.loading = (i === 0 || i === n - 1) ? 'eager' : 'lazy'; img.decoding = 'async';
       img.alt = pre + st.alt; img.draggable = false;
       img.src = 'assets/img/pd-' + proj.id + '-' + st.key + '-720.jpg';
       pic.appendChild(img);
