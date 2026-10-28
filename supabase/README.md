@@ -70,12 +70,17 @@ Il codice non può impostarle da solo: vanno fatte a mano dagli account del sito
 - Authentication → Users: deve esserci solo l'utente di Lisa; eventuali utenti di prova vanno eliminati.
 - Database → Advisors → Security Advisor: nessun avviso rosso.
 
-**Cloudflare** (zona `andrealisagarden.it`)
+**Cloudflare** (zona `andrealisagarden.it`) — fatte il 28 ottobre 2026: TLS minimo 1.2, Bot Fight Mode, regola `/admin`, SPF.
 - SSL/TLS → Edge Certificates: *Minimum TLS Version* **TLS 1.2**, *TLS 1.3* attivo, *Always Use HTTPS* attivo.
-- Security → Bots: *Bot Fight Mode* attivo.
-- Security → WAF → Custom rules → nuova regola "Pannello solo dall'Italia": *URI Path* **starts with** `/admin` (se l'operatore non c'è, **contains**) **and** *Country* **does not equal** Italy → azione **Block**. Se Lisa è all'estero e deve usare il pannello, va messa in pausa.
+- Security → Bots: *Bot Fight Mode* attivo. **Spegni *JavaScript Detections***: Cloudflare inietta uno script in ogni pagina, ma la CSP (`script-src 'self'`) lo blocca giustamente e a ogni visita compare un errore in console; il Bot Fight Mode funziona lo stesso.
+- Analytics & Logs → Web Analytics → `andrealisagarden.it`: **spegni l'impostazione automatica**. Anche questa inietta uno script (`static.cloudflareinsights.com`) che la CSP blocca; il sito non usa strumenti di analisi e l'informativa privacy dice proprio questo ("non usa strumenti di analisi, pubblicità o profilazione").
+- Security → WAF → Custom rules → regola "Pannello solo dall'Italia", azione **Block**:
+  ```
+  (starts_with(http.request.uri.path, "/admin") and ip.src.country ne "IT")
+  ```
+  Se Lisa è all'estero e deve usare il pannello, va messa in pausa.
 - Workers & Pages → marea-demos → Settings → Domains & Routes: dopo il primo deploy con questo `wrangler.jsonc`, *workers.dev* e *Preview URLs* risultano spenti e `andrealisagarden.it` resta collegato.
-- DNS: record **TXT** su `@` con valore `v=spf1 -all` (dal dominio non parte posta). Il DMARC `p=reject` c'è già. Se un giorno si usa la casella IONOS per spedire, il valore diventa `v=spf1 include:_spf-eu.ionos.com -all`.
+- DNS: record **TXT** su `@` con `v=spf1 -all` (dal dominio non parte posta; `v=spf1 ~all` va bene lo stesso, il DMARC `p=reject` fa il resto). Se un giorno si usa la casella IONOS per spedire, il valore diventa `v=spf1 include:_spf-eu.ionos.com -all`.
 
 **Account**
 - Verifica in due passaggi (app di autenticazione) su GitHub, Cloudflare, Netlify, Supabase e IONOS: chi entra in uno di questi account controlla il sito.
