@@ -49,11 +49,26 @@
       <ol id="elenco" class="elenco"></ol>
       <p id="vuoto" class="aiuto" hidden>Non ci sono foto nel database: il sito mostra le foto già presenti nella pagina.</p>
     </div>
+
+    <div class="card">
+      <h2>Password</h2>
+      <p class="aiuto">Scegline una che conosci solo tu: almeno 12 caratteri, meglio una frase di quattro o cinque parole. Non usarla per altri siti. Quando la cambi, si esce da tutti gli altri dispositivi.</p>
+      <form id="cambio" autocomplete="on">
+        <input id="utente" name="username" type="email" autocomplete="username" hidden>
+        <label for="nuova">Nuova password</label>
+        <input id="nuova" name="new-password" type="password" autocomplete="new-password" minlength="12" maxlength="72" required>
+        <label for="ripeti">Ripeti la nuova password</label>
+        <input id="ripeti" name="confirm-password" type="password" autocomplete="new-password" minlength="12" maxlength="72" required>
+        <button type="submit" class="btn btn-main" id="salva-pw">Cambia password</button>
+      </form>
+      <p id="stato-pw" class="stato" role="status" aria-live="polite"></p>
+    </div>
   </section>
 
   <section id="vista-negato" class="card" hidden>
     <h2>Accesso non consentito</h2>
     <p>Questo utente non può gestire la galleria.</p>
+    <button type="button" class="btn btn-ghost" id="torna">Torna all'accesso</button>
   </section>
 
   <section id="vista-spenta" class="card" hidden>

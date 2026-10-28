@@ -1,12 +1,14 @@
 # Cloudflare: intestazioni HTTP (stesse regole di netlify.toml)
 # Nessuno script inline: la CSP accetta solo file serviti da questo dominio.
+# Trusted Types: nessuno script può scrivere HTML nella pagina (innerHTML e simili sono bloccati),
+# così un testo arrivato da fuori non può mai diventare codice.
 
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
-  Content-Security-Policy: default-src 'none'; img-src 'self' data: https://kpwmjngzsgjniontminj.supabase.co; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self' https://kpwmjngzsgjniontminj.supabase.co; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests
+  Permissions-Policy: accelerometer=(), autoplay=(), browsing-topics=(), camera=(), display-capture=(), encrypted-media=(), geolocation=(), gyroscope=(), hid=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), usb=(), xr-spatial-tracking=()
+  Content-Security-Policy: default-src 'none'; img-src 'self' data: https://kpwmjngzsgjniontminj.supabase.co; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self' https://kpwmjngzsgjniontminj.supabase.co; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; require-trusted-types-for 'script'; trusted-types 'none'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
@@ -22,10 +24,11 @@
 /gallery/*
   Cache-Control: no-cache
 
-# Pannello del cliente: mai indicizzato, sempre riconvalidato
+# Pannello del cliente: mai indicizzato e mai salvato dal browser (nemmeno nella cronologia
+# "indietro": dopo l'uscita non si rivede l'elenco delle foto)
 /admin/*
   X-Robots-Tag: noindex, nofollow
-  Cache-Control: no-cache
+  Cache-Control: no-store
 
 # Gli indirizzi di prova *.pages.dev non devono finire su Google
 https://:project.pages.dev/*

@@ -1,6 +1,11 @@
 {
   "name": "marea-demos",
   "compatibility_date": "2026-10-17",
+  // Il sito risponde solo dal dominio (andrealisagarden.it, collegato dal pannello di Cloudflare):
+  // niente indirizzo *.workers.dev né indirizzi di anteprima, che aggirerebbero le regole del dominio
+  // (redirect, protezioni WAF).
+  "workers_dev": false,
+  "preview_urls": false,
   "assets": {
     "directory": "./public",
     "not_found_handling": "404-page"

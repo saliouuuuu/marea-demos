@@ -40,5 +40,17 @@ chk "config.js contiene solo url e anonKey" \
   bash -c "grep -c 'window.GALLERY_CONFIG' $PUB/gallery/config.js | grep -q 1"
 chk "le 20 foto di partenza hanno data-key e il seed ne ha 20" \
   bash -c "test \$(grep -c 'data-key=\"gal-' $PUB/index.html) -eq 20 && test \$(grep -c \"^  (\" supabase/migrations/0002_seed_legacy.sql) -eq 20"
+no "nessun innerHTML/outerHTML/insertAdjacentHTML/document.write negli script del sito (Trusted Types li bloccherebbero)" \
+  grep -nE "\.(innerHTML|outerHTML)\s*=|insertAdjacentHTML|document\.write" $PUB/assets/js/*.js
+chk "CSP con Trusted Types (require-trusted-types-for 'script') in _headers e netlify.toml" \
+  bash -c "grep -E 'Content-Security-Policy' $PUB/_headers | grep -q \"require-trusted-types-for 'script'\" && grep -E 'Content-Security-Policy' netlify.toml | grep -q \"require-trusted-types-for 'script'\""
+chk "admin: il browser non salva le pagine del pannello (no-store)" \
+  bash -c "grep -A3 '^/admin/' $PUB/_headers | grep -q 'no-store' && grep -A4 'for = \"/admin/\*\"' netlify.toml | grep -q 'no-store'"
+chk "admin: sessione solo nella scheda (sessionStorage) e uscita per inattività" \
+  bash -c "grep -q 'storage: archivio' $PUB/admin/admin.js && grep -q 'INATTIVITA' $PUB/admin/admin.js"
+chk "il Worker risponde solo dal dominio (workers_dev e preview_urls spenti)" \
+  bash -c "grep -q '\"workers_dev\": false' wrangler.jsonc && grep -q '\"preview_urls\": false' wrangler.jsonc"
+chk "security.txt presente e non scaduto (va rinnovato ogni anno: riga Expires)" \
+  bash -c "d=\$(grep -oE '^Expires: [0-9T:.Z-]+' $PUB/.well-known/security.txt | cut -d' ' -f2) && test \$(date -d \"\$d\" +%s) -gt \$(date +%s)"
 [ $FAIL = 0 ] && echo && echo "Tutti i controlli statici superati." || { echo; echo "ATTENZIONE: controlli falliti."; }
 exit $FAIL
